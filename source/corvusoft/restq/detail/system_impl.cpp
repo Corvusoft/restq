@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <ciso646>
 
 //Project Includes
 #include "corvusoft/restq/detail/system_impl.hpp"
