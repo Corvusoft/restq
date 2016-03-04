@@ -93,10 +93,10 @@ namespace restq
                 static void unsupported_media_type_handler( const shared_ptr< Session > session )
                 {
                     static const list< multimap< string, Bytes > > values { {
-                            { "status", { '4', '1', '5' } },
-                            { "code", { '4', '0', '0', '1', '5' } },
-                            { "type", { 'e', 'r', 'r', 'o', 'r' } },
-                            { "title", { 'U', 'n', 's', 'u', 'p', 'p', 'o', 'r', 't', 'e', 'd', ' ', 'M', 'e', 'd', 'i', 'a', ' ', 'T', 'y', 'p', 'e' } },
+                            { "status", String::to_bytes( "415" ) },
+                            { "code", String::to_bytes( "40015" ) },
+                            { "type", String::to_bytes( "error" ) },
+                            { "title", String::to_bytes( "Unsupported Media Type" ) },
                             { "message", String::to_bytes( "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-encoding header sent in the request." ) }
                         } };
                         

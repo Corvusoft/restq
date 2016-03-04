@@ -66,10 +66,10 @@ namespace restq
                     const auto request = session->get_request( );
                     
                     static const list< multimap< string, Bytes > > values { {
-                            { "status", { '4', '1', '7' } },
-                            { "code", { '4', '0', '0', '1', '7' } },
-                            { "type", { 'e', 'r', 'r', 'o', 'r' } },
-                            { "title", { 'E', 'x', 'p', 'e', 'c', 't', 'a', 't', 'i', 'o', 'n', ' ', 'F', 'a', 'i', 'l', 'e', 'd' } ) },
+                            { "status", String::to_bytes( "417" ) },
+                            { "code", String::to_bytes( "40017" ) },
+                            { "type", String::to_bytes( "error" ) },
+                            { "title", String::to_bytes( "Expectation Failed" ) },
                             { "message", String::to_bytes( "The exchange is refusing to process the request because a request expectation failed; not supported." ) }
                         } };
                         

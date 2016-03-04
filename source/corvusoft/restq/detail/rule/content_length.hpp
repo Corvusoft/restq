@@ -89,10 +89,10 @@ namespace restq
                     else
                     {
                         static const list< multimap< string, Bytes > > values { {
-                                { "status", { '4', '1', '1' } },
-                                { "type", { 'e', 'r', 'r', 'o', 'r' } },
-                                { "code", { '4', '0', '0', '1', '1' } },
-                                { "title", { 'L', 'e', 'n', 'g', 't', 'h', ' ', 'R', 'e', 'q', 'u', 'i', 'r', 'e', 'd' } ) },
+                                { "status", String::to_bytes( "411" ) },
+                                { "type", String::to_bytes( "error" ) },
+                                { "code", String::to_bytes( "40011" ) },
+                                { "title", String::to_bytes( "Length Required" ) },
                                 { "message", String::to_bytes( "The exchange refuses to accept the request without a well defined content-length entity header." ) }
                             } };
                             
