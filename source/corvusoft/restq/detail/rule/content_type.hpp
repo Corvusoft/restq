@@ -2,38 +2,43 @@
  * Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTQ_DETAIL_RULE_CONTENT_ENCODING_H
-#define _RESTQ_DETAIL_RULE_CONTENT_ENCODING_H 1
+#ifndef _RESTQ_DETAIL_RULE_CONTENT_TYPE_H
+#define _RESTQ_DETAIL_RULE_CONTENT_TYPE_H 1
 
 //System Includes
 #include <map>
 #include <list>
+#include <regex>
 #include <string>
 #include <memory>
 #include <ciso646>
+#include <utility>
 #include <functional>
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/formatter.hpp>
 #include <corvusoft/restq/status_code.hpp>
 #include <corvusoft/restq/detail/rule/date.hpp>
 #include <corvusoft/restq/detail/rule/content_md5.hpp>
-#include <corvusoft/restq/detail/rule/content_type.hpp>
-#include <corvusoft/restq/detail/rule/content_length.hpp>
+#include <corvusoft/restq/detail/rule/content_language.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/string.hpp>
 #include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
+using std::map;
 using std::list;
+using std::regex;
 using std::string;
-using std::function;
 using std::multimap;
+using std::function;
+using std::to_string;
 using std::shared_ptr;
+using std::regex_constants::icase;
 
 //Project Namespaces
 
@@ -46,63 +51,83 @@ namespace restq
 {
     namespace detail
     {
-        class ContentEncoding final : public Rule
+        class ContentType final : public Rule
         {
             public:
-                ContentEncoding( void ) : Rule( )
+                ContentType( const map< string, shared_ptr< Formatter > >& formats ) : Rule( ),
+                    m_formats( formats )
                 {
                     return;
                 }
                 
-                virtual ~ContentEncoding( void )
+                virtual ~ContentType( void )
                 {
                     return;
                 }
                 
                 bool condition( const shared_ptr< Session > session ) final override
                 {
-                    return session->get_request( )->has_header( "Content-Encoding" );
+                    const auto request = session->get_request( );
+                    const auto method = request->get_method( String::lowercase );
+                    
+                    return method == "put" or method == "post" or request->has_header( "Content-Type" );
                 }
                 
                 void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     const auto request = session->get_request( );
-                    const auto encoding = request->get_header( "Content-Encoding", String::lowercase );
+                    const auto header = request->get_header( "Content-Type" );
                     
-                    if ( encoding.empty( ) or encoding == "identity" or encoding == "*" )
+                    for ( const auto& format : m_formats )
                     {
-                        return callback( session );
+                        if ( regex_match( header, regex( format.first, icase ) ) )
+                        {
+                            session->set( "content-format", format.second );
+                            return callback( session );
+                        }
                     }
                     
+                    unsupported_media_type_handler( session );
+                }
+                
+                static void unsupported_media_type_handler( const shared_ptr< Session > session )
+                {
                     static const list< multimap< string, Bytes > > values { {
-                            { "status", { '4', '1', '5' } },
                             { "type", { 'e', 'r', 'r', 'o', 'r' } },
                             { "code", { '4', '0', '0', '1', '5' } },
+                            { "status", { '4', '1', '5' } },
                             { "title", { 'U', 'n', 's', 'u', 'p', 'p', 'o', 'r', 't', 'e', 'd', ' ', 'M', 'e', 'd', 'i', 'a', ' ', 'T', 'y', 'p', 'e' } },
                             { "message", String::to_bytes( "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-encoding header sent in the request." ) }
                         } };
                         
-                    const bool echo = session->get( "echo" );
-                    const bool styled = session->get( "style" );
-                    const string accept = session->get( "accept" );
-                    const string charset = session->get( "charset" );
                     const shared_ptr< Formatter > formatter = session->get( "accept-format" );
-                    
-                    const auto body = formatter->compose( values, styled );
+                    const auto body = formatter->compose( values, session->get( "style" ) );
                     
                     const multimap< string, string > headers
                     {
+                        { "Date", Date::make( ) },
+                        { "Content-MD5", ContentMD5::make( body ) },
                         { "Content-Language", ContentLanguage::make( ) },
                         { "Content-Type",  ContentType::make( session ) },
-                        { "Content-Length", ContentLength::make( body ) },
-                        { "Content-MD5", ContentMD5::make( body ) },
-                        { "Date", Date::make( ) }
+                        { "Content-Length", ::to_string( body.size( ) ) }
                     };
                     
+                    const bool echo = session->get( "echo" );
                     ( echo ) ? session->close( UNSUPPORTED_MEDIA_TYPE, body, headers ) : session->close( UNSUPPORTED_MEDIA_TYPE, headers );
                 }
+                
+                static string make( const shared_ptr< Session >& session )
+                {
+                    const string charset = session->get( "charset", string( "utf-8" ) );
+                    const string accept = session->get( "accept", string( "text/plain" ) );
+                    
+                    return String::format( "%s; charset=%s", accept.data( ), charset.data( ) );
+                }
+                
+            private:
+                const map< string, shared_ptr< Formatter > >& m_formats;
         };
     }
 }
 
-#endif  /* _RESTQ_DETAIL_RULE_CONTENT_ENCODING_H */
+#endif  /* _RESTQ_DETAIL_RULE_CONTENT_TYPE_H */
