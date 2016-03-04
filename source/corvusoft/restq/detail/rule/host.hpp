@@ -71,9 +71,7 @@ namespace restq
                 
                 void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& ) final override
                 {
-                    static const list< multimap< string, Bytes > > values
-                    {
-                        {
+                    static const list< multimap< string, Bytes > > values {{
                             { "status", String::to_bytes( "400" ) },
                             { "code", String::to_bytes( "40000" ) },
                             { "type", String::to_bytes( "error" ) },
