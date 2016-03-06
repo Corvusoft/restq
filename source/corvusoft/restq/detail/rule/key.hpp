@@ -115,6 +115,34 @@ namespace restq
                     ( echo ) ? session->close( NOT_FOUND, body, headers ) : session->close( NOT_FOUND, headers );
                 }
                 
+                static void conflict_handler( const shared_ptr< Session >& session )
+                {
+                    static const list< multimap< string, Bytes > > values
+                    {
+                        {
+                            { "type", String::to_bytes( "error" ) },
+                            { "code", String::to_bytes( "40009" ) },
+                            { "status", String::to_bytes( "409" ) },
+                            { "title", String::to_bytes(  "Conflict" ) },
+                            { "message", String::to_bytes( "The exchange is refusing to process the request because of a conflict with an existing resource." ) }
+                        } };
+                        
+                    const shared_ptr< Formatter > composer = session->get( "accept-format" );
+                    const auto body = composer->compose( values, session->get( "style" ) );
+                    
+                    const multimap< string, string > headers
+                    {
+                        { "Date", Date::make( ) },
+                        { "Content-MD5", ContentMD5::make( body ) },
+                        { "Content-Language", ContentLanguage::make( ) },
+                        { "Content-Type",  ContentType::make( session ) },
+                        { "Content-Length", ContentLength::make( body ) }
+                    };
+                    
+                    const bool echo = session->get( "echo" );
+                    ( echo ) ? session->close( CONFLICT, body, headers ) : session->close( CONFLICT, headers );
+                }
+                
                 static const string pattern;
                 
                 static bool is_invalid( const Bytes& key )

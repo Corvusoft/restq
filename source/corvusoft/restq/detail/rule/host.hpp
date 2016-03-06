@@ -71,21 +71,22 @@ namespace restq
                 
                 void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& ) final override
                 {
-                    static const list< multimap< string, Bytes > > values {{
-                            { "status", String::to_bytes( "400" ) },
-                            { "code", String::to_bytes( "40000" ) },
-                            { "type", String::to_bytes( "error" ) },
-                            { "title", String::to_bytes( "Bad Request" ) },
-                            { "message", String::to_bytes( "The exchange is refusing to process the request because it was missing or contained a malformed Host request-header." ) }
+                    static const string message = "The exchange is refusing to process the request because it was missing or contained a malformed Host request-header.";
+                    bad_request_handler( message, session );
+                }
+                
+                static void bad_request_handler( const string& message, const shared_ptr< Session >& session )
+                {
+                    const list< multimap< string, Bytes > > values { {
+                            { "status", { '4', '0', '0' } },
+                            { "type", { 'e', 'r', 'r', 'o', 'r' } },
+                            { "code", { '4', '0', '0', '0', '0' } },
+                            { "title", { 'B', 'a', 'd', ' ', 'R', 'e', 'q', 'u', 'e', 's', 't' } },
+                            { "message", String::to_bytes( message ) }
                         } };
                         
-                    const bool echo = session->get( "echo" );
-                    const bool styled = session->get( "style" );
-                    const string accept = session->get( "accept" );
-                    const string charset = session->get( "charset" );
-                    const shared_ptr< Formatter > formatter = session->get( "accept-format" );
-                    
-                    const auto body = formatter->compose( values, styled );
+                    const shared_ptr< Formatter > composer = session->get( "accept-format" );
+                    const auto body = composer->compose( values, session->get( "style" ) );
                     
                     const multimap< string, string > headers
                     {
@@ -94,9 +95,9 @@ namespace restq
                         { "Content-Language", ContentLanguage::make( ) },
                         { "Content-Type",  ContentType::make( session ) },
                         { "Content-Length", ContentLength::make( body ) }
-                        
                     };
                     
+                    const bool echo = session->get( "echo" );
                     ( echo ) ? session->close( BAD_REQUEST, body, headers ) : session->close( BAD_REQUEST, headers );
                 }
         };
