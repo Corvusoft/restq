@@ -606,7 +606,6 @@ namespace restq
             }
             
             session->close( ACCEPTED, headers );
-            
             m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
         }
         
