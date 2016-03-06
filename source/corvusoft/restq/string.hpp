@@ -7,6 +7,7 @@
 
 //System Includes
 #include <string>
+#include <cstddef>
 
 //Project Includes
 
@@ -38,6 +39,12 @@ namespace restq
             static bool is_boolean( const std::string& value );
             
             static bool is_fraction( const std::string& value );
+            
+            static std::string trim( const std::string& value, const std::string& delimiter = " \t\r\n" );
+            
+            static std::string trim_leading( const std::string& value, const std::string& delimiter = " \t\r\n" );
+            
+            static std::string trim_lagging( const std::string& value, const std::string& delimiter = " \t\r\n" );
             
             //Getters
             

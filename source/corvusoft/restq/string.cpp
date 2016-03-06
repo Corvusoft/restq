@@ -13,6 +13,7 @@
 
 //System Namespaces
 using std::regex;
+using std::size_t;
 using std::string;
 using std::regex_match;
 
@@ -38,5 +39,35 @@ namespace restq
     {
         static const regex pattern( "^[\\-+]?([0-9]+\\.[0-9]+)$" );
         return regex_match( value, pattern );
+    }
+    
+    string String::trim( const string& value, const string& delimiter )
+    {
+        const auto result = StringImpl::trim_leading( value, delimiter );
+        return StringImpl::trim_lagging( result, delimiter );
+    }
+    
+    string String::trim_leading( const string& value, const string& delimiter )
+    {
+        size_t position = value.find_first_not_of( delimiter );
+        
+        if ( string::npos not_eq position )
+        {
+            return value.substr( position );
+        }
+        
+        return empty;
+    }
+    
+    string String::trim_lagging( const string& value, const string& delimiter )
+    {
+        size_t position = value.find_last_not_of( delimiter );
+        
+        if ( string::npos not_eq position )
+        {
+            return value.substr( 0, position + 1 );
+        }
+        
+        return empty;
     }
 }
