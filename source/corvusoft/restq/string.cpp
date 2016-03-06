@@ -43,8 +43,8 @@ namespace restq
     
     string String::trim( const string& value, const string& delimiter )
     {
-        const auto result = StringImpl::trim_leading( value, delimiter );
-        return StringImpl::trim_lagging( result, delimiter );
+        const auto result = trim_leading( value, delimiter );
+        return trim_lagging( result, delimiter );
     }
     
     string String::trim_leading( const string& value, const string& delimiter )

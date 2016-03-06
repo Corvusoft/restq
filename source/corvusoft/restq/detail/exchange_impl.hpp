@@ -139,6 +139,8 @@ namespace restq
                 
                 void remove_reserved_words( std::list< std::multimap< std::string, Bytes > >& values ) const;
                 
+                std::multimap< std::string, Bytes > make_message( const std::shared_ptr< restbed::Session >& session ) const;
+                
                 void setup_ruleset( void );
                 
                 void setup_queue_resource( void );
