@@ -87,17 +87,18 @@ namespace restq
                         }
                     }
                     
-                    unsupported_media_type_handler( session );
+                    static const string message = "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-type header sent in the request.";
+                    unsupported_media_type_handler( message, session );
                 }
                 
-                static void unsupported_media_type_handler( const shared_ptr< Session > session )
+                static void unsupported_media_type_handler( const string message, const shared_ptr< Session > session )
                 {
                     static const list< multimap< string, Bytes > > values { {
                             { "status", String::to_bytes( "415" ) },
                             { "code", String::to_bytes( "40015" ) },
                             { "type", String::to_bytes( "error" ) },
-                            { "title", String::to_bytes( "Unsupported Media Type" ) },
-                            { "message", String::to_bytes( "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-encoding header sent in the request." ) }
+                            { "message", String::to_bytes( message ) },
+                            { "title", String::to_bytes( "Unsupported Media Type" ) }
                         } };
                         
                     const shared_ptr< Formatter > formatter = session->get( "accept-format" );
