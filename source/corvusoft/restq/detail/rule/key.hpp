@@ -117,9 +117,7 @@ namespace restq
                 
                 static void conflict_handler( const shared_ptr< Session >& session )
                 {
-                    static const list< multimap< string, Bytes > > values
-                    {
-                        {
+                    static const list< multimap< string, Bytes > > values { {
                             { "type", String::to_bytes( "error" ) },
                             { "code", String::to_bytes( "40009" ) },
                             { "status", String::to_bytes( "409" ) },
