@@ -9,6 +9,8 @@ cmake_minimum_required( VERSION 2.8.10 )
 #
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example" )
 
+include_directories( SYSTEM ${json_INCLUDE} ${restq_INCLUDE} )
+
 #
 # Build
 #

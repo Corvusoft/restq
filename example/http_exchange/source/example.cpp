@@ -20,9 +20,6 @@ using std::shared_ptr;
 using std::make_shared;
 
 //Project Namespaces
-using STDOUTLogger;
-using JSONFormatter;
-using STLRepository;
 
 //External Namespaces
 using restq::Settings;
@@ -40,7 +37,7 @@ int main( const int, const char** )
     exchange->add_format( "^application/json|application/\\*|\\*/\\*$", format );
     exchange->set_ready_handler( [ &logger ]( Exchange& )
     {
-        logger->log( "Corvusoft's RestQ awaiting messages..." );
+        logger->log( STDOUTLogger::Level::INFO, "Corvusoft's RestQ awaiting messages..." );
     } );
     
     auto settings = make_shared< Settings >( );
