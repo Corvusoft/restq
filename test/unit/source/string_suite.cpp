@@ -55,3 +55,48 @@ TEST_CASE( "test if a string is in a real representation", "[string]" )
     REQUIRE( String::is_fraction( "ON" ) == false );
     REQUIRE( String::is_fraction( "()jhoigaowj)" ) == false );
 }
+
+TEST_CASE( "trim", "[string]" )
+{
+    REQUIRE( String::trim( "\n\r\t  Corvusoft Solutions\t\n\r " ) == "Corvusoft Solutions" );
+}
+
+TEST_CASE( "trim with empty", "[string]" )
+{
+    REQUIRE( String::trim( "" ) == "" );
+}
+
+TEST_CASE( "trim with no whitespace", "[string]" )
+{
+    REQUIRE( String::trim( "CorvusoftSolutions" ) == "CorvusoftSolutions" );
+}
+
+TEST_CASE( "trim leading", "[string]" )
+{
+    REQUIRE( String::trim_leading( "\n\r\t  Corvusoft Solutions\t\n\r " ) == "Corvusoft Solutions\t\n\r " );
+}
+
+TEST_CASE( "trim leading with empty", "[string]" )
+{
+    REQUIRE( String::trim_leading( "" ) == "" );
+}
+
+TEST_CASE( "trim leading with no whitespace", "[string]" )
+{
+    REQUIRE( String::trim_leading( "CorvusoftSolutions" ) == "CorvusoftSolutions" );
+}
+
+TEST_CASE( "trim lagging", "[string]" )
+{
+    REQUIRE( String::trim_lagging( "\n\r\t  Corvusoft Solutions\t\n\r " ) == "\n\r\t  Corvusoft Solutions" );
+}
+
+TEST_CASE( "trim lagging with empty", "[string]" )
+{
+    REQUIRE( String::trim_lagging( "" ) == "" );
+}
+
+TEST_CASE( "trim lagging with no whitespace", "[string]" )
+{
+    REQUIRE( String::trim_lagging( "CorvusoftSolutions" ) == "CorvusoftSolutions" );
+}
