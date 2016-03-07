@@ -21,7 +21,7 @@ HTTP message broker enabling software solutions to decouple, connect and scale. 
 
 ## Example
 
-See [exchange example](https://github.com/Corvusoft/restq/tree/master/example) for service implementation details.
+See the [exchange example](https://github.com/Corvusoft/restq/tree/master/example) for service implementation details.
 
 ###### Create Queue
 ```
@@ -58,7 +58,7 @@ Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
 
 ###### Create Subscription
 ```
-curl -XPOST http://localhost:1984/subscriptions --data '{ "data": { "endpoint": "http://localhost:1985" } }' -H'Content-type: application/json' -H'Accept: application/json' -H'Host: localhost:1984' -v
+curl -XPOST http://localhost:1984/subscriptions --data '{ "data": { "endpoint": "http://localhost:1985", "queues": [ "040ab769-e4ba-40bb-886b-37bb6800baed" ] } }' -H'Content-type: application/json' -H'Accept: application/json' -H'Host: localhost:1984' -v
 ```
 
 ```
