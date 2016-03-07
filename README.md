@@ -18,8 +18,38 @@ See [exchange example](https://github.com/Corvusoft/restq/tree/master/example) f
 
 ###### Create Queue
 ```
-curl -XPOST --data='' 'http://localhost:1984/queues'
+curl -XPOST http://localhost:1984/queues --data '{ "data": { "name":"biz-logic-events" } }' -H'Content-Type: application/json' -H'Accept: application/json' -H'Host: localhost:1984' -v
 ```
+
+```
+HTTP/1.1 201 Created
+Expires: 0
+Pragma: no-cache
+Connection: close
+Accept-Ranges: none
+Content-Length: 192
+Server: corvusoft/restq
+ETag: ""58929204637930416000""
+Allow: GET,PUT,HEAD,DELETE,OPTIONS
+Date: Mon, 07 Mar 2016 02:54:57 GMT
+Content-MD5: 1FDBFBECFF809C2EC325ACDC83EF7A26
+Content-Type: application/json; charset=utf-8
+Last-Modified: Mon, 07 Mar 2016 02:54:57 GMT
+Cache-Control: private,max-age=0,no-cache,no-store
+Location: http://localhost:1984/queues/040ab769-e4ba-40bb-886b-37bb6800baed
+Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
+
+{ "data": {
+    "type":"queue",
+    "modified": 1457319297,
+    "name":"biz-logic-events",
+    "origin":"[::ffff:127.0.0.1]:61957",
+    "revision":"\"58929204637930416000\"",
+    "key": "040ab769-e4ba-40bb-886b-37bb6800baed"
+  }
+}
+```
+
 ###### Create Subscription
 ```
 curl -XPOST --data='' 'http://localhost:1984/subscriptions'
