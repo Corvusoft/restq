@@ -10,3 +10,6 @@
 [submodule "dependency/md5"]
 	path = dependency/md5
 	url = https://github.com/corvusoft/md5-dependency
+[submodule "dependency/json"]
+	path = dependency/json
+	url = https://github.com/Corvusoft/json-dependency

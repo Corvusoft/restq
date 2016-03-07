@@ -50,6 +50,7 @@ else ( )
 endif ( )
 
 if ( BUILD_EXAMPLES )
+    find_package( json REQUIRED )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/example" )
 endif ( )
 
