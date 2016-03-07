@@ -93,7 +93,7 @@ namespace restq
                 
                 static void unsupported_media_type_handler( const string message, const shared_ptr< Session > session )
                 {
-                    static const list< multimap< string, Bytes > > values { {
+                    const list< multimap< string, Bytes > > values { {
                             { "status", String::to_bytes( "415" ) },
                             { "code", String::to_bytes( "40015" ) },
                             { "type", String::to_bytes( "error" ) },
