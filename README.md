@@ -160,7 +160,7 @@ The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tr
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |             HTTP 1.0/1.1 Compliance             |     complete    |
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |              Publish/Subscribe                  |     complete    |
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |         Custom Formatters (JSON,YAML,XML)       |     complete    |
-|   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |      Multi-Threaded service capability          |      pending    |
+|   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |      Multi-Threaded service capability          |     complete    |
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |       Bind Service to specific Address          |      pending    |
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |              API Documentation                  |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |             Secure Socket Layer                 |      pending    |
@@ -169,6 +169,7 @@ The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tr
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |                 Worker Queue                    |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |                 Queue Features                  |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |            Subscription Features                |      pending    |
+|   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |             Client Functionality                |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |                 Compression                     |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |             Custom Authentication               |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |               Custom Encodings                  |      pending    |
