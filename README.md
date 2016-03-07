@@ -8,7 +8,7 @@ HTTP message broker enabling software solutions to decouple, connect and scale. 
 
 | Feature | Description |
 |---------|-------------| 
-| Compliance | Flexibility to address HTTP 1.0/1.1+ compliance. |
+| HTTP API | Configuration of the broker and message generation is all done via a RESTful application programming interface. |
 | Community  | Active, vibrant and energetic open source community. |
 | Support | Commercial support is available from [Corvusoft](http://www.corvusoft.co.uk). |
 
@@ -134,7 +134,7 @@ Please submit all enhancements, proposals, and defects via the [issue](http://gi
 
 ## Test
 
-The [lettuce.py](http://lettuce.it) behaviour driven development tool is required to run this suite of tests.
+The [lettuce.py](http://lettuce.it) behaviour driven development tool is required to run this test suite.
 
 ```bash
 cd restq
@@ -158,10 +158,11 @@ The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tr
 |:-------------:|:-----------------------------------------------:|:---------------:| 
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |         Asynchrounous HTTP Service              |     complete    |
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |             HTTP 1.0/1.1 Compliance             |     complete    |
-|   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |              Publish/Subscribe                  |     complete    |
-|   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |         Custom Formatters (JSON,YAML,XML)       |     complete    |
+|   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |                PubSub Pattern                   |     complete    |
+|   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |               Custom Formatters                 |     complete    |
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |      Multi-Threaded service capability          |     complete    |
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |       Bind Service to specific Address          |     complete    |
+|   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |           Query/Subscription Search             |     complete    |
 |   [1.0](https://github.com/Corvusoft/restq/milestones/1.0)  |              API Documentation                  |    development  |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |             Secure Socket Layer                 |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |     Simultaneous Network Ports (HTTP/HTTPS)     |      pending    |
