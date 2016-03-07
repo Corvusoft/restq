@@ -8,7 +8,14 @@ HTTP message broker enabling software solutions to decouple, connect and scale. 
 
 | Feature | Description |
 |---------|-------------| 
-| HTTP API | Configuration of the broker and message generation is all done via a RESTful application programming interface. |
+| Open Standards | Configuration of the broker and message generation is all done via a HTTP RESTful application programming interface. |
+| Discovery | The ability to query and discover Queues/Subscriptions of importance.  |
+| Decoration | Queues/Subscriptions can be annotated with properties to tag, categorise and aid discovery. |
+| PubSub  | Support for the Publish-Subscribe messaging pattern. |
+| Logging |	Customise how and where log entries are created. |
+| IPv4/IPv6 |	Internet Protocol Version 4/6 Network Support. |
+| Architecture | Asynchronous single or multi-threaded architecture, capable of addressing the C10K problem. |
+| Address Binding |	Bind HTTP and/or HTTPS services to separate IP addresses. |
 | Community  | Active, vibrant and energetic open source community. |
 | Support | Commercial support is available from [Corvusoft](http://www.corvusoft.co.uk). |
 
