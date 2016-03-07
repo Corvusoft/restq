@@ -12,7 +12,11 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example" )
 #
 # Build
 #
-add_executable( http_exchange http_exchange/source/example.cpp )
+add_executable( http_exchange http_exchange/source/example.cpp
+                              http_exchange/source/stdout_logger.cpp
+                              http_exchange/source/json_formatter.cpp
+                              http_exchange_source/stl_repository.cpp )
+
 target_link_libraries( http_exchange ${CMAKE_PROJECT_NAME} )
 
 #
