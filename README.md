@@ -105,7 +105,7 @@ Location: /messages/6dbb7894-3f04-4e71-97c0-aefde07fefb5
 Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
 ```
 
-Given you have a consumer waiting on the subscription endpoint value (http://localhost:1985). You'll see the message dispatched. See [documentation](https://github.com/Corvusoft/restq/tree/master/documentation) and the [acceptance tests suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features) for further details and configurations.
+Given you have a consumer waiting on the subscription endpoint (http://localhost:1985). You'll see the message dispatched. See [documentation](https://github.com/Corvusoft/restq/tree/master/documentation) and the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features) for further details and configurations.
 
 ## License
 
