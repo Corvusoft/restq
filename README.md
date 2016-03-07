@@ -8,13 +8,20 @@ HTTP message broker enabling software solutions to decouple, connect and scale. 
 
 | Feature | Description |
 |---------|-------------| 
-| HTTP API | Configuration of the broker and message generation is all done via a RESTful application programming interface. |
+| Open Standards | Configuration of the broker and message generation is all done via a HTTP RESTful application programming interface. |
+| Discovery | The ability to query and discover Queues/Subscriptions of importance.  |
+| Decoration | Queues/Subscriptions can be annotated with properties to tag, categorise and aid discovery. |
+| PubSub  | Support for the Publish-Subscribe messaging pattern. |
+| Logging |	Customise how and where log entries are created. |
+| IPv4/IPv6 |	Internet Protocol Version 4/6 Network Support. |
+| Architecture | Asynchronous single or multi-threaded architecture, capable of addressing the C10K problem. |
+| Address Binding |	Bind HTTP and/or HTTPS services to separate IP addresses. |
 | Community  | Active, vibrant and energetic open source community. |
 | Support | Commercial support is available from [Corvusoft](http://www.corvusoft.co.uk). |
 
 ## Example
 
-See [exchange example](https://github.com/Corvusoft/restq/tree/master/example) for service implementation details.
+See the [exchange example](https://github.com/Corvusoft/restq/tree/master/example) for service implementation details.
 
 ###### Create Queue
 ```
@@ -51,7 +58,7 @@ Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
 
 ###### Create Subscription
 ```
-curl -XPOST http://localhost:1984/subscriptions --data '{ "data": { "endpoint": "http://localhost:1985" } }' -H'Content-type: application/json' -H'Accept: application/json' -H'Host: localhost:1984' -v
+curl -XPOST http://localhost:1984/subscriptions --data '{ "data": { "endpoint": "http://localhost:1985", "queues": [ "040ab769-e4ba-40bb-886b-37bb6800baed" ] } }' -H'Content-type: application/json' -H'Accept: application/json' -H'Host: localhost:1984' -v
 ```
 
 ```
