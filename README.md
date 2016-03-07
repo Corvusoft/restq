@@ -83,8 +83,29 @@ Location: http://localhost:1984/subscriptions/3a627a94-66da-45e7-a7fb-c700fd877e
 ```
 ###### Create Message
 ```
-curl -XPOST --data='' 'http://localhost:1984/messages'
+curl -XPOST --data 'Payroll server is low on disk space.' 'http://localhost:1984/queues/040ab769-e4ba-40bb-886b-37bb6800baed/messages' -H'Content-Type: text/plain' -H'Accept: application/json' -H'Host: localhost:1984' -v
 ```
+
+or
+```
+curl -XPOST --data 'Payroll server is low on disk space.' 'http://localhost:1984/messages?name=biz-logic-events' -H'Content-Type: text/plain' -H'Accept: application/json' -H'Host: localhost:1984' -v
+```
+
+```
+HTTP/1.1 202 Accepted
+Expires: 0
+Allow: OPTIONS
+Pragma: no-cache
+Connection: close
+Accept-Ranges: none
+Server: corvusoft/restq
+Date: Mon, 07 Mar 2016 03:34:06 GMT
+Cache-Control: private,max-age=0,no-cache,no-store
+Location: /messages/6dbb7894-3f04-4e71-97c0-aefde07fefb5
+Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
+```
+
+Given you have a consumer waiting on the subscription endpoint value (http://localhost:1985). You'll see the message dispatched. See [documentation](https://github.com/Corvusoft/restq/tree/master/documentation) and the [acceptance tests suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features) for further details and configurations.
 
 ## License
 
