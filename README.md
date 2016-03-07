@@ -54,6 +54,19 @@ You will now find all required components installed in the distribution folder.
 
 Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restq/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/questions/ask) tagged [#restq](http://stackoverflow.com/questions/tagged/restq).
 
+## Test
+
+The [lettuce.py](http://lettuce.it) behaviour driven development tool is required to run this suite of tests.
+
+```bash
+cd restq
+./distribution/example/http_example
+
+lettuce test/acceptance
+```
+
+The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features). They're also a good starting point for developers wishing to integrate with RestQ.
+
 ## Minimum Requirements
 
 |     Resource   |                   Requirement                   |
