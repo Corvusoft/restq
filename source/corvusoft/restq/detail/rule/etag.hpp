@@ -76,7 +76,7 @@ namespace restq
                         etag.append( minimum_length - etag.length( ), '0' );
                     }
                     
-                    return String::format( "\"%.*s\"", etag.size( ), etag.data( ) );
+                    return String::format( "%s", etag.data( ) );
                 }
                 
                 static string make( const list< multimap< string, Bytes > >& values )
@@ -88,7 +88,7 @@ namespace restq
                         etag = String::to_string( values.back( ).lower_bound( "revision" )->second );
                     }
                     
-                    return make( etag );
+                    return "\"" + etag + "\"";
                 }
         };
     }
