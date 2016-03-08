@@ -20,7 +20,7 @@ Feature: Limit Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "172"
+        And I should see a "Content-Length" header value "189"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -71,7 +71,7 @@ Feature: Limit Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "506"
+        And I should see a "Content-Length" header value "557"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -215,7 +215,7 @@ Feature: Limit Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "172"
+        And I should see a "Content-Length" header value "189"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -266,7 +266,7 @@ Feature: Limit Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "339"
+        And I should see a "Content-Length" header value "373"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value

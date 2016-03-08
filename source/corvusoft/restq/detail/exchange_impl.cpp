@@ -16,7 +16,6 @@
 #include "corvusoft/restq/repository.hpp"
 #include "corvusoft/restq/status_code.hpp"
 #include "corvusoft/restq/detail/ruleset.hpp"
-#include "corvusoft/restq/detail/system_impl.hpp"
 #include "corvusoft/restq/detail/exchange_impl.hpp"
 
 //External Includes
@@ -49,6 +48,7 @@ using std::chrono::system_clock;
 //Project Namespaces
 
 //External Namespaces
+using loadis::System;
 using restbed::Http;
 using restbed::Request;
 using restbed::Service;
@@ -72,6 +72,7 @@ namespace restq
         
         ExchangeImpl::ExchangeImpl( void ) : m_boot_time( 0 ),
             m_logger( nullptr ),
+            m_system( new System ),
             m_repository( nullptr ),
             m_settings( nullptr ),
             m_service( nullptr ),
@@ -199,6 +200,7 @@ namespace restq
             resource.erase( "key" );
             resource.erase( "type" );
             resource.erase( "origin" );
+            resource.erase( "created" );
             resource.erase( "revision" );
             resource.erase( "modified" );
         }
@@ -217,11 +219,14 @@ namespace restq
             const auto request = session->get_request( );
             const auto body = request->get_body( );
             
+            const auto message_datestamp = String::to_bytes( Date::make( ) );
+            
             multimap< string, Bytes > message;
             message.insert( make_pair( "key", key ) );
             message.insert( make_pair( "data", body ) );
             message.insert( make_pair( "type", MESSAGE ) );
-            message.insert( make_pair( "modified", String::to_bytes( Date::make( ) ) ) );
+            message.insert( make_pair( "created", message_datestamp ) );
+            message.insert( make_pair( "modified", message_datestamp ) );
             message.insert( make_pair( "author", String::to_bytes( "not implemented" ) ) );
             message.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
             message.insert( make_pair( "size", String::to_bytes( ContentLength::make( body ) ) ) );
@@ -645,11 +650,14 @@ namespace restq
                 
                 remove_reserved_words( resource );
                 
+                const auto datastamp = String::to_bytes( ::to_string( time( 0 ) ) );
+                
                 resource.insert( make_pair( "key", key ) );
                 resource.insert( make_pair( "type", type ) );
+                resource.insert( make_pair( "created", datastamp ) );
+                resource.insert( make_pair( "modified", datastamp ) );
                 resource.insert( make_pair( "revision", ETag::make( ) ) );
                 resource.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
-                resource.insert( make_pair( "modified", String::to_bytes( ::to_string( time( 0 ) ) ) ) );
             }
             
             const auto status = m_repository->create( resources );
@@ -818,8 +826,8 @@ namespace restq
                 { "Date", Date::make( ) },
                 { "Uptime", ::to_string( boot_time ) },
                 { "Workers", ::to_string( m_settings->get_worker_limit( ) ) },
-                { "CPU", String::format( "%.1f%%", SystemImpl::get_cpu_load( ) ) },
-                { "Memory", String::format( "%.1f%%", SystemImpl::get_memory_load( ) ) },
+                { "CPU", String::format( "%.1f%%", m_system->get_cpu_load( ) ) },
+                { "Memory", String::format( "%.1f%%", m_system->get_memory_load( ) ) },
                 { "Queues", ::to_string( m_repository->count( { { "type", QUEUE } } ) ) },
                 { "Messages", ::to_string( m_repository->count( { { "type", MESSAGE } } ) ) },
                 { "Subscriptions", ::to_string( m_repository->count( { { "type", SUBSCRIPTION } } ) ) }
@@ -937,7 +945,7 @@ namespace restq
         {
             const string message = error.what( );
             
-            log( Logger::FATAL, String::format( "Internal Server Error: %s\n", message.data( ) ) );
+            log( Logger::FATAL, String::format( "Internal Server Error: %s", message.data( ) ) );
             
             const multimap< string, string > headers
             {

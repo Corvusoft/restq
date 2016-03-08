@@ -19,7 +19,7 @@ Feature: Styled Output
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "250"
+        And I should see a "Content-Length" header value "277"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -69,7 +69,7 @@ Feature: Styled Output
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "178"
+        And I should see a "Content-Length" header value "195"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -139,7 +139,7 @@ Feature: Styled Output
         And I should see a "Date" header value
         And I should see a "Content-MD5" header value
         And I should see a "Server" header value "corvusoft/restq"
-        And I should see a "Content-Length" header value "258"
+        And I should see a "Content-Length" header value "285"
         And I should see a "Connection" header value "close"
         And I should see a "Allow" header value "GET,PUT,HEAD,DELETE,OPTIONS"
         And I should see a "Accept-Ranges" header value "none"
@@ -195,7 +195,7 @@ Feature: Styled Output
         And I should see a "Date" header value
         And I should see a "Content-MD5" header value
         And I should see a "Server" header value "corvusoft/restq"
-        And I should see a "Content-Length" header value "186"
+        And I should see a "Content-Length" header value "203"
         And I should see a "Connection" header value "close"
         And I should see a "Allow" header value "GET,PUT,HEAD,DELETE,OPTIONS"
         And I should see a "Accept-Ranges" header value "none"

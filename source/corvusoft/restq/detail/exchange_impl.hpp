@@ -19,6 +19,7 @@
 #include <corvusoft/restq/logger.hpp>
 
 //External Includes
+#include <corvusoft/loadis/system.hpp>
 #include <corvusoft/restbed/rule.hpp>
 #include <corvusoft/restbed/service.hpp>
 #include <corvusoft/restbed/session.hpp>
@@ -69,6 +70,8 @@ namespace restq
                 std::time_t m_boot_time;
                 
                 std::shared_ptr< Logger > m_logger;
+                
+                std::shared_ptr< loadis::System > m_system;
                 
                 std::shared_ptr< Repository > m_repository;
                 
