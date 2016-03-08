@@ -1,6 +1,6 @@
 # Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.
 
-project( "examples" )
+project( "example" )
 
 cmake_minimum_required( VERSION 2.8.10 )
 
@@ -14,12 +14,12 @@ include_directories( SYSTEM ${json_INCLUDE} ${restq_INCLUDE} )
 #
 # Build
 #
-add_executable( http_exchange http_exchange/source/example.cpp
-                              http_exchange/source/stdout_logger.cpp
-                              http_exchange/source/json_formatter.cpp
-                              http_exchange/source/stl_repository.cpp )
+add_executable( exchange exchange/source/example.cpp
+                         exchange/source/stdout_logger.cpp
+                         exchange/source/json_formatter.cpp
+                         exchange/source/stl_repository.cpp )
 
-target_link_libraries( http_exchange ${CMAKE_PROJECT_NAME} )
+target_link_libraries( exchange ${CMAKE_PROJECT_NAME} )
 
 #
 # Install
