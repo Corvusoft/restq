@@ -25,9 +25,11 @@ message( "   ${Blue}Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.${Re
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
 
 find_package( md5 REQUIRED )
+find_package( loadis REQUIRED )
 find_package( restbed REQUIRED )
 find_package( kashmir REQUIRED )
-include_directories( SYSTEM ${md5_INCLUDE} ${restbed_INCLUDE} ${kashmir_INCLUDE} )
+
+include_directories( SYSTEM ${md5_INCLUDE} ${loadis_INCLUDE} ${restbed_INCLUDE} ${kashmir_INCLUDE} )
 
 if ( BUILD_SSL )
     find_package( openssl REQUIRED )
