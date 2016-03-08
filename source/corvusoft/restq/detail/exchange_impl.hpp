@@ -33,9 +33,9 @@ namespace restq
 {
     //Forward Declarations
     class Logger;
-    class Encoder;
     class Settings;
     class Exchange;
+    class Formatter;
     class Repository;
     
     namespace detail
