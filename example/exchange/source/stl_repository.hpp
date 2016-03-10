@@ -16,6 +16,7 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/settings.hpp>
+#include <corvusoft/restq/resource.hpp>
 #include <corvusoft/restq/repository.hpp>
 
 //External Includes
@@ -43,16 +44,16 @@ class STLRepository final : public restq::Repository
         
         void start( const std::shared_ptr< const restq::Settings >& settings );
         
-        void create( const std::list< std::multimap< std::string, restq::Bytes > > values,
+        void create( const restq::Resources values,
                      const std::shared_ptr< restq::Session > session,
-                     const std::function< void ( const int, const std::list< std::multimap< std::string, restq::Bytes > >, const std::shared_ptr< restq::Session > ) >& callback );
+                     const std::function< void ( const int, const restq::Resources, const std::shared_ptr< restq::Session > ) >& callback );
                      
         void read( const std::shared_ptr< restq::Session > session,
-                   const std::function< void ( const int, const std::list< std::multimap< std::string, restq::Bytes > >, const std::shared_ptr< restq::Session > ) >& callback );
+                   const std::function< void ( const int, const restq::Resources, const std::shared_ptr< restq::Session > ) >& callback );
                    
-        void update( const std::multimap< std::string, restq::Bytes > changeset,
+        void update( const restq::Resource changeset,
                      const std::shared_ptr< restq::Session > session,
-                     const std::function< void (  const int, const std::list< std::multimap< std::string, restq::Bytes > >, const std::shared_ptr< restq::Session > ) >& callback );
+                     const std::function< void (  const int, const restq::Resources, const std::shared_ptr< restq::Session > ) >& callback );
                      
         void destroy( const std::shared_ptr< restq::Session > session, const std::function< void ( const int, const std::shared_ptr< restq::Session > ) >& callback );
         
@@ -99,7 +100,7 @@ class STLRepository final : public restq::Repository
         STLRepository& operator =( const STLRepository& value ) = delete;
         
         //Properties
-        std::list< std::multimap< std::string, restq::Bytes > > m_resources;
+        restq::Resources m_resources;
 };
 
 #endif  /* _STL_REPOSITORY_H */

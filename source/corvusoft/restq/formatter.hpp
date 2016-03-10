@@ -12,6 +12,7 @@
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/resource.hpp>
 
 //External Includes
 
@@ -35,11 +36,11 @@ namespace restq
             //Constructors
             
             //Functionality
-            virtual std::list< std::multimap< std::string, Bytes > > parse( const Bytes& value ) = 0;
+            virtual Resources parse( const Bytes& value ) = 0;
             
-            virtual bool try_parse( const Bytes& value, std::list< std::multimap< std::string, Bytes > >& values ) noexcept = 0;
+            virtual bool try_parse( const Bytes& value, Resources& values ) noexcept = 0;
             
-            virtual Bytes compose( const std::list< std::multimap< std::string, Bytes > >& values, const bool styled = false ) = 0;
+            virtual Bytes compose( const Resources& values, const bool styled = false ) = 0;
             
             //Getters
             virtual const std::string get_mime_type( void ) const = 0;

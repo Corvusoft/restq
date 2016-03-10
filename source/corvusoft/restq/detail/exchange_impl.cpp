@@ -163,7 +163,7 @@ namespace restq
             return invalid_headers.count( String::lowercase( header.first ) ) == 0;
         }
         
-        bool ExchangeImpl::is_invalid( const multimap< string, Bytes >& value, const Bytes& type ) const
+        bool ExchangeImpl::is_invalid( const Resource& value, const Bytes& type ) const
         {
             if ( type not_eq SUBSCRIPTION )
             {
@@ -192,7 +192,7 @@ namespace restq
             return false;
         }
         
-        void ExchangeImpl::remove_reserved_words( multimap< string, Bytes >& resource ) const
+        void ExchangeImpl::remove_reserved_words( Resource& resource ) const
         {
             resource.erase( "key" );
             resource.erase( "type" );
@@ -202,7 +202,7 @@ namespace restq
             resource.erase( "modified" );
         }
         
-        void ExchangeImpl::remove_reserved_words( list< multimap< string, Bytes > >& resources ) const
+        void ExchangeImpl::remove_reserved_words( Resources& resources ) const
         {
             for ( auto& resource : resources )
             {
@@ -210,7 +210,7 @@ namespace restq
             }
         }
         
-        multimap< string, Bytes > ExchangeImpl::make_message( const shared_ptr< Session >& session ) const
+        Resource ExchangeImpl::make_message( const shared_ptr< Session >& session ) const
         {
             const auto key = Key::make( );
             const auto request = session->get_request( );
@@ -218,7 +218,7 @@ namespace restq
             
             const auto message_datestamp = String::to_bytes( Date::make( ) );
             
-            multimap< string, Bytes > message;
+            Resource message;
             message.insert( make_pair( "key", key ) );
             message.insert( make_pair( "data", body ) );
             message.insert( make_pair( "type", MESSAGE ) );
@@ -241,7 +241,7 @@ namespace restq
             }
             
             string query = String::empty;
-            multimap< string, Bytes > parameters = session->get( "filtered_parameters" );
+            Resource parameters = session->get( "filtered_parameters" );
             
             for ( const auto parameter : parameters )
             {
@@ -272,7 +272,7 @@ namespace restq
         
         void ExchangeImpl::setup_queue_resource( void )
         {
-            auto resource = make_shared< Resource >( );
+            auto resource = make_shared< restbed::Resource >( );
             resource->set_path( "/queues/{key: " + Key::pattern + "}" );
             resource->add_rule( m_key_rule );
             resource->add_rule( m_content_type_rule );
@@ -288,7 +288,7 @@ namespace restq
         
         void ExchangeImpl::setup_queues_resource( void )
         {
-            auto resource = make_shared< Resource >( );
+            auto resource = make_shared< restbed::Resource >( );
             resource->set_path( "/queues" );
             resource->add_rule( m_keys_rule );
             resource->add_rule( m_paging_rule );
@@ -305,7 +305,7 @@ namespace restq
         
         void ExchangeImpl::setup_message_resource( void )
         {
-            auto resource = make_shared< Resource >( );
+            auto resource = make_shared< restbed::Resource >( );
             resource->set_path( "/messages/{key: " + Key::pattern + "}" );
             resource->add_rule( m_key_rule );
             resource->set_method_handler( "OPTIONS", bind( &ExchangeImpl::options_resource_handler, this, _1, MESSAGE, "OPTIONS" ) );
@@ -315,7 +315,7 @@ namespace restq
         
         void ExchangeImpl::setup_messages_resource( void )
         {
-            auto resource = make_shared< Resource >( );
+            auto resource = make_shared< restbed::Resource >( );
             resource->set_paths( { "/messages", "/queues/{key: " + Key::pattern + "}/messages" } );
             resource->add_rule( m_key_rule );
             resource->add_rule( m_keys_rule );
@@ -327,7 +327,7 @@ namespace restq
         
         void ExchangeImpl::setup_asterisk_resource( void )
         {
-            auto resource = make_shared< Resource >( );
+            auto resource = make_shared< restbed::Resource >( );
             resource->set_path( "\\*" );
             resource->set_method_handler( "OPTIONS", bind( &ExchangeImpl::asterisk_resource_handler, this, _1 ) );
             
@@ -336,7 +336,7 @@ namespace restq
         
         void ExchangeImpl::setup_subscription_resource( void )
         {
-            auto resource = make_shared< Resource >( );
+            auto resource = make_shared< restbed::Resource >( );
             resource->set_path( "/subscriptions/{key: " + Key::pattern + "}" );
             resource->add_rule( m_key_rule );
             resource->add_rule( m_content_type_rule );
@@ -352,7 +352,7 @@ namespace restq
         
         void ExchangeImpl::setup_subscriptions_resource( void )
         {
-            auto resource = make_shared< Resource >( );
+            auto resource = make_shared< restbed::Resource >( );
             resource->set_path( "/subscriptions" );
             resource->add_rule( m_keys_rule );
             resource->add_rule( m_paging_rule );
@@ -377,10 +377,10 @@ namespace restq
             const pair< size_t, size_t > range = { 0, 1 };
             session->set( "paging", range );
             
-            const multimap< string, Bytes > filters = { { "type", STATE }, { "status", PENDING } };
+            const Resource filters = { { "type", STATE }, { "status", PENDING } };
             session->set( "filters", filters );
             
-            m_repository->read( session, [ this ]( const int status, const list< multimap< string, Bytes > > states, shared_ptr< Session > session )
+            m_repository->read( session, [ this ]( const int status, const Resources states, shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
                 {
@@ -400,10 +400,10 @@ namespace restq
                 const pair< size_t, size_t > range = { 0, 1 };
                 session->set( "paging", range );
                 
-                const multimap< string, Bytes > filters = { { "type", STATE }, { "status", PENDING } };
+                const Resource filters = { { "type", STATE }, { "status", PENDING } };
                 session->set( "filters", filters );
                 
-                m_repository->update( { { "status", INFLIGHT } }, session, [ this, state_key ]( const int status, const list< multimap< string, Bytes > > states, shared_ptr< Session > session )
+                m_repository->update( { { "status", INFLIGHT } }, session, [ this, state_key ]( const int status, const Resources states, shared_ptr< Session > session )
                 {
                     if ( status not_eq OK )
                     {
@@ -423,10 +423,10 @@ namespace restq
                     const pair< size_t, size_t > range = { 0, 1 };
                     session->set( "paging", range );
                     
-                    const multimap< string, Bytes > filters = { { "type", MESSAGE } };
+                    const Resource filters = { { "type", MESSAGE } };
                     session->set( "filters", filters );
                     
-                    m_repository->read( session, [ this, state_key, states ]( const int status, const list< multimap< string, Bytes > > messages, shared_ptr< Session > session )
+                    m_repository->read( session, [ this, state_key, states ]( const int status, const Resources messages, shared_ptr< Session > session )
                     {
                         if ( status not_eq OK or messages.empty( ) )
                         {
@@ -434,7 +434,7 @@ namespace restq
                             vector< string > keys = { state_key };
                             session->set( "keys", keys );
                             
-                            const multimap< string, Bytes > filters = { { "type", STATE } };
+                            const Resource filters = { { "type", STATE } };
                             session->set( "filters", filters );
                             
                             return m_repository->destroy( session, [ ]( const int, shared_ptr< Session > )
@@ -492,7 +492,7 @@ namespace restq
                         Http::close( request );
                         
                         string log_message = "";
-                        multimap< string, Bytes > change;
+                        Resource change;
                         const auto subscription_key = String::to_string( states.back( ).lower_bound( "subscription-key" )->second );
                         const auto message_key = String::to_string( states.back( ).lower_bound( "message-key" )->second );
                         
@@ -517,11 +517,11 @@ namespace restq
                         keys.push_back( state_key );
                         session->set( "keys", keys );
                         
-                        multimap< string, Bytes > filters;
+                        Resource filters;
                         filters.insert( make_pair( "type", STATE ) );
                         session->set( "filters", filters );
                         
-                        m_repository->update( change, session, [ this ]( const int status, const list< multimap< string, Bytes > >, shared_ptr< Session > session )
+                        m_repository->update( change, session, [ this ]( const int status, const Resources, shared_ptr< Session > session )
                         {
                             if ( status not_eq OK )
                             {
@@ -549,7 +549,7 @@ namespace restq
             }
             
             vector< string > keys = session->get( "keys" );
-            multimap< string, Bytes > filters = session->get( "filters" );
+            Resource filters = session->get( "filters" );
             
             if ( request->has_path_parameter( "key" ) )
             {
@@ -564,7 +564,7 @@ namespace restq
             session->set( "filters", filters );
             session->set( "paging", Paging::default_value );
             
-            m_repository->read( session, [ this ]( const int status, const list< multimap< string, Bytes > > queues, const shared_ptr< Session > session )
+            m_repository->read( session, [ this ]( const int status, const Resources queues, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
                 {
@@ -573,7 +573,7 @@ namespace restq
                 
                 session->set( "keys", vector< string >( ) );
                 
-                multimap< string, Bytes > filters;
+                Resource filters;
                 filters.insert( make_pair( "type", SUBSCRIPTION ) );
                 
                 for ( const auto& queue : queues )
@@ -583,7 +583,7 @@ namespace restq
                 
                 session->set( "filters", filters );
                 
-                m_repository->read( session, [ queues, this ]( const int status, const list< multimap< string, Bytes > > subscriptions, const shared_ptr< Session > session )
+                m_repository->read( session, [ queues, this ]( const int status, const Resources subscriptions, const shared_ptr< Session > session )
                 {
                     if ( status not_eq 200 )
                     {
@@ -595,7 +595,7 @@ namespace restq
                     const auto message = make_message( session );
                     const auto message_key = make_pair( "message-key", message.lower_bound( "key" )->second );
                     
-                    list< multimap< string, Bytes > > states;
+                    Resources states;
                     
                     for ( const auto& subscription : subscriptions )
                     {
@@ -611,7 +611,7 @@ namespace restq
                             {
                                 if ( property->second == queue_key ) //lowercase this see keycase test case as well
                                 {
-                                    multimap< string, Bytes > state;
+                                    Resource state;
                                     state.insert( make_pair( "type", STATE ) );
                                     state.insert( make_pair( "key", Key::make( ) ) );
                                     state.insert( make_pair( "status", PENDING ) );
@@ -627,14 +627,14 @@ namespace restq
                     
                     if ( not states.empty( ) )
                     {
-                        m_repository->create( { message }, session, [ states, this, message_key ]( const int status, const list< multimap< string, Bytes > >, const shared_ptr< Session > session )
+                        m_repository->create( { message }, session, [ states, this, message_key ]( const int status, const Resources, const shared_ptr< Session > session )
                         {
                             if ( status not_eq CREATED )
                             {
                                 return session->close( 500 );
                             }
                             
-                            m_repository->create( states, session, [ this, message_key ]( const int status, const list< multimap< string, Bytes > >, const shared_ptr< Session > session )
+                            m_repository->create( states, session, [ this, message_key ]( const int status, const Resources, const shared_ptr< Session > session )
                             {
                                 if ( status not_eq CREATED )
                                 {
@@ -679,7 +679,7 @@ namespace restq
         
         void ExchangeImpl::create_resource_handler( const shared_ptr< Session > session, const Bytes& type )
         {
-            list< multimap< string, Bytes > > resources;
+            Resources resources;
             const shared_ptr< Formatter > parser = session->get( "content-format" );
             const bool parsing_success = parser->try_parse( session->get_request( )->get_body( ), resources );
             
@@ -723,7 +723,7 @@ namespace restq
                 resource.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
             }
             
-            m_repository->create( resources, session, [ ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
+            m_repository->create( resources, session, [ ]( const int status, const Resources resources, const shared_ptr< Session > session )
             {
                 if ( status not_eq CREATED )
                 {
@@ -762,11 +762,11 @@ namespace restq
                 session->set( "paging", Paging::default_value );
             }
             
-            multimap< string, Bytes > filters = session->get( "filters" );
+            Resource filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
             session->set( "filters", filters );
             
-            m_repository->read( session, [ ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
+            m_repository->read( session, [ ]( const int status, const Resources resources, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
                 {
@@ -799,7 +799,7 @@ namespace restq
         {
             const shared_ptr< Formatter > parser = session->get( "content-format" );
             
-            list< multimap< string, Bytes > > changeset;
+            Resources changeset;
             const bool parsing_success = parser->try_parse( session->get_request( )->get_body( ), changeset );
             
             if ( not parsing_success )
@@ -831,11 +831,11 @@ namespace restq
                 session->set( "paging", Paging::default_value );
             }
             
-            multimap< string, Bytes > filters = session->get( "filters" );
+            Resource filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
             session->set( "filters", filters );
             
-            m_repository->update( change, session, [ changeset ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
+            m_repository->update( change, session, [ changeset ]( const int status, const Resources resources, const shared_ptr< Session > session )
             {
                 if ( status == NOT_FOUND )
                 {
@@ -876,7 +876,7 @@ namespace restq
         {
             session->set( "paging", Paging::default_value );
             
-            multimap< string, Bytes > filters = session->get( "filters" );
+            Resource filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
             session->set( "filters", filters );
             
@@ -917,10 +917,10 @@ namespace restq
         {
             session->set( "paging", Paging::default_value );
             
-            multimap< string, Bytes > filters = session->get( "filters" );
+            Resource filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
             session->set( "filters", filters );
-            m_repository->read( session, [ options ]( const int status, const list< multimap< string, Bytes > >, const shared_ptr< Session > session )
+            m_repository->read( session, [ options ]( const int status, const Resources, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
                 {
@@ -944,7 +944,7 @@ namespace restq
         
         void ExchangeImpl::method_not_allowed_handler( const shared_ptr< Session > session )
         {
-            static const list< multimap< string, Bytes > > values { {
+            static const Resources values { {
                     { "type", String::to_bytes( "error" ) },
                     { "code", String::to_bytes( "40005" ) },
                     { "status", String::to_bytes( "405" ) },
@@ -989,7 +989,7 @@ namespace restq
         
         void ExchangeImpl::method_not_implemenented_handler( const shared_ptr< Session > session )
         {
-            static const list< multimap< string, Bytes > > values { {
+            static const Resources values { {
                     { "type", String::to_bytes( "error" ) },
                     { "code", String::to_bytes( "50001" ) },
                     { "status", String::to_bytes( "501" ) },

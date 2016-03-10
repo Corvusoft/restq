@@ -37,6 +37,8 @@ using restq::Bytes;
 using restq::String;
 using restq::Session;
 using restq::Settings;
+using restq::Resource;
+using restq::Resources;
 using restq::Repository;
 
 STLRepository::STLRepository( void ) : Repository( ),
@@ -60,11 +62,11 @@ void STLRepository::start( const shared_ptr< const Settings >& )
     return;
 }
 
-void STLRepository::create( const list< multimap< string, Bytes > > values, const shared_ptr< Session > session, const function< void ( const int, const list< multimap< string, Bytes > >, const shared_ptr< Session > ) >& callback )
+void STLRepository::create( const Resources values, const shared_ptr< Session > session, const function< void ( const int, const Resources, const shared_ptr< Session > ) >& callback )
 {
     for ( const auto value : values )
     {
-        bool conflict = any_of( m_resources.begin( ), m_resources.end( ), [ &value ]( const multimap< string, Bytes >& resource )
+        bool conflict = any_of( m_resources.begin( ), m_resources.end( ), [ &value ]( const Resource & resource )
         {
             const auto lhs = String::to_string( value.lower_bound( "key" )->second );
             const auto rhs = String::to_string( resource.lower_bound( "key" )->second );
@@ -83,20 +85,20 @@ void STLRepository::create( const list< multimap< string, Bytes > > values, cons
     callback( CREATED, values, session );
 }
 
-void STLRepository::read( const shared_ptr< Session > session, const function< void ( const int, const list< multimap< string, Bytes > >, const shared_ptr< Session > ) >& callback )
+void STLRepository::read( const shared_ptr< Session > session, const function< void ( const int, const Resources, const shared_ptr< Session > ) >& callback )
 {
-    list< multimap< string, Bytes > > values;
+    Resources values;
     const vector< string > keys = session->get( "keys" );
     const pair< size_t, size_t > range = session->get( "paging" );
-    const multimap< string, Bytes > filters = session->get( "filters" );
+    const Resource filters = session->get( "filters" );
     
-    list< multimap< string, Bytes > > resources;
+    Resources resources;
     
     if ( not keys.empty( ) )
     {
         for ( const auto& key : keys )
         {
-            auto resource = find_if( m_resources.begin( ), m_resources.end( ), [ &key ]( const multimap< string, Bytes >& resource )
+            auto resource = find_if( m_resources.begin( ), m_resources.end( ), [ &key ]( const Resource & resource )
             {
                 if ( resource.count( "key" ) == 0 )
                 {
@@ -181,9 +183,9 @@ void STLRepository::read( const shared_ptr< Session > session, const function< v
     callback( OK, values, session );
 }
 
-void STLRepository::update( const multimap< string, Bytes > changeset, const shared_ptr< Session > session, const function< void (  const int, const list< multimap< string, Bytes > >, const shared_ptr< Session > ) >& callback  )
+void STLRepository::update( const Resource changeset, const shared_ptr< Session > session, const function< void (  const int, const Resources, const shared_ptr< Session > ) >& callback  )
 {
-    read( session, [ changeset, callback, this ]( const int status_code, const list< multimap< string, Bytes > > values, const shared_ptr< Session > session )
+    read( session, [ changeset, callback, this ]( const int status_code, const Resources values, const shared_ptr< Session > session )
     {
         if ( status_code not_eq OK )
         {
@@ -217,7 +219,7 @@ void STLRepository::update( const multimap< string, Bytes > changeset, const sha
                 }
             }
             
-            auto resource = find_if( m_resources.begin( ), m_resources.end( ), [ &value ]( const multimap< string, Bytes >& resource )
+            auto resource = find_if( m_resources.begin( ), m_resources.end( ), [ &value ]( const Resource & resource )
             {
                 const auto lhs = String::to_string( value.lower_bound( "key" )->second );
                 const auto rhs = String::to_string( resource.lower_bound( "key" )->second );
@@ -234,7 +236,7 @@ void STLRepository::update( const multimap< string, Bytes > changeset, const sha
 
 void STLRepository::destroy( const shared_ptr< Session > session, const function< void ( const int, const shared_ptr< Session > ) >& callback )
 {
-    read( session, [ callback, this ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
+    read( session, [ callback, this ]( const int status, const Resources resources, const shared_ptr< Session > session )
     {
         if ( status not_eq OK )
         {
@@ -243,7 +245,7 @@ void STLRepository::destroy( const shared_ptr< Session > session, const function
         
         for ( const auto resource : resources )
         {
-            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), [ &resource ]( const multimap< string, Bytes >& value )
+            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), [ &resource ]( const Resource & value )
             {
                 const auto lhs = String::to_string( value.lower_bound( "key" )->second );
                 const auto rhs = String::to_string( resource.lower_bound( "key" )->second );

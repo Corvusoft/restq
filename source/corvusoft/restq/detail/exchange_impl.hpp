@@ -7,7 +7,6 @@
 
 //System Includes
 #include <map>
-#include <list>
 #include <ctime>
 #include <string>
 #include <memory>
@@ -18,6 +17,7 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/logger.hpp>
 #include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/resource.hpp>
 #include <corvusoft/restq/settings.hpp>
 
 //External Includes
@@ -135,13 +135,13 @@ namespace restq
                 //Functionality
                 bool is_valid( const std::pair< const std::string, const std::string >& header ) const;
                 
-                bool is_invalid( const std::multimap< std::string, Bytes >& values, const Bytes& type ) const;
+                bool is_invalid( const Resource& values, const Bytes& type ) const;
                 
-                void remove_reserved_words( std::multimap< std::string, Bytes >& value ) const;
+                void remove_reserved_words( Resource& value ) const;
                 
-                void remove_reserved_words( std::list< std::multimap< std::string, Bytes > >& values ) const;
+                void remove_reserved_words( Resources& values ) const;
                 
-                std::multimap< std::string, Bytes > make_message( const std::shared_ptr< Session >& session ) const;
+                Resource make_message( const std::shared_ptr< Session >& session ) const;
                 
                 void setup_ruleset( void );
                 

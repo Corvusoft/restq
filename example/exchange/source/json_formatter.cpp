@@ -27,6 +27,8 @@ using std::domain_error;
 //External Namespaces
 using restq::Bytes;
 using restq::String;
+using restq::Resource;
+using restq::Resources;
 using restq::Formatter;
 using nlohmann::json;
 
@@ -40,7 +42,7 @@ JSONFormatter::~JSONFormatter( void )
     return;
 }
 
-list< multimap< string, Bytes > > JSONFormatter::parse( const Bytes& value )
+Resources JSONFormatter::parse( const Bytes& value )
 {
     auto json = json::parse( String::to_string( value ) );
     
@@ -50,7 +52,7 @@ list< multimap< string, Bytes > > JSONFormatter::parse( const Bytes& value )
     }
     
     auto data = json[ "data" ];
-    list< multimap< string, Bytes > > resources;
+    Resources resources;
     
     if ( data.is_array( ) )
     {
@@ -76,7 +78,7 @@ list< multimap< string, Bytes > > JSONFormatter::parse( const Bytes& value )
     return resources;
 }
 
-bool JSONFormatter::try_parse( const Bytes& value, list< multimap< string, Bytes > >& values ) noexcept
+bool JSONFormatter::try_parse( const Bytes& value, Resources& values ) noexcept
 {
     try
     {
@@ -90,7 +92,7 @@ bool JSONFormatter::try_parse( const Bytes& value, list< multimap< string, Bytes
     return true;
 }
 
-Bytes JSONFormatter::compose( const list< multimap< string, Bytes > >& values, const bool styled )
+Bytes JSONFormatter::compose( const Resources& values, const bool styled )
 {
     auto json = json::object( );
     
@@ -146,7 +148,7 @@ Bytes JSONFormatter::to_bytes( const json& json, bool styled ) const
     return Bytes( data.begin( ), data.end( ) );
 }
 
-json JSONFormatter::compose_object( const multimap< string, Bytes >& value ) const
+json JSONFormatter::compose_object( const Resource& value ) const
 {
     auto object = json::object( );
     
@@ -239,9 +241,9 @@ json JSONFormatter::compose_object( const multimap< string, Bytes >& value ) con
     return object;
 }
 
-multimap< string, Bytes > JSONFormatter::parse_object( const json& value ) const
+Resource JSONFormatter::parse_object( const json& value ) const
 {
-    multimap< string, Bytes > object;
+    Resource object;
     
     for ( auto iterator = value.begin( ); iterator not_eq value.end( ); iterator++ )
     {

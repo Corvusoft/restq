@@ -16,6 +16,7 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/settings.hpp>
+#include <corvusoft/restq/resource.hpp>
 
 //External Includes
 
@@ -43,16 +44,16 @@ namespace restq
             
             virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
             
-            virtual void create( const std::list< std::multimap< std::string, Bytes > > values,
+            virtual void create( const Resources values,
                                  const std::shared_ptr< Session > session,
-                                 const std::function< void ( const int, const std::list< std::multimap< std::string, Bytes > >, const std::shared_ptr< Session > ) >& callback ) = 0;
+                                 const std::function< void ( const int, const Resources, const std::shared_ptr< Session > ) >& callback ) = 0;
                                  
             virtual void read( const std::shared_ptr< Session > session,
-                               const std::function< void ( const int, const std::list< std::multimap< std::string, Bytes > >, const std::shared_ptr< Session > ) >& callback ) = 0;
+                               const std::function< void ( const int, const Resources, const std::shared_ptr< Session > ) >& callback ) = 0;
                                
-            virtual void update( const std::multimap< std::string, Bytes > changeset,
+            virtual void update( const Resource changeset,
                                  const std::shared_ptr< Session > session,
-                                 const std::function< void (  const int, const std::list< std::multimap< std::string, Bytes > >, const std::shared_ptr< Session > ) >& callback ) = 0;
+                                 const std::function< void (  const int, const Resources, const std::shared_ptr< Session > ) >& callback ) = 0;
                                  
             virtual void destroy( const std::shared_ptr< Session > session, const std::function< void ( const int, const std::shared_ptr< Session > ) >& callback ) = 0;
             

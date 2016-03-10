@@ -16,6 +16,7 @@
 //External Includes
 #include <json.hpp>
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/resource.hpp>
 #include <corvusoft/restq/formatter.hpp>
 
 //System Namespaces
@@ -39,11 +40,11 @@ class JSONFormatter final : public restq::Formatter
         virtual ~JSONFormatter( void );
         
         //Functionality
-        std::list< std::multimap< std::string, restq::Bytes > > parse( const restq::Bytes& value );
+        restq::Resources parse( const restq::Bytes& value );
         
-        bool try_parse( const restq::Bytes& value, std::list< std::multimap< std::string, restq::Bytes > >& values ) noexcept;
+        bool try_parse( const restq::Bytes& value, restq::Resources& values ) noexcept;
         
-        restq::Bytes compose( const std::list< std::multimap< std::string, restq::Bytes > >& values, const bool styled = false );
+        restq::Bytes compose( const restq::Resources& values, const bool styled = false );
         
         //Getters
         const std::string get_mime_type( void ) const;
@@ -84,9 +85,9 @@ class JSONFormatter final : public restq::Formatter
         
         restq::Bytes to_bytes( const nlohmann::json& json, bool styled ) const;
         
-        nlohmann::json compose_object( const std::multimap< std::string, restq::Bytes >& value ) const;
+        nlohmann::json compose_object( const restq::Resource& value ) const;
         
-        std::multimap< std::string, restq::Bytes > parse_object( const nlohmann::json& value ) const;
+        restq::Resource parse_object( const nlohmann::json& value ) const;
         
         //Getters
         
