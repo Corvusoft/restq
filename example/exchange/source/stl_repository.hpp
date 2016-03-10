@@ -6,17 +6,13 @@
 #define _STL_REPOSITORY_H 1
 
 //System Includes
-#include <map>
-#include <list>
-#include <string>
 #include <memory>
 #include <functional>
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
-#include <corvusoft/restq/session.hpp>
-#include <corvusoft/restq/settings.hpp>
 #include <corvusoft/restq/resource.hpp>
+#include <corvusoft/restq/settings.hpp>
 #include <corvusoft/restq/repository.hpp>
 
 //External Includes
@@ -60,6 +56,7 @@ class STLRepository final : public restq::Repository
         //Getters
         
         //Setters
+        void set_logger( const std::shared_ptr< restq::Logger >& value );
         
         //Operators
         

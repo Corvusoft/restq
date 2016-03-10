@@ -12,6 +12,7 @@
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/logger.hpp>
 #include <corvusoft/restq/resource.hpp>
 
 //External Includes
@@ -46,6 +47,7 @@ namespace restq
             virtual const std::string get_mime_type( void ) const = 0;
             
             //Setters
+            virtual void set_logger( const std::shared_ptr< Logger >& value ) = 0;
             
             //Operators
             

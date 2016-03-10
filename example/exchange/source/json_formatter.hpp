@@ -6,8 +6,6 @@
 #define _JSON_FORMATTER_H 1
 
 //System Includes
-#include <map>
-#include <list>
 #include <string>
 #include <memory>
 
@@ -50,6 +48,7 @@ class JSONFormatter final : public restq::Formatter
         const std::string get_mime_type( void ) const;
         
         //Setters
+        void set_logger( const std::shared_ptr< restq::Logger >& value );
         
         //Operators
         

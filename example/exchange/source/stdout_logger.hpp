@@ -6,7 +6,6 @@
 #define _STDOUT_LOGGER_H 1
 
 //System Includes
-#include <string>
 #include <memory>
 
 //Project Includes

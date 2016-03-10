@@ -96,6 +96,12 @@ namespace restq
         if ( m_pimpl->m_logger not_eq nullptr )
         {
             m_pimpl->m_logger->start( m_pimpl->m_settings );
+            m_pimpl->m_repository->set_logger( m_pimpl->m_logger );
+            
+            for ( auto formatter : m_pimpl->m_formats )
+            {
+                formatter.second->set_logger( m_pimpl->m_logger );
+            }
         }
         
         m_pimpl->m_repository->start( m_pimpl->m_settings );

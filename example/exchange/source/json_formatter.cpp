@@ -12,13 +12,12 @@
 #include <corvusoft/restq/string.hpp>
 
 //System Namespaces
-using std::list;
 using std::stol;
 using std::string;
 using std::distance;
-using std::multimap;
 using std::to_string;
 using std::exception;
+using std::shared_ptr;
 using std::out_of_range;
 using std::domain_error;
 
@@ -27,6 +26,7 @@ using std::domain_error;
 //External Namespaces
 using restq::Bytes;
 using restq::String;
+using restq::Logger;
 using restq::Resource;
 using restq::Resources;
 using restq::Formatter;
@@ -118,6 +118,11 @@ Bytes JSONFormatter::compose( const Resources& values, const bool styled )
 const string JSONFormatter::get_mime_type( void ) const
 {
     return "application/json";
+}
+
+void JSONFormatter::set_logger( const shared_ptr< Logger >& )
+{
+    return;
 }
 
 string JSONFormatter::to_string( const json& value ) const

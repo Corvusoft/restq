@@ -14,6 +14,7 @@
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/logger.hpp>
 #include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/settings.hpp>
 #include <corvusoft/restq/resource.hpp>
@@ -60,6 +61,7 @@ namespace restq
             //Getters
             
             //Setters
+            virtual void set_logger( const std::shared_ptr< Logger >& value ) = 0;
             
             //Operators
             

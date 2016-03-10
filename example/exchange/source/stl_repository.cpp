@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <string>
 #include <memory>
 #include <algorithm>
 
@@ -14,14 +15,12 @@
 #include <corvusoft/restq/status_code.hpp>
 
 //System Namespaces
-using std::list;
 using std::pair;
 using std::size_t;
 using std::vector;
 using std::string;
 using std::advance;
 using std::find_if;
-using std::multimap;
 using std::function;
 using std::shared_ptr;
 
@@ -35,6 +34,7 @@ using restq::NOT_FOUND;
 using restq::NO_CONTENT;
 using restq::Bytes;
 using restq::String;
+using restq::Logger;
 using restq::Session;
 using restq::Settings;
 using restq::Resource;
@@ -258,4 +258,9 @@ void STLRepository::destroy( const shared_ptr< Session > session, const function
         
         callback( OK, session );
     } );
+}
+
+void STLRepository::set_logger( const shared_ptr< Logger >& )
+{
+    return;
 }
