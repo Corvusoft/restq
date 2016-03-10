@@ -7,6 +7,23 @@ Feature: HTTP DELETE
 
     Scenario Outline: Delete resource.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "b7ae0965-e69f-403f-8ac0-1b80b13d99dc"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "b7ae0965-e69f-403f-8ac0-1b80b13d99dc" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         And I perform a HTTP "POST" request to "/messages" with headers "Content-Type: utf-8, Accept: application/json, Host: localhost:1984":
         """
         " My awesome data payload"

@@ -7,6 +7,23 @@ Feature: Accept-Charset request-header field
 
     Scenario Outline: Valid accept-charset field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "51773aba-e8a8-41d9-9e81-6fd62b58ed34"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "51773aba-e8a8-41d9-9e81-6fd62b58ed34" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, Accept-Charset: utf-8":
         """
         " ftp://localhost/reading "
@@ -91,6 +108,23 @@ Feature: Accept-Charset request-header field
 
     Scenario Outline: Abscent accept-charset field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "1622258b-cee0-466a-b6a2-c47a6ef5d2d5"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "1622258b-cee0-466a-b6a2-c47a6ef5d2d5" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984":
         """
         " ftp://localhost/reading "
@@ -175,6 +209,23 @@ Feature: Accept-Charset request-header field
 
     Scenario Outline: Wildcard accept-charset field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "e067f4b0-6c22-4682-84d3-e347a8db23a8"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "e067f4b0-6c22-4682-84d3-e347a8db23a8" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, Accept-Charset: *":
         """
         " ftp://localhost/reading "

@@ -7,6 +7,23 @@ Feature: If-None-Match request-header field
 
     Scenario Outline: ETag if-none-match request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "f0b314ae-c5f9-43f6-a373-977c2ce83b9c"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "f0b314ae-c5f9-43f6-a373-977c2ce83b9c" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, If-None-Match: "12978507194598101300"":
         """
         " ftp://localhost/reading "
@@ -44,6 +61,23 @@ Feature: If-None-Match request-header field
 
     Scenario Outline: Wildcard if-none-match request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "a9219d6f-ec15-4690-9eb5-818465aef8bd"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "a9219d6f-ec15-4690-9eb5-818465aef8bd" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, If-None-Match: *":
         """
         " ftp://localhost/reading "
@@ -81,6 +115,23 @@ Feature: If-None-Match request-header field
 
     Scenario Outline: Empty if-none-match request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "691a31e1-4f27-4492-9f6e-7fb2157df96c"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "691a31e1-4f27-4492-9f6e-7fb2157df96c" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, If-None-Match: ":
         """
         " ftp://localhost/reading "

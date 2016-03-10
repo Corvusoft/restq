@@ -62,6 +62,23 @@ Feature: Host request-header field
 
     Scenario Outline: Invalid host request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "5e9f2bcf-1856-409d-9958-33b946aed892"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "5e9f2bcf-1856-409d-9958-33b946aed892" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         And I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984":
         """
         " Water level low. "
@@ -110,6 +127,23 @@ Feature: Host request-header field
 
     Scenario Outline: Abscent host request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "218620e0-73f8-4a39-9840-737d68293b2e"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "218620e0-73f8-4a39-9840-737d68293b2e" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         And I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984":
         """
         " Water level low. "
@@ -158,6 +192,23 @@ Feature: Host request-header field
 
     Scenario Outline: Empty host request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "8ea9d2d1-2d95-41be-a551-7607aefa3d16"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "8ea9d2d1-2d95-41be-a551-7607aefa3d16" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         And I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984":
         """
         " Water level low. "

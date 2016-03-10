@@ -33,7 +33,6 @@
 namespace restq
 {
     //Forward Declarations
-    class Logger;
     class Settings;
     class Exchange;
     class Formatter;
@@ -142,7 +141,7 @@ namespace restq
                 
                 void remove_reserved_words( std::list< std::multimap< std::string, Bytes > >& values ) const;
                 
-                std::multimap< std::string, Bytes > make_message( const std::shared_ptr< restbed::Session >& session ) const;
+                std::multimap< std::string, Bytes > make_message( const std::shared_ptr< Session >& session ) const;
                 
                 void setup_ruleset( void );
                 

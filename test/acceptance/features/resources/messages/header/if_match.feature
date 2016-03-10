@@ -7,6 +7,23 @@ Feature: If-Match request-header field
 
     Scenario Outline: ETag if-match request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "8fd8b32a-7b8c-4155-bf52-db61beb997da"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "8fd8b32a-7b8c-4155-bf52-db61beb997da" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, If-Match: "12978507194598101300"":
         """
         " ftp://localhost/reading "
@@ -44,6 +61,23 @@ Feature: If-Match request-header field
 
     Scenario Outline: Wildcard if-match request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "e3288d24-38cb-4823-8fb3-9757c979740f"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "e3288d24-38cb-4823-8fb3-9757c979740f" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, If-Match: *":
         """
         " ftp://localhost/reading "
@@ -81,6 +115,23 @@ Feature: If-Match request-header field
 
     Scenario Outline: Empty if-match request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "6d022c79-f677-4dde-9705-0917cc5ded12"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "6d022c79-f677-4dde-9705-0917cc5ded12" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, If-Match: ":
         """
         " ftp://localhost/reading "

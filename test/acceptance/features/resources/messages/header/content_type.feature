@@ -7,6 +7,23 @@ Feature: Content-Type entity-header field
 
     Scenario Outline: Valid content-type field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "7543ccef-a41a-4eb6-b138-6a66402d2b96"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "7543ccef-a41a-4eb6-b138-6a66402d2b96" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984":
         """
         " { data } "

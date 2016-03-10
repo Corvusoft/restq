@@ -59,7 +59,7 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< Session > session ) final override
+                bool condition( const shared_ptr< restbed::Session > session ) final override
                 {
                     const auto request = session->get_request( );
                     const auto host = request->get_header( "Host", String::lowercase );
@@ -69,13 +69,13 @@ namespace restq
                     return not Uri::is_valid( host );
                 }
                 
-                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& ) final override
+                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& ) final override
                 {
                     static const string message = "The exchange is refusing to process the request because it was missing or contained a malformed Host request-header.";
                     bad_request_handler( message, session );
                 }
                 
-                static void bad_request_handler( const string& message, const shared_ptr< Session >& session )
+                static void bad_request_handler( const string& message, const shared_ptr< restbed::Session >& session )
                 {
                     const list< multimap< string, Bytes > > values { {
                             { "status", { '4', '0', '0' } },

@@ -48,7 +48,7 @@ namespace restq
                     return;
                 }
                 
-                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
+                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
                 {
                     const auto request = session->get_request( );
                     const auto parameters = request->get_query_parameters( "style" );

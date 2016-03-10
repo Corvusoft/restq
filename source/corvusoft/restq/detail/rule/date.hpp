@@ -47,12 +47,12 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< Session > ) final override
+                bool condition( const shared_ptr< restbed::Session > ) final override
                 {
                     return false;
                 }
                 
-                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
+                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
                 {
                     callback( session );
                 }

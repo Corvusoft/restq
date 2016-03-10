@@ -7,6 +7,23 @@ Feature: HTTP PATCH
 
     Scenario Outline: Patch resource.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "52ecb599-75c1-48d5-82cc-c46ad3f4e597"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "52ecb599-75c1-48d5-82cc-c46ad3f4e597" ] "
+        "   }                                                      "
+        " } 
+        """
         And I perform a HTTP "POST" request to "/messages" with headers "Content-Type: system/utf-8, Accept: application/json, Host: localhost:1984":
         """
         " Stock on hair dye is running low."

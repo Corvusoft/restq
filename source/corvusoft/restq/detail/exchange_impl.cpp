@@ -11,6 +11,7 @@
 
 //Project Includes
 #include "corvusoft/restq/string.hpp"
+#include "corvusoft/restq/session.hpp"
 #include "corvusoft/restq/settings.hpp"
 #include "corvusoft/restq/formatter.hpp"
 #include "corvusoft/restq/repository.hpp"
@@ -72,7 +73,7 @@ namespace restq
         
         ExchangeImpl::ExchangeImpl( void ) : m_boot_time( 0 ),
             m_logger( nullptr ),
-            m_system( new System ),
+            m_system( make_shared< System >( ) ),
             m_repository( nullptr ),
             m_settings( nullptr ),
             m_service( nullptr ),
@@ -244,7 +245,7 @@ namespace restq
             }
             
             string query = String::empty;
-            multimap< string, Bytes > parameters = session->get( "filters" );
+            multimap< string, Bytes > parameters = session->get( "filtered_parameters" );
             
             for ( const auto parameter : parameters )
             {
@@ -372,136 +373,176 @@ namespace restq
         
         void ExchangeImpl::dispatch( void )
         {
-            static const vector< string > keys = { };
-            static const pair< size_t, size_t > range = { 0, 1 };
-            static const multimap< string, Bytes > filters = { { "type", STATE }, { "status", PENDING } };
+            auto session = make_shared< Session >( "dispatch" );
             
-            list< multimap< string, Bytes > > states;
-            uint16_t status = m_repository->read( keys, range, filters, states );
+            const vector< string > keys = { };
+            session->set( "keys", keys );
             
-            if ( status not_eq OK )
+            const pair< size_t, size_t > range = { 0, 1 };
+            session->set( "paging", range );
+            
+            const multimap< string, Bytes > filters = { { "type", STATE }, { "status", PENDING } };
+            session->set( "filters", filters );
+            
+            m_repository->read( session, [ this ]( const int status, const list< multimap< string, Bytes > > states, shared_ptr< Session > session )
             {
-                return log( Logger::ERROR, "Failed to read transaction states." );
-            }
-            else if ( states.empty( ) )
-            {
-                return;
-            }
-            
-            
-            const auto state_key = String::to_string( states.back( ).lower_bound( "key" )->second );
-            status = m_repository->update( { state_key }, range, filters, { { "status", INFLIGHT } }, states );
-            
-            if ( status not_eq OK )
-            {
-                return log( Logger::ERROR, "Failed to update transaction status." );
-            }
-            else if ( status == NO_CONTENT )
-            {
-                return m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
-            }
-            
-            
-            list< multimap< string, Bytes > > messages;
-            const auto message_key = String::to_string( states.back( ).lower_bound( "message-key" )->second );
-            const auto subscription_key = String::to_string( states.back( ).lower_bound( "subscription-key" )->second );
-            
-            status = m_repository->read( { message_key }, range, { { "type", MESSAGE } }, messages );
-            
-            if ( status not_eq OK or messages.empty( ) )
-            {
-                log( Logger::WARNING, "Failed to read associated state message, purging." );
-                m_repository->destroy( { state_key }, { { "type", STATE } } );
-                return;
-            }
-            
-            
-            auto message = messages.back( );
-            
-            auto request = make_shared< Request >( Uri( String::to_string( states.back( ).lower_bound( "subscription-endpoint" )->second ) ) );
-            request->set_method( "POST" );
-            request->set_body( message.lower_bound( "data" )->second );
-            request->set_headers( { {
-                    { "Expires", "0" },
-                    { "Pragma", "no-cache" },
-                    { "Connection", "close" },
-                    { "Date", Date::make( ) },
-                    { "Cache-Control", "private,max-age=0,no-cache,no-store" },
-                    { "From", String::to_string( message.lower_bound( "author" )->second ) },
-                    { "Referer", String::to_string( message.lower_bound( "origin" )->second ) },
-                    { "Content-MD5", String::to_string( message.lower_bound( "checksum" )->second ) },
-                    { "Content-Length", ContentLength::make( message.lower_bound( "data" )->second ) },
-                    { "Content-Type", String::to_string( message.lower_bound( "content-type" )->second ) },
-                    { "Last-Modified", String::to_string( message.lower_bound( "modified" )->second ) },
-                    { "Via", String::format( "%s/%s %s", String::to_string( message.lower_bound( "protocol" )->second ).data( ), String::to_string( message.lower_bound( "protocol-version" )->second ).data( ), String::to_string( message.lower_bound( "destination" )->second ).data( ) ) }
+                if ( status not_eq OK )
+                {
+                    return log( Logger::ERROR, "Failed to read transaction states." );
                 }
+                else if ( states.empty( ) )
+                {
+                    return;
+                }
+                
+                
+                const auto state_key = String::to_string( states.back( ).lower_bound( "key" )->second );
+                vector< string > keys;
+                keys.push_back( state_key );
+                session->set( "keys", keys );
+                
+                const pair< size_t, size_t > range = { 0, 1 };
+                session->set( "paging", range );
+                
+                const multimap< string, Bytes > filters = { { "type", STATE }, { "status", PENDING } };
+                session->set( "filters", filters );
+                
+                m_repository->update( { { "status", INFLIGHT } }, session, [ this, state_key ]( const int status, const list< multimap< string, Bytes > > states, shared_ptr< Session > session )
+                {
+                    if ( status not_eq OK )
+                    {
+                        return log( Logger::ERROR, "Failed to update transaction status." );
+                    }
+                    else if ( status == NO_CONTENT )
+                    {
+                        return m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
+                    }
+                    
+                    const auto message_key = String::to_string( states.back( ).lower_bound( "message-key" )->second );
+                    
+                    vector< string > keys;
+                    keys.push_back( message_key );
+                    session->set( "keys", keys );
+                    
+                    const pair< size_t, size_t > range = { 0, 1 };
+                    session->set( "paging", range );
+                    
+                    const multimap< string, Bytes > filters = { { "type", MESSAGE } };
+                    session->set( "filters", filters );
+                    
+                    m_repository->read( session, [ this, state_key, states ]( const int status, const list< multimap< string, Bytes > > messages, shared_ptr< Session > session )
+                    {
+                        if ( status not_eq OK or messages.empty( ) )
+                        {
+                            log( Logger::WARNING, "Failed to read associated state message, purging." );
+                            vector< string > keys = { state_key };
+                            session->set( "keys", keys );
+                            
+                            const multimap< string, Bytes > filters = { { "type", STATE } };
+                            session->set( "filters", filters );
+                            
+                            return m_repository->destroy( session, [ ]( const int, shared_ptr< Session > )
+                            {
+                                return; //repo should cehck for nullptr before invoking
+                            } );
+                        }
+                        
+                        auto message = messages.back( );
+                        
+                        auto request = make_shared< Request >( Uri( String::to_string( states.back( ).lower_bound( "subscription-endpoint" )->second ) ) );
+                        request->set_method( "POST" );
+                        request->set_body( message.lower_bound( "data" )->second );
+                        request->set_headers( { {
+                                { "Expires", "0" },
+                                { "Pragma", "no-cache" },
+                                { "Connection", "close" },
+                                { "Date", Date::make( ) },
+                                { "Cache-Control", "private,max-age=0,no-cache,no-store" },
+                                { "From", String::to_string( message.lower_bound( "author" )->second ) },
+                                { "Referer", String::to_string( message.lower_bound( "origin" )->second ) },
+                                { "Content-MD5", String::to_string( message.lower_bound( "checksum" )->second ) },
+                                { "Content-Length", ContentLength::make( message.lower_bound( "data" )->second ) },
+                                { "Content-Type", String::to_string( message.lower_bound( "content-type" )->second ) },
+                                { "Last-Modified", String::to_string( message.lower_bound( "modified" )->second ) },
+                                { "Via", String::format( "%s/%s %s", String::to_string( message.lower_bound( "protocol" )->second ).data( ), String::to_string( message.lower_bound( "protocol-version" )->second ).data( ), String::to_string( message.lower_bound( "destination" )->second ).data( ) ) }
+                            }
+                        } );
+                        
+                        for ( const auto parameter : String::split( String::to_string( message.lower_bound( "query" )->second ), '&' ) )
+                        {
+                            const auto name_value = String::split( parameter, '=' );
+                            request->set_query_parameter( name_value[ 0 ], name_value[ 1 ] );
+                        }
+                        
+                        message.erase( "key" );
+                        message.erase( "type" );
+                        message.erase( "data" );
+                        message.erase( "size" );
+                        message.erase( "query" );
+                        message.erase( "origin" );
+                        message.erase( "checksum" );
+                        message.erase( "protocol" );
+                        message.erase( "destination" );
+                        message.erase( "last-modified" );
+                        message.erase( "protocol-version" );
+                        
+                        for ( const auto& property : message )
+                        {
+                            request->set_header( property.first, String::to_string( property.second ) );
+                        }
+                        
+                        auto response = Http::sync( request );
+                        int status_code = response->get_status_code( );
+                        Http::close( request );
+                        
+                        string log_message = "";
+                        multimap< string, Bytes > change;
+                        const auto subscription_key = String::to_string( states.back( ).lower_bound( "subscription-key" )->second );
+                        const auto message_key = String::to_string( states.back( ).lower_bound( "message-key" )->second );
+                        
+                        if ( status_code == ACCEPTED )
+                        {
+                            change.insert( make_pair( "status", DISPATCHED ) );
+                            log_message = "Failed to update transaction status to dispatched.";
+                            log( Logger::INFO, String::format( "Subscription '%s' accepted message '%s'.", subscription_key.data( ), message_key.data( ) ) );
+                        }
+                        else if ( status_code >= 200 and status_code <= 299 )
+                        {
+                            change.insert( make_pair( "status", REJECTED ) );
+                            log_message = "Failed to update transaction status to rejected.";
+                            log( Logger::INFO, String::format( "Subscription '%s' rejected message '%s'.", subscription_key.data( ), message_key.data( ) ) );
+                        }
+                        else
+                        {
+                            return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
+                        }
+                        
+                        vector< string > keys;
+                        keys.push_back( state_key );
+                        session->set( "keys", keys );
+                        
+                        multimap< string, Bytes > filters;
+                        filters.insert( make_pair( "type", STATE ) );
+                        session->set( "filters", filters );
+                        
+                        m_repository->update( change, session, [ this ]( const int status, const list< multimap< string, Bytes > >, shared_ptr< Session > session )
+                        {
+                            if ( status not_eq OK )
+                            {
+                                log( Logger::ERROR, "Failed to update transaction status to dispatched." );
+                            }
+                            
+                            m_repository->destroy( session, [ this ]( const int, const shared_ptr< Session > )
+                            {
+                                m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
+                            } );
+                        } );
+                    } );
+                } );
             } );
-            
-            for ( const auto parameter : String::split( String::to_string( message.lower_bound( "query" )->second ), '&' ) )
-            {
-                const auto name_value = String::split( parameter, '=' );
-                request->set_query_parameter( name_value[ 0 ], name_value[ 1 ] );
-            }
-            
-            message.erase( "key" );
-            message.erase( "type" );
-            message.erase( "data" );
-            message.erase( "size" );
-            message.erase( "query" );
-            message.erase( "origin" );
-            message.erase( "checksum" );
-            message.erase( "protocol" );
-            message.erase( "destination" );
-            message.erase( "last-modified" );
-            message.erase( "protocol-version" );
-            
-            for ( const auto& property : message )
-            {
-                request->set_header( property.first, String::to_string( property.second ) );
-            }
-            
-            
-            auto response = Http::sync( request );
-            status = response->get_status_code( );
-            
-            if ( status == ACCEPTED )
-            {
-                status = m_repository->update( { state_key }, range, { { "type", STATE } }, { { "status", DISPATCHED } }, states );
-                
-                if ( status not_eq OK )
-                {
-                    log( Logger::ERROR, "Failed to update transaction status to dispatched." );
-                }
-                
-                status = m_repository->destroy( { state_key }, { { "type", STATE } } );
-            }
-            else if ( status >= 200 and status <= 299 )
-            {
-                log( Logger::INFO, String::format( "Subscription '%s' rejected message '%s'.", subscription_key.data( ), message_key.data( ) ) );
-                
-                status = m_repository->update( { state_key }, range, { { "type", STATE } }, { { "status", REJECTED } }, states );
-                
-                if ( status not_eq OK )
-                {
-                    log( Logger::ERROR, "Failed to update transaction status to rejected." );
-                }
-                
-                status = m_repository->destroy( { state_key }, { { "type", STATE } } );
-            }
-            else
-            {
-                return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
-            }
-            
-            Http::close( request );
-            
-            if ( m_repository->count( filters ) not_eq 0 )
-            {
-                m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
-            }
         }
         
-        void ExchangeImpl::create_message_handler( const shared_ptr< Session > session )
+        void ExchangeImpl::create_message_handler( const shared_ptr< restbed::Session > session )
         {
             const auto request = session->get_request( );
             
@@ -519,102 +560,128 @@ namespace restq
                 keys.clear( );
                 filters.clear( );
                 keys.push_back( request->get_path_parameter( "key" ) );
+                session->set( "filters", filters );
+                session->set( "keys", keys );
             }
             
             filters.insert( make_pair( "type", QUEUE ) );
+            session->set( "filters", filters );
+            session->set( "paging", Paging::default_value );
             
-            list< multimap< string, Bytes > > queues;
-            uint16_t status = m_repository->read( keys, Paging::default_value, filters, queues );
-            
-            if ( status not_eq OK )
+            m_repository->read( std::static_pointer_cast< Session >( session ), [ this ]( const int status, const list< multimap< string, Bytes > > queues, const shared_ptr< Session > session )
             {
-                return Key::not_found_handler( session );
-            }
-            
-            keys.clear( );
-            filters.clear( );
-            filters.insert( make_pair( "type", SUBSCRIPTION ) );
-            
-            const auto message = make_message( session );
-            const auto message_key = message.lower_bound( "key" )->second;
-            
-            list< multimap< string, Bytes > > states;
-            list< multimap< string, Bytes > > subscriptions;
-            
-            for ( const auto& queue : queues )
-            {
-                const auto queue_key = queue.lower_bound( "key" )->second;
-                
-                filters.erase( "queues" );
-                filters.insert( make_pair( "queues", queue_key ) );
-                
-                status = m_repository->read( keys, Paging::default_value, filters, subscriptions );
-                
-                if ( status not_eq 200 )
+                if ( status not_eq OK )
                 {
                     return Key::not_found_handler( session );
                 }
                 
-                for ( const auto& subscription : subscriptions )
-                {
-                    multimap< string, Bytes > state;
-                    state.insert( make_pair( "type", STATE ) );
-                    state.insert( make_pair( "key", Key::make( ) ) );
-                    state.insert( make_pair( "status", PENDING ) );
-                    state.insert( make_pair( "queue-key", queue_key ) );
-                    state.insert( make_pair( "message-key", message_key ) );
-                    state.insert( make_pair( "subscription-key", subscription.lower_bound( "key" )->second ) );
-                    state.insert( make_pair( "subscription-endpoint", subscription.lower_bound( "endpoint" )->second ) );
-                    states.push_back( state );
-                }
-            }
-            
-            const auto location = String::format( "/messages/%.*s", message_key.size( ), message_key.data( ) );
-            multimap< string, string > headers
-            {
-                { "Allow", "OPTIONS" },
-                { "Location", location },
-                { "Date", Date::make( ) },
-            };
-            
-            if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
-            {
-                headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
-            }
-            
-            status = m_repository->create( { message } );
-            
-            if ( status not_eq CREATED )
-            {
-                return session->close( 500 );
-            }
-            
-            if ( states.empty( ) )
-            {
-                filters.clear( );
-                filters.insert( make_pair( "type", MESSAGE ) );
-                status = m_repository->destroy( { String::to_string( message_key ) }, filters );
+                session->set( "keys", vector< string >( ) );
                 
-                if ( status not_eq OK )
-                {
-                    return session->close( 500 );
-                }
-            }
-            else
-            {
-                status = m_repository->create( states );
+                multimap< string, Bytes > filters;
+                filters.insert( make_pair( "type", SUBSCRIPTION ) );
                 
-                if ( status not_eq CREATED )
+                for ( const auto& queue : queues )
                 {
-                    return session->close( 500 );
+                    filters.insert( make_pair( "queues", queue.lower_bound( "key" )->second ) );
                 }
-            }
-            
-            session->close( ACCEPTED, headers );
-            m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
+                
+                session->set( "filters", filters );
+                
+                m_repository->read( session, [ queues, this ]( const int status, const list< multimap< string, Bytes > > subscriptions, const shared_ptr< Session > session )
+                {
+                    if ( status not_eq 200 )
+                    {
+                        //a subscription may have been purged; how to proceed?
+                        //if 404 ignore?
+                        return session->close( 500 );
+                    }
+                    
+                    const auto message = make_message( session );
+                    const auto message_key = make_pair( "message-key", message.lower_bound( "key" )->second );
+                    
+                    list< multimap< string, Bytes > > states;
+                    
+                    for ( const auto& subscription : subscriptions )
+                    {
+                        const auto properties = subscription.equal_range( "queues" );
+                        const auto subscription_key = make_pair( "subscription-key", subscription.lower_bound( "key" )->second );
+                        const auto subscription_endpoint = make_pair( "subscription-endpoint", subscription.lower_bound( "endpoint" )->second );
+                        
+                        for ( const auto& queue : queues )
+                        {
+                            const auto queue_key = queue.lower_bound( "key" )->second;
+                            
+                            for ( auto property = properties.first; property not_eq properties.second; property++ )
+                            {
+                                if ( property->second == queue_key ) //lowercase this see keycase test case as well
+                                {
+                                    multimap< string, Bytes > state;
+                                    state.insert( make_pair( "type", STATE ) );
+                                    state.insert( make_pair( "key", Key::make( ) ) );
+                                    state.insert( make_pair( "status", PENDING ) );
+                                    state.insert( make_pair( "queue-key", queue_key ) );
+                                    state.insert( message_key );
+                                    state.insert( subscription_key );
+                                    state.insert( subscription_endpoint );
+                                    states.push_back( state );
+                                }
+                            }
+                        }
+                    }
+                    
+                    if ( not states.empty( ) )
+                    {
+                        m_repository->create( { message }, session, [ states, this, message_key ]( const int status, const list< multimap< string, Bytes > >, const shared_ptr< Session > session )
+                        {
+                            if ( status not_eq CREATED )
+                            {
+                                return session->close( 500 );
+                            }
+                            
+                            m_repository->create( states, session, [ this, message_key ]( const int status, const list< multimap< string, Bytes > >, const shared_ptr< Session > session )
+                            {
+                                if ( status not_eq CREATED )
+                                {
+                                    return session->close( 500 );
+                                }
+                                
+                                const auto location = String::format( "/messages/%.*s", message_key.second.size( ), message_key.second.data( ) );
+                                multimap< string, string > headers
+                                {
+                                    { "Allow", "OPTIONS" },
+                                    { "Location", location },
+                                    { "Date", Date::make( ) },
+                                };
+                                
+                                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+                                {
+                                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+                                }
+                                
+                                session->close( ACCEPTED, headers );
+                                m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
+                            } );
+                        } );
+                    }
+                    else
+                    {
+                        multimap< string, string > headers
+                        {
+                            { "Date", Date::make( ) },
+                        };
+                        
+                        if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+                        {
+                            headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+                        }
+                        
+                        session->close( OK, headers );
+                    }
+                } );
+            } );
         }
         
-        void ExchangeImpl::create_resource_handler( const shared_ptr< Session > session, const Bytes& type )
+        void ExchangeImpl::create_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type )
         {
             list< multimap< string, Bytes > > resources;
             const shared_ptr< Formatter > parser = session->get( "content-format" );
@@ -660,75 +727,79 @@ namespace restq
                 resource.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
             }
             
-            const auto status = m_repository->create( resources );
-            
-            if ( status not_eq CREATED )
+            m_repository->create( resources, std::static_pointer_cast< Session >( session ), [ ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
             {
-                return Key::conflict_handler( session );
-            }
-            
-            const shared_ptr< Formatter > composer = session->get( "accept-format" );
-            const auto body = composer->compose( resources, session->get( "style" ) );
-            
-            multimap< string, string > headers
-            {
-                { "Date", Date::make( ) },
-                { "ETag", ETag::make( resources ) },
-                { "Last-Modified", LastModified::make( ) },
-                { "Allow", "GET,PUT,HEAD,DELETE,OPTIONS" },
-                { "Content-MD5", ContentMD5::make( body ) },
-                { "Content-Length", ContentLength::make( body ) },
-                { "Content-Type",  ContentType::make( session ) },
-                { "Location", Location::make( session, resources ) }
-            };
-            
-            if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
-            {
-                headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
-            }
-            
-            const bool echo = session->get( "echo" );
-            ( echo ) ? session->close( CREATED, body, headers ) : session->close( NO_CONTENT, headers );
+                if ( status not_eq CREATED )
+                {
+                    return Key::conflict_handler( session );
+                }
+                
+                const shared_ptr< Formatter > composer = session->get( "accept-format" );
+                const auto body = composer->compose( resources, session->get( "style" ) );
+                
+                multimap< string, string > headers
+                {
+                    { "Date", Date::make( ) },
+                    { "ETag", ETag::make( resources ) },
+                    { "Last-Modified", LastModified::make( ) },
+                    { "Allow", "GET,PUT,HEAD,DELETE,OPTIONS" },
+                    { "Content-MD5", ContentMD5::make( body ) },
+                    { "Content-Length", ContentLength::make( body ) },
+                    { "Content-Type",  ContentType::make( session ) },
+                    { "Location", Location::make( session, resources ) }
+                };
+                
+                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+                {
+                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+                }
+                
+                const bool echo = session->get( "echo" );
+                ( echo ) ? session->close( CREATED, body, headers ) : session->close( NO_CONTENT, headers );
+            } );
         }
         
-        void ExchangeImpl::read_resource_handler( const shared_ptr< Session > session, const Bytes& type )
+        void ExchangeImpl::read_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type )
         {
-            const vector< string > keys = session->get( "keys" );
-            const pair< size_t, size_t > range = session->get( "paging", Paging::default_value );
+            if ( not session->has( "paging" ) )
+            {
+                session->set( "paging", Paging::default_value );
+            }
             
             multimap< string, Bytes > filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
+            session->set( "filters", filters );
             
-            list< multimap< string, Bytes > > resources;
-            const auto status = m_repository->read( keys, range, filters, resources );
-            
-            if ( status not_eq OK )
+            m_repository->read( std::static_pointer_cast< Session >( session ), [ ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
             {
-                return Key::not_found_handler( session );
-            }
-            
-            const shared_ptr< Formatter > composer = session->get( "accept-format" );
-            const auto body = composer->compose( resources, session->get( "style" ) );
-            
-            multimap< string, string > headers
-            {
-                { "Date", Date::make( ) },
-                { "Content-MD5", ContentMD5::make( body ) },
-                { "Content-Type", ContentType::make( session ) },
-                { "Content-Length", ContentLength::make( body ) }
-            };
-            
-            if ( not resources.empty( ) )
-            {
-                headers.insert( make_pair( "ETag", ETag::make( resources ) ) );
-                headers.insert( make_pair( "Last-Modified", LastModified::make( resources ) ) );
-            }
-            
-            const bool echo = session->get( "echo" );
-            ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
+                if ( status not_eq OK )
+                {
+                    return Key::not_found_handler( session );
+                }
+                
+                const shared_ptr< Formatter > composer = session->get( "accept-format" );
+                const auto body = composer->compose( resources, session->get( "style" ) );
+                
+                multimap< string, string > headers
+                {
+                    { "Date", Date::make( ) },
+                    { "Content-MD5", ContentMD5::make( body ) },
+                    { "Content-Type", ContentType::make( session ) },
+                    { "Content-Length", ContentLength::make( body ) }
+                };
+                
+                if ( not resources.empty( ) )
+                {
+                    headers.insert( make_pair( "ETag", ETag::make( resources ) ) );
+                    headers.insert( make_pair( "Last-Modified", LastModified::make( resources ) ) );
+                }
+                
+                const bool echo = session->get( "echo" );
+                ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
+            } );
         }
         
-        void ExchangeImpl::update_resource_handler( const shared_ptr< Session > session, const Bytes& type )
+        void ExchangeImpl::update_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type )
         {
             const shared_ptr< Formatter > parser = session->get( "content-format" );
             
@@ -758,65 +829,73 @@ namespace restq
             change.insert( make_pair( "revision", ETag::make( ) ) );
             change.insert( make_pair( "modified", String::to_bytes( ::to_string( time( 0 ) ) ) ) );
             
-            const vector< string > keys = session->get( "keys" );
-            const pair< size_t, size_t > range = session->get( "paging", Paging::default_value );
+            
+            if ( not session->has( "paging" ) )
+            {
+                session->set( "paging", Paging::default_value );
+            }
             
             multimap< string, Bytes > filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
+            session->set( "filters", filters );
             
-            list< multimap< string, Bytes > > resources;
-            const auto status = m_repository->update( keys, range, filters, change, resources );
-            
-            if ( status == NOT_FOUND )
+            m_repository->update( change, std::static_pointer_cast< Session >( session ), [ changeset ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
             {
-                return Key::not_found_handler( session );
-            }
-            
-            multimap< string, string > headers
-            {
-                { "Date", Date::make( ) },
-                { "Last-Modified", LastModified::make( resources ) }
-            };
-            
-            if ( status == NO_CONTENT )
-            {
-                return session->close( NO_CONTENT, headers );
-            }
-            
-            const shared_ptr< Formatter > composer = session->get( "accept-format" );
-            const auto body = composer->compose( resources, session->get( "style" ) );
-            
-            headers.insert( make_pair( "ETag", ETag::make( changeset ) ) );
-            headers.insert( make_pair( "Allow", "GET,PUT,HEAD,DELETE,OPTIONS" ) );
-            headers.insert( make_pair( "Content-MD5", ContentMD5::make( body ) ) );
-            headers.insert( make_pair( "Content-Type",  ContentType::make( session ) ) );
-            headers.insert( make_pair( "Content-Length", ContentLength::make( body ) ) );
-            
-            if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
-            {
-                headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
-            }
-            
-            const bool echo = session->get( "echo" );
-            ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
+                if ( status == NOT_FOUND )
+                {
+                    return Key::not_found_handler( session );
+                }
+                
+                multimap< string, string > headers
+                {
+                    { "Date", Date::make( ) },
+                    { "Last-Modified", LastModified::make( resources ) }
+                };
+                
+                if ( status == NO_CONTENT )
+                {
+                    return session->close( NO_CONTENT, headers );
+                }
+                
+                const shared_ptr< Formatter > composer = session->get( "accept-format" );
+                const auto body = composer->compose( resources, session->get( "style" ) );
+                
+                headers.insert( make_pair( "ETag", ETag::make( changeset ) ) );
+                headers.insert( make_pair( "Allow", "GET,PUT,HEAD,DELETE,OPTIONS" ) );
+                headers.insert( make_pair( "Content-MD5", ContentMD5::make( body ) ) );
+                headers.insert( make_pair( "Content-Type",  ContentType::make( session ) ) );
+                headers.insert( make_pair( "Content-Length", ContentLength::make( body ) ) );
+                
+                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+                {
+                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+                }
+                
+                const bool echo = session->get( "echo" );
+                ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
+            } );
         }
         
-        void ExchangeImpl::delete_resource_handler( const shared_ptr< Session > session, const Bytes& type )
+        void ExchangeImpl::delete_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type )
         {
+            session->set( "paging", Paging::default_value );
+            
             multimap< string, Bytes > filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
+            session->set( "filters", filters );
             
-            const auto status = m_repository->destroy( session->get( "keys" ), filters );
-            
-            if ( status not_eq OK )
+            m_repository->destroy( std::static_pointer_cast< Session >( session ), [ ]( const int status, const shared_ptr< Session > session )
             {
-                return Key::not_found_handler( session );
-            }
-            
-            session->close( NO_CONTENT, { { "Date", Date::make( ) } } );
+                if ( status not_eq OK )
+                {
+                    return Key::not_found_handler( session );
+                }
+                
+                session->close( NO_CONTENT, { { "Date", Date::make( ) } } );
+            } );
         }
         
-        void ExchangeImpl::asterisk_resource_handler( const shared_ptr< Session > session )
+        void ExchangeImpl::asterisk_resource_handler( const shared_ptr< restbed::Session > session )
         {
             const auto boot_time = system_clock::to_time_t( system_clock::now( ) ) - m_boot_time;
             
@@ -827,10 +906,7 @@ namespace restq
                 { "Uptime", ::to_string( boot_time ) },
                 { "Workers", ::to_string( m_settings->get_worker_limit( ) ) },
                 { "CPU", String::format( "%.1f%%", m_system->get_cpu_load( ) ) },
-                { "Memory", String::format( "%.1f%%", m_system->get_memory_load( ) ) },
-                { "Queues", ::to_string( m_repository->count( { { "type", QUEUE } } ) ) },
-                { "Messages", ::to_string( m_repository->count( { { "type", MESSAGE } } ) ) },
-                { "Subscriptions", ::to_string( m_repository->count( { { "type", SUBSCRIPTION } } ) ) }
+                { "Memory", String::format( "%.1f%%", m_system->get_memory_load( ) ) }
             };
             
             if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
@@ -841,34 +917,36 @@ namespace restq
             session->close( NO_CONTENT, headers );
         }
         
-        void ExchangeImpl::options_resource_handler( const shared_ptr< Session > session, const Bytes& type, const string& options )
+        void ExchangeImpl::options_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type, const string& options )
         {
+            session->set( "paging", Paging::default_value );
+            
             multimap< string, Bytes > filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
-            
-            list< multimap< string, Bytes > > resources;
-            const auto status = m_repository->read( session->get( "keys" ), Paging::default_value, filters, resources );
-            
-            if ( status not_eq OK )
+            session->set( "filters", filters );
+            m_repository->read( std::static_pointer_cast< Session >( session ), [ options ]( const int status, const list< multimap< string, Bytes > >, const shared_ptr< Session > session )
             {
-                return Key::not_found_handler( session );
-            }
-            
-            multimap< string, string > headers
-            {
-                { "Allow", options },
-                { "Date", Date::make( ) }
-            };
-            
-            if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
-            {
-                headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
-            }
-            
-            session->close( NO_CONTENT, headers );
+                if ( status not_eq OK )
+                {
+                    return Key::not_found_handler( session );
+                }
+                
+                multimap< string, string > headers
+                {
+                    { "Allow", options },
+                    { "Date", Date::make( ) }
+                };
+                
+                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+                {
+                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+                }
+                
+                session->close( NO_CONTENT, headers );
+            } );
         }
         
-        void ExchangeImpl::method_not_allowed_handler( const shared_ptr< Session > session )
+        void ExchangeImpl::method_not_allowed_handler( const shared_ptr< restbed::Session > session )
         {
             static const list< multimap< string, Bytes > > values { {
                     { "type", String::to_bytes( "error" ) },
@@ -913,7 +991,7 @@ namespace restq
             ( echo ) ? session->close( METHOD_NOT_ALLOWED, body, headers ) : session->close( METHOD_NOT_ALLOWED, headers );
         }
         
-        void ExchangeImpl::method_not_implemenented_handler( const shared_ptr< Session > session )
+        void ExchangeImpl::method_not_implemenented_handler( const shared_ptr< restbed::Session > session )
         {
             static const list< multimap< string, Bytes > > values { {
                     { "type", String::to_bytes( "error" ) },

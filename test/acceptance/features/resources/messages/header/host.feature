@@ -7,6 +7,23 @@ Feature: Host request-header field
 
     Scenario Outline: Valid host request-header field.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "e2b35255-749e-4e96-aa10-69080ab41cdc"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "e2b35255-749e-4e96-aa10-69080ab41cdc" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984":
         """
         " ftp://localhost/reading "

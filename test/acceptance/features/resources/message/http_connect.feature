@@ -7,6 +7,23 @@ Feature: HTTP CONNECT
 
     Scenario Outline: Connect resource.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "1f00fc0e-4e3c-4cf9-8620-1c3cd981d861"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "1f00fc0e-4e3c-4cf9-8620-1c3cd981d861" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         And I perform a HTTP "POST" request to "/messages" with headers "Content-Type: ascii, Accept: application/json, Host: localhost:1984":
         """
         " My awesome data payload"

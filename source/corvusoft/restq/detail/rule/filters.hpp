@@ -52,7 +52,7 @@ namespace restq
                     return;
                 }
                 
-                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
+                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
                 {
                     static const set< const string > reserved = { "echo", "keys", "style", "index", "limit", "fields" };
                     
@@ -75,6 +75,7 @@ namespace restq
                     }
                     
                     session->set( "filters", filters );
+                    session->set( "filtered_parameters", filters );
                     callback( session );
                 }
         };

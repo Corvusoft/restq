@@ -69,12 +69,12 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< Session > session ) final override
+                bool condition( const shared_ptr< restbed::Session > session ) final override
                 {
                     return session->get_request( )->has_path_parameter( "key" );
                 }
                 
-                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
+                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
                 {
                     vector< string > keys = session->get( "keys", vector< string >( ) );
                     
@@ -85,7 +85,7 @@ namespace restq
                     callback( session );
                 }
                 
-                static void not_found_handler( const shared_ptr< Session > session )
+                static void not_found_handler( const shared_ptr< restbed::Session > session )
                 {
                     static const list< multimap< string, Bytes > > values { {
                             { "type", String::to_bytes( "error" ) },
@@ -115,7 +115,7 @@ namespace restq
                     ( echo ) ? session->close( NOT_FOUND, body, headers ) : session->close( NOT_FOUND, headers );
                 }
                 
-                static void conflict_handler( const shared_ptr< Session >& session )
+                static void conflict_handler( const shared_ptr< restbed::Session >& session )
                 {
                     static const list< multimap< string, Bytes > > values { {
                             { "type", String::to_bytes( "error" ) },

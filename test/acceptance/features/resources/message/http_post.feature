@@ -7,6 +7,23 @@ Feature: HTTP POST
 
     Scenario Outline: Create resource.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "e0dc29e6-ff16-4f86-86a3-d8506b857256"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "e0dc29e6-ff16-4f86-86a3-d8506b857256" ] "
+        "   }                                                      "
+        " } 
+        """
         And I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/ascii, Accept: application/json, Host: localhost:1984":
         """
         " Important system data! "                                        

@@ -4,6 +4,7 @@ set( BUILD_ARTIFACTS
    ${SOURCE_DIR}/byte.hpp
    ${SOURCE_DIR}/string.hpp
    ${SOURCE_DIR}/logger.hpp
+   ${SOURCE_DIR}/session.hpp
    ${SOURCE_DIR}/exchange.hpp
    ${SOURCE_DIR}/settings.hpp
    ${SOURCE_DIR}/formatter.hpp

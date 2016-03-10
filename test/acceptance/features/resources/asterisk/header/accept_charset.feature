@@ -10,9 +10,6 @@ Feature: Accept-Charset request-header field
         When I perform a HTTP "OPTIONS" request to "/*" with headers "Accept: application/json, Accept-Charset: utf-8, Host: localhost:1984"
         Then I should see a response status code of "204" "No Content"
         And I should see a "Workers" header value
-        And I should see a "Queues" header value
-        And I should see a "Messages" header value
-        And I should see a "Subscriptions" header value
         And I should see a "Uptime" header value
         And I should see a "CPU" header value
         And I should see a "Memory" header value
@@ -95,9 +92,6 @@ Feature: Accept-Charset request-header field
         When I perform a HTTP "OPTIONS" request to "/*" with headers "Accept: application/json, Host: localhost:1984"
         Then I should see a response status code of "204" "No Content"
         And I should see a "Workers" header value
-        And I should see a "Queues" header value
-        And I should see a "Messages" header value
-        And I should see a "Subscriptions" header value
         And I should see a "Uptime" header value
         And I should see a "CPU" header value
         And I should see a "Memory" header value
@@ -180,9 +174,6 @@ Feature: Accept-Charset request-header field
         When I perform a HTTP "OPTIONS" request to "/*" with headers "Accept: application/json, Accept-Charset: *, Host: localhost:1984"
         Then I should see a response status code of "204" "No Content"
         And I should see a "Workers" header value
-        And I should see a "Queues" header value
-        And I should see a "Messages" header value
-        And I should see a "Subscriptions" header value
         And I should see a "Uptime" header value
         And I should see a "CPU" header value
         And I should see a "Memory" header value

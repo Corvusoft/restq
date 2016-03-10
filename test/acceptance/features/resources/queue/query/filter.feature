@@ -167,7 +167,7 @@ Feature: Filter Query
         "   }                                                "
         " }                                                  "
         """
-        When I perform a HTTP "GET" request to "/queues/a4a5ef06-2e12-419d-859a-32df9f6581b8?name=A,B,c" with headers "Accept: application/json, Host: localhost:1984"
+        When I perform a HTTP "GET" request to "/queues/a4a5ef06-2e12-419d-859a-32df9f6581b8?name=A,B,C" with headers "Accept: application/json, Host: localhost:1984"
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"

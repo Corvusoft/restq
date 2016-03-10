@@ -8,11 +8,9 @@
 //System Includes
 #include <map>
 #include <list>
-#include <vector>
 #include <string>
 #include <memory>
-#include <utility>
-#include <cstddef>
+#include <functional>
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
@@ -28,6 +26,7 @@
 namespace restq
 {
     //Forward Declarations
+    class Session;
     class Settings;
     
     class Repository
@@ -44,22 +43,18 @@ namespace restq
             
             virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
             
-            virtual std::size_t count( const std::multimap< std::string, Bytes >& filters ) = 0;
-            
-            virtual int create( const std::list< std::multimap< std::string, Bytes > >& values ) = 0;
-            
-            virtual int read( const std::vector< std::string >& keys,
-                              const std::pair< std::size_t, std::size_t >& range,
-                              const std::multimap< std::string, Bytes >& filters,
-                              std::list< std::multimap< std::string, Bytes > >& values ) = 0;
-                              
-            virtual int update( const std::vector< std::string >& keys,
-                                const std::pair< std::size_t, std::size_t >& range,
-                                const std::multimap< std::string, Bytes >& filters,
-                                const std::multimap< std::string, Bytes >& changeset,
-                                std::list< std::multimap< std::string, Bytes > >& values ) = 0;
-                                
-            virtual int destroy( const std::vector< std::string >& keys, const std::multimap< std::string, Bytes >& filters ) = 0;
+            virtual void create( const std::list< std::multimap< std::string, Bytes > > values,
+                                 const std::shared_ptr< Session > session,
+                                 const std::function< void ( const int, const std::list< std::multimap< std::string, Bytes > >, const std::shared_ptr< Session > ) >& callback ) = 0;
+                                 
+            virtual void read( const std::shared_ptr< Session > session,
+                               const std::function< void ( const int, const std::list< std::multimap< std::string, Bytes > >, const std::shared_ptr< Session > ) >& callback ) = 0;
+                               
+            virtual void update( const std::multimap< std::string, Bytes > changeset,
+                                 const std::shared_ptr< Session > session,
+                                 const std::function< void (  const int, const std::list< std::multimap< std::string, Bytes > >, const std::shared_ptr< Session > ) >& callback ) = 0;
+                                 
+            virtual void destroy( const std::shared_ptr< Session > session, const std::function< void ( const int, const std::shared_ptr< Session > ) >& callback ) = 0;
             
             //Getters
             

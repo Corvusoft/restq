@@ -46,12 +46,12 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< Session > session ) final override
+                bool condition( const shared_ptr< restbed::Session > session ) final override
                 {
                     return session->get_request( )->has_header( "Range" );
                 }
                 
-                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
+                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
                 {
                     session->set_header( "Accept-Ranges", "none" );
                     callback( session );

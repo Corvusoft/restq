@@ -7,6 +7,23 @@ Feature: Transfer-Encoding general-header field
 
     Scenario Outline: Presense of transfer-encoding general-header field with content-length.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "819e03a2-1306-44da-8465-1a722e4d70b4"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "819e03a2-1306-44da-8465-1a722e4d70b4" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
         When I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984, Content-Length: 25, Transfer-Encoding: chunked":
         """
         " ftp://localhost/reading "

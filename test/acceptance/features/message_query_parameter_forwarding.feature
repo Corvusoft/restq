@@ -26,12 +26,12 @@ Feature: HTTP query parameter forwarding
         """
         When I perform a HTTP "POST" request to "/queues/8beaad29-da53-4164-b543-2a1e42780a5b/messages?shutdown=20mins&reboot=true" with headers "Content-Type: text/plain, Accept: application/json, Host: localhost:1984":
         """
-        " Hello, World! "
+        " Hello, Query Parameters! "
         """
         And I wait "5" seconds
         Then I should see a message arrive at "http://localhost:1985":
         """
-        " Hello, World! "
+        " Hello, Query Parameters! "
         """
         And I should see a message "reboot" query parameter value "true"
         And I should see a message "shutdown" query parameter value "20mins"
@@ -41,8 +41,8 @@ Feature: HTTP query parameter forwarding
         And I should see a message "Pragma" header value "no-cache"
         And I should see a message "Cache-Control" header value "private,max-age=0,no-cache,no-store"
         And I should see a message "Content-Type" header value "text/plain"
-        And I should see a message "Content-Length" header value "15"
-        And I should see a message "Content-MD5" header value "CDFD4C824484B345C35B372963060B83"
+        And I should see a message "Content-Length" header value "26"
+        And I should see a message "Content-MD5" header value "EF2554DD1738BB957DF43EC64E29C1EF"
         And I should see a message "Last-Modified" header value
         And I should see a message "Via" header value "HTTP/1.1 localhost:1984"
         And I should see a message "From" header value "not implemented"

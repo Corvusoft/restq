@@ -10,12 +10,11 @@
 #include <list>
 #include <string>
 #include <memory>
-#include <vector>
-#include <utility>
-#include <cstddef>
+#include <functional>
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/settings.hpp>
 #include <corvusoft/restq/repository.hpp>
 
@@ -44,22 +43,18 @@ class STLRepository final : public restq::Repository
         
         void start( const std::shared_ptr< const restq::Settings >& settings );
         
-        std::size_t count( const std::multimap< std::string, restq::Bytes >& filters );
-        
-        int create( const std::list< std::multimap< std::string, restq::Bytes > >& values );
-        
-        int read( const std::vector< std::string >& keys,
-                  const std::pair< std::size_t, std::size_t >& range,
-                  const std::multimap< std::string, restq::Bytes >& filters,
-                  std::list< std::multimap< std::string, restq::Bytes > >& values );
-                  
-        int update( const std::vector< std::string >& keys,
-                    const std::pair< std::size_t, std::size_t >& range,
-                    const std::multimap< std::string, restq::Bytes >& filters,
-                    const std::multimap< std::string, restq::Bytes >& changeset,
-                    std::list< std::multimap< std::string, restq::Bytes > >& values );
-                    
-        int destroy( const std::vector< std::string >& keys, const std::multimap< std::string, restq::Bytes >& filters );
+        void create( const std::list< std::multimap< std::string, restq::Bytes > > values,
+                     const std::shared_ptr< restq::Session > session,
+                     const std::function< void ( const int, const std::list< std::multimap< std::string, restq::Bytes > >, const std::shared_ptr< restq::Session > ) >& callback );
+                     
+        void read( const std::shared_ptr< restq::Session > session,
+                   const std::function< void ( const int, const std::list< std::multimap< std::string, restq::Bytes > >, const std::shared_ptr< restq::Session > ) >& callback );
+                   
+        void update( const std::multimap< std::string, restq::Bytes > changeset,
+                     const std::shared_ptr< restq::Session > session,
+                     const std::function< void (  const int, const std::list< std::multimap< std::string, restq::Bytes > >, const std::shared_ptr< restq::Session > ) >& callback );
+                     
+        void destroy( const std::shared_ptr< restq::Session > session, const std::function< void ( const int, const std::shared_ptr< restq::Session > ) >& callback );
         
         //Getters
         

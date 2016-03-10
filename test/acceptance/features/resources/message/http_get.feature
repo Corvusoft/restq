@@ -7,6 +7,23 @@ Feature: HTTP GET
 
     Scenario Outline: Read resource.
         Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                        "
+        "     "name": "acceptance test queue",               "
+        "     "key": "71829c94-e112-4766-9a57-35b330ec41c0"  "
+        "   }                                                "
+        " }                                                  "
+        """
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "name": "acceptance test consumer",                  "
+        "     "endpoint": "http://localhost:1985",                 "
+        "     "queues": [ "71829c94-e112-4766-9a57-35b330ec41c0" ] "
+        "   }                                                      "
+        " } 
+        """
         And I perform a HTTP "POST" request to "/messages" with headers "Content-Type: text/xml, Accept: application/json, Host: localhost:1984":
         """
         " Important event"

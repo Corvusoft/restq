@@ -22,6 +22,7 @@ using std::string;
 using std::advance;
 using std::find_if;
 using std::multimap;
+using std::function;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -34,6 +35,7 @@ using restq::NOT_FOUND;
 using restq::NO_CONTENT;
 using restq::Bytes;
 using restq::String;
+using restq::Session;
 using restq::Settings;
 using restq::Repository;
 
@@ -58,33 +60,7 @@ void STLRepository::start( const shared_ptr< const Settings >& )
     return;
 }
 
-size_t STLRepository::count( const multimap< string, Bytes >& filters )
-{
-    size_t count = 0;
-    
-    for ( const auto resource : m_resources )
-    {
-        bool rejected = false;
-        
-        for ( const auto filter : filters )
-        {
-            if ( resource.count( filter.first ) == 0 or resource.lower_bound( filter.first )->second not_eq filter.second )
-            {
-                rejected = true;
-                break;
-            }
-        }
-        
-        if ( not rejected )
-        {
-            count++;
-        }
-    }
-    
-    return count;
-}
-
-int STLRepository::create( const list< multimap< string, Bytes > >& values )
+void STLRepository::create( const list< multimap< string, Bytes > > values, const shared_ptr< Session > session, const function< void ( const int, const list< multimap< string, Bytes > >, const shared_ptr< Session > ) >& callback )
 {
     for ( const auto value : values )
     {
@@ -98,17 +74,22 @@ int STLRepository::create( const list< multimap< string, Bytes > >& values )
         
         if ( conflict )
         {
-            return CONFLICT;
+            return callback( CONFLICT, values, session );
         }
     }
     
     m_resources.insert( m_resources.end( ), values.begin( ), values.end( ) );
     
-    return CREATED;
+    callback( CREATED, values, session );
 }
 
-int STLRepository::read( const vector< string >& keys, const pair< size_t, size_t >& range, const multimap< string, Bytes >& filters, list< multimap< string, Bytes > >& values )
+void STLRepository::read( const shared_ptr< Session > session, const function< void ( const int, const list< multimap< string, Bytes > >, const shared_ptr< Session > ) >& callback )
 {
+    list< multimap< string, Bytes > > values;
+    const vector< string > keys = session->get( "keys" );
+    const pair< size_t, size_t > range = session->get( "paging" );
+    const multimap< string, Bytes > filters = session->get( "filters" );
+    
     list< multimap< string, Bytes > > resources;
     
     if ( not keys.empty( ) )
@@ -127,7 +108,7 @@ int STLRepository::read( const vector< string >& keys, const pair< size_t, size_
             
             if ( resource == m_resources.end( ) )
             {
-                return NOT_FOUND;
+                return callback( NOT_FOUND, values, session );
             }
             
             resources.push_back( *resource );
@@ -138,32 +119,45 @@ int STLRepository::read( const vector< string >& keys, const pair< size_t, size_
         resources = m_resources;
     }
     
+    bool matched = false;
+    
     for ( auto resource = resources.begin( ); resource not_eq resources.end( ); resource++ )
     {
-        bool rejected = false;
-        
-        for ( const auto filter : filters )
+        for ( auto filter = filters.begin( ); filter not_eq filters.end( ); )
         {
-            const auto iterators = resource->equal_range( filter.first );
+            matched = false;
+            const auto filter_range = filters.equal_range( filter->first );
+            const auto property_range = resource->equal_range( filter->first );
             
-            rejected = true;
-            
-            for ( auto iterator = iterators.first; iterator not_eq iterators.second; iterator++ )
+            for ( auto filter_iterator = filter_range.first; filter_iterator not_eq filter_range.second; filter_iterator++ )
             {
-                if ( iterator->second == filter.second )
+                matched = std::any_of( property_range.first, property_range.second, [ &filter_iterator ]( const pair< string, Bytes >& property )
                 {
-                    rejected = false;
+                    return property.second == filter_iterator->second;
+                } );
+                
+                if ( matched )
+                {
                     break;
                 }
             }
             
-            if ( rejected )
+            if ( matched == false )
             {
                 break;
             }
+            
+            if ( filter_range.second not_eq filters.end( ) )
+            {
+                filter = filter_range.second;
+            }
+            else
+            {
+                filter++;
+            }
         }
         
-        if ( rejected )
+        if ( matched == false )
         {
             resources.erase( resource );
         }
@@ -184,81 +178,82 @@ int STLRepository::read( const vector< string >& keys, const pair< size_t, size_
         }
     }
     
-    return OK;
+    callback( OK, values, session );
 }
 
-int STLRepository::update( const vector< string >& keys, const pair< size_t, size_t >& range, const multimap< string, Bytes >& filters, const multimap< string, Bytes >& changeset, list< multimap< string, Bytes > >& values )
+void STLRepository::update( const multimap< string, Bytes > changeset, const shared_ptr< Session > session, const function< void (  const int, const list< multimap< string, Bytes > >, const shared_ptr< Session > ) >& callback  )
 {
-    int status = read( keys, range, filters, values );
-    
-    if ( status not_eq OK )
+    read( session, [ changeset, callback, this ]( const int status_code, const list< multimap< string, Bytes > > values, const shared_ptr< Session > session )
     {
-        return status;
-    }
-    
-    status = NO_CONTENT;
-    
-    for ( auto& value : values )
-    {
-        for ( const auto& change : changeset )
+        if ( status_code not_eq OK )
         {
-            if ( change.first == "modified" or change.first == "revision" )
-            {
-                continue;
-            }
-            
-            auto property = value.find( change.first );
-            
-            if ( property == value.end( ) )
-            {
-                value.insert( change );
-                status = OK;
-            }
-            else if ( property->second not_eq change.second )
-            {
-                property->second = change.second;
-                status = OK;
-            }
+            return callback( status_code, values, session );
         }
         
-        auto resource = find_if( m_resources.begin( ), m_resources.end( ), [ &value ]( const multimap< string, Bytes >& resource )
-        {
-            const auto lhs = String::to_string( value.lower_bound( "key" )->second );
-            const auto rhs = String::to_string( resource.lower_bound( "key" )->second );
-            
-            return String::lowercase( lhs ) == String::lowercase( rhs );
-        } );
+        int status = NO_CONTENT;
         
-        *resource = value;
-    }
-    
-    return status;
+        auto resources = values;
+        
+        for ( auto& value : resources )
+        {
+            for ( const auto& change : changeset )
+            {
+                if ( change.first == "modified" or change.first == "revision" )
+                {
+                    continue;
+                }
+                
+                auto property = value.find( change.first );
+                
+                if ( property == value.end( ) )
+                {
+                    value.insert( change );
+                    status = OK;
+                }
+                else if ( property->second not_eq change.second )
+                {
+                    property->second = change.second;
+                    status = OK;
+                }
+            }
+            
+            auto resource = find_if( m_resources.begin( ), m_resources.end( ), [ &value ]( const multimap< string, Bytes >& resource )
+            {
+                const auto lhs = String::to_string( value.lower_bound( "key" )->second );
+                const auto rhs = String::to_string( resource.lower_bound( "key" )->second );
+                
+                return String::lowercase( lhs ) == String::lowercase( rhs );
+            } );
+            
+            *resource = value;
+        }
+        
+        callback( status, resources, session );
+    } );
 }
 
-int STLRepository::destroy( const vector< string >& keys, const multimap< string, Bytes >& filters )
+void STLRepository::destroy( const shared_ptr< Session > session, const function< void ( const int, const shared_ptr< Session > ) >& callback )
 {
-    list< multimap< string, Bytes > > resources;
-    static const pair< size_t, size_t > range = { 0, UINT_MAX };
-    
-    const int status = read( keys, range, filters, resources );
-    
-    if ( status not_eq OK )
+    read( session, [ callback, this ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
     {
-        return status;
-    }
-    
-    for ( const auto resource : resources )
-    {
-        auto iterator = find_if( m_resources.begin( ), m_resources.end( ), [ &resource ]( const multimap< string, Bytes >& value )
+        if ( status not_eq OK )
         {
-            const auto lhs = String::to_string( value.lower_bound( "key" )->second );
-            const auto rhs = String::to_string( resource.lower_bound( "key" )->second );
-            
-            return String::lowercase( lhs ) == String::lowercase( rhs );
-        } );
+            return callback( status, session );
+        }
         
-        m_resources.erase( iterator );
-    }
-    
-    return OK;
+        for ( const auto resource : resources )
+        {
+            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), [ &resource ]( const multimap< string, Bytes >& value )
+            {
+                const auto lhs = String::to_string( value.lower_bound( "key" )->second );
+                const auto rhs = String::to_string( resource.lower_bound( "key" )->second );
+                
+                return String::lowercase( lhs ) == String::lowercase( rhs );
+            } );
+            
+            m_resources.erase( iterator );
+        }
+        
+        callback( OK, session );
+    } );
 }
