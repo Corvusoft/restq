@@ -18,6 +18,7 @@
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
+#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/formatter.hpp>
 #include <corvusoft/restq/status_code.hpp>
 #include <corvusoft/restq/detail/rule/date.hpp>
@@ -26,7 +27,6 @@
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -44,7 +44,6 @@ using std::regex_constants::icase;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Session;
 using restbed::Request;
 
 namespace restq
@@ -65,7 +64,7 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< restbed::Session > session ) final override
+                bool condition( const shared_ptr< Session > session ) final override
                 {
                     const auto request = session->get_request( );
                     const auto method = request->get_method( String::lowercase );
@@ -73,7 +72,7 @@ namespace restq
                     return method == "put" or method == "post" or request->has_header( "Content-Type" );
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     const auto request = session->get_request( );
                     const auto header = request->get_header( "Content-Type" );
@@ -91,7 +90,7 @@ namespace restq
                     unsupported_media_type_handler( message, session );
                 }
                 
-                static void unsupported_media_type_handler( const string message, const shared_ptr< restbed::Session > session )
+                static void unsupported_media_type_handler( const string message, const shared_ptr< Session > session )
                 {
                     const list< multimap< string, Bytes > > values { {
                             { "status", String::to_bytes( "415" ) },
@@ -117,7 +116,7 @@ namespace restq
                     ( echo ) ? session->close( UNSUPPORTED_MEDIA_TYPE, body, headers ) : session->close( UNSUPPORTED_MEDIA_TYPE, headers );
                 }
                 
-                static string make( const shared_ptr< restbed::Session >& session )
+                static string make( const shared_ptr< Session >& session )
                 {
                     const string charset = session->get( "charset", string( "utf-8" ) );
                     const string accept = session->get( "accept", string( "text/plain" ) );

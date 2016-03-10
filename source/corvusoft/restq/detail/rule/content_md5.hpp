@@ -12,13 +12,13 @@
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/string.hpp>
+#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/status_code.hpp>
 
 //External Includes
 #include <md5.h>
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/string.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -30,7 +30,6 @@ using std::shared_ptr;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Session;
 using restbed::Request;
 
 namespace restq
@@ -50,12 +49,12 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< restbed::Session > session ) final override
+                bool condition( const shared_ptr< Session > session ) final override
                 {
                     return session->get_request( )->has_header( "Content-MD5" );
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     callback( session );
                 }

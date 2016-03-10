@@ -18,6 +18,7 @@
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
+#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/formatter.hpp>
 #include <corvusoft/restq/status_code.hpp>
 #include <corvusoft/restq/detail/rule/date.hpp>
@@ -29,7 +30,6 @@
 #include <kashmir/uuid_gen.h>
 #include <kashmir/system/devrand.h>
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -49,7 +49,6 @@ using std::stringstream;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Session;
 using restbed::Request;
 
 namespace restq
@@ -69,12 +68,12 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< restbed::Session > session ) final override
+                bool condition( const shared_ptr< Session > session ) final override
                 {
                     return session->get_request( )->has_path_parameter( "key" );
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     vector< string > keys = session->get( "keys", vector< string >( ) );
                     
@@ -85,7 +84,7 @@ namespace restq
                     callback( session );
                 }
                 
-                static void not_found_handler( const shared_ptr< restbed::Session > session )
+                static void not_found_handler( const shared_ptr< Session > session )
                 {
                     static const list< multimap< string, Bytes > > values { {
                             { "type", String::to_bytes( "error" ) },
@@ -115,7 +114,7 @@ namespace restq
                     ( echo ) ? session->close( NOT_FOUND, body, headers ) : session->close( NOT_FOUND, headers );
                 }
                 
-                static void conflict_handler( const shared_ptr< restbed::Session >& session )
+                static void conflict_handler( const shared_ptr< Session >& session )
                 {
                     static const list< multimap< string, Bytes > > values { {
                             { "type", String::to_bytes( "error" ) },

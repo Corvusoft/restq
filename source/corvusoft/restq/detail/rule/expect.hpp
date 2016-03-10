@@ -14,6 +14,7 @@
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/status_code.hpp>
 #include <corvusoft/restq/detail/rule/date.hpp>
 #include <corvusoft/restq/detail/rule/content_md5.hpp>
@@ -21,7 +22,6 @@
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -36,7 +36,6 @@ using std::shared_ptr;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Session;
 using restbed::Request;
 
 namespace restq
@@ -56,12 +55,12 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< restbed::Session > session ) final override
+                bool condition( const shared_ptr< Session > session ) final override
                 {
                     return session->get_request( )->has_header( "Expect" );
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& ) final override
                 {
                     const auto request = session->get_request( );
                     

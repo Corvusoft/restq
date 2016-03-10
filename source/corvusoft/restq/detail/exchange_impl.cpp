@@ -12,7 +12,6 @@
 //Project Includes
 #include "corvusoft/restq/string.hpp"
 #include "corvusoft/restq/session.hpp"
-#include "corvusoft/restq/settings.hpp"
 #include "corvusoft/restq/formatter.hpp"
 #include "corvusoft/restq/repository.hpp"
 #include "corvusoft/restq/status_code.hpp"
@@ -24,7 +23,6 @@
 #include <corvusoft/restbed/request.hpp>
 #include <corvusoft/restbed/response.hpp>
 #include <corvusoft/restbed/resource.hpp>
-#include <corvusoft/restbed/settings.hpp>
 
 //System Namespaces
 using std::set;
@@ -53,10 +51,8 @@ using loadis::System;
 using restbed::Http;
 using restbed::Request;
 using restbed::Service;
-using restbed::Session;
 using restbed::Response;
 using restbed::Resource;
-using restbed::Settings;
 
 namespace restq
 {
@@ -542,7 +538,7 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::create_message_handler( const shared_ptr< restbed::Session > session )
+        void ExchangeImpl::create_message_handler( const shared_ptr< Session > session )
         {
             const auto request = session->get_request( );
             
@@ -568,7 +564,7 @@ namespace restq
             session->set( "filters", filters );
             session->set( "paging", Paging::default_value );
             
-            m_repository->read( std::static_pointer_cast< Session >( session ), [ this ]( const int status, const list< multimap< string, Bytes > > queues, const shared_ptr< Session > session )
+            m_repository->read( session, [ this ]( const int status, const list< multimap< string, Bytes > > queues, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
                 {
@@ -681,7 +677,7 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::create_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type )
+        void ExchangeImpl::create_resource_handler( const shared_ptr< Session > session, const Bytes& type )
         {
             list< multimap< string, Bytes > > resources;
             const shared_ptr< Formatter > parser = session->get( "content-format" );
@@ -727,7 +723,7 @@ namespace restq
                 resource.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
             }
             
-            m_repository->create( resources, std::static_pointer_cast< Session >( session ), [ ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
+            m_repository->create( resources, session, [ ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
             {
                 if ( status not_eq CREATED )
                 {
@@ -759,7 +755,7 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::read_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type )
+        void ExchangeImpl::read_resource_handler( const shared_ptr< Session > session, const Bytes& type )
         {
             if ( not session->has( "paging" ) )
             {
@@ -770,7 +766,7 @@ namespace restq
             filters.insert( make_pair( "type", type ) );
             session->set( "filters", filters );
             
-            m_repository->read( std::static_pointer_cast< Session >( session ), [ ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
+            m_repository->read( session, [ ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
                 {
@@ -799,7 +795,7 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::update_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type )
+        void ExchangeImpl::update_resource_handler( const shared_ptr< Session > session, const Bytes& type )
         {
             const shared_ptr< Formatter > parser = session->get( "content-format" );
             
@@ -839,7 +835,7 @@ namespace restq
             filters.insert( make_pair( "type", type ) );
             session->set( "filters", filters );
             
-            m_repository->update( change, std::static_pointer_cast< Session >( session ), [ changeset ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
+            m_repository->update( change, session, [ changeset ]( const int status, const list< multimap< string, Bytes > > resources, const shared_ptr< Session > session )
             {
                 if ( status == NOT_FOUND )
                 {
@@ -876,7 +872,7 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::delete_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type )
+        void ExchangeImpl::delete_resource_handler( const shared_ptr< Session > session, const Bytes& type )
         {
             session->set( "paging", Paging::default_value );
             
@@ -884,7 +880,7 @@ namespace restq
             filters.insert( make_pair( "type", type ) );
             session->set( "filters", filters );
             
-            m_repository->destroy( std::static_pointer_cast< Session >( session ), [ ]( const int status, const shared_ptr< Session > session )
+            m_repository->destroy( session, [ ]( const int status, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
                 {
@@ -895,7 +891,7 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::asterisk_resource_handler( const shared_ptr< restbed::Session > session )
+        void ExchangeImpl::asterisk_resource_handler( const shared_ptr< Session > session )
         {
             const auto boot_time = system_clock::to_time_t( system_clock::now( ) ) - m_boot_time;
             
@@ -917,14 +913,14 @@ namespace restq
             session->close( NO_CONTENT, headers );
         }
         
-        void ExchangeImpl::options_resource_handler( const shared_ptr< restbed::Session > session, const Bytes& type, const string& options )
+        void ExchangeImpl::options_resource_handler( const shared_ptr< Session > session, const Bytes& type, const string& options )
         {
             session->set( "paging", Paging::default_value );
             
             multimap< string, Bytes > filters = session->get( "filters" );
             filters.insert( make_pair( "type", type ) );
             session->set( "filters", filters );
-            m_repository->read( std::static_pointer_cast< Session >( session ), [ options ]( const int status, const list< multimap< string, Bytes > >, const shared_ptr< Session > session )
+            m_repository->read( session, [ options ]( const int status, const list< multimap< string, Bytes > >, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
                 {
@@ -946,7 +942,7 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::method_not_allowed_handler( const shared_ptr< restbed::Session > session )
+        void ExchangeImpl::method_not_allowed_handler( const shared_ptr< Session > session )
         {
             static const list< multimap< string, Bytes > > values { {
                     { "type", String::to_bytes( "error" ) },
@@ -991,7 +987,7 @@ namespace restq
             ( echo ) ? session->close( METHOD_NOT_ALLOWED, body, headers ) : session->close( METHOD_NOT_ALLOWED, headers );
         }
         
-        void ExchangeImpl::method_not_implemenented_handler( const shared_ptr< restbed::Session > session )
+        void ExchangeImpl::method_not_implemenented_handler( const shared_ptr< Session > session )
         {
             static const list< multimap< string, Bytes > > values { {
                     { "type", String::to_bytes( "error" ) },
@@ -1019,7 +1015,7 @@ namespace restq
             ( echo ) ? session->close( NOT_IMPLEMENTED, body, headers ) : session->close( NOT_IMPLEMENTED, headers );
         }
         
-        void ExchangeImpl::internal_server_error_handler( const int status, const exception& error, const shared_ptr< restbed::Session > session )
+        void ExchangeImpl::internal_server_error_handler( const int status, const exception& error, const shared_ptr< Session > session )
         {
             const string message = error.what( );
             

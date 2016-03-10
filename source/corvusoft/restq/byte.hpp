@@ -6,12 +6,11 @@
 #define _RESTQ_BYTE_H 1
 
 //System Includes
-#include <vector>
-#include <cstdint>
 
 //Project Includes
 
 //External Includes
+#include <corvusoft/restbed/byte.hpp>
 
 //System Namespaces
 
@@ -21,9 +20,9 @@
 
 namespace restq
 {
-    typedef uint8_t Byte;
+    using Byte = restbed::Byte;
     
-    typedef std::vector< Byte > Bytes;
+    using Bytes = restbed::Bytes;
 }
 
 #endif  /* _RESTQ_BYTE_H */

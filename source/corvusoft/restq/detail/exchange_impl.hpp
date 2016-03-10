@@ -17,12 +17,13 @@
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/logger.hpp>
+#include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/settings.hpp>
 
 //External Includes
 #include <corvusoft/loadis/system.hpp>
 #include <corvusoft/restbed/rule.hpp>
 #include <corvusoft/restbed/service.hpp>
-#include <corvusoft/restbed/session.hpp>
 
 //System Namespaces
 
@@ -33,7 +34,6 @@
 namespace restq
 {
     //Forward Declarations
-    class Settings;
     class Exchange;
     class Formatter;
     class Repository;
@@ -161,25 +161,25 @@ namespace restq
                 
                 void dispatch( void );
                 
-                void create_message_handler( const std::shared_ptr< restbed::Session > session );
+                void create_message_handler( const std::shared_ptr< Session > session );
                 
-                void create_resource_handler( const std::shared_ptr< restbed::Session > session, const Bytes& type );
+                void create_resource_handler( const std::shared_ptr< Session > session, const Bytes& type );
                 
-                void read_resource_handler( const std::shared_ptr< restbed::Session > session, const Bytes& type );
+                void read_resource_handler( const std::shared_ptr< Session > session, const Bytes& type );
                 
-                void update_resource_handler( const std::shared_ptr< restbed::Session > session, const Bytes& type );
+                void update_resource_handler( const std::shared_ptr< Session > session, const Bytes& type );
                 
-                void delete_resource_handler( const std::shared_ptr< restbed::Session > session, const Bytes& type );
+                void delete_resource_handler( const std::shared_ptr< Session > session, const Bytes& type );
                 
-                void asterisk_resource_handler( const std::shared_ptr< restbed::Session > session );
+                void asterisk_resource_handler( const std::shared_ptr< Session > session );
                 
-                void options_resource_handler( const std::shared_ptr< restbed::Session > session, const Bytes& type, const std::string& options );
+                void options_resource_handler( const std::shared_ptr< Session > session, const Bytes& type, const std::string& options );
                 
-                void method_not_allowed_handler( const std::shared_ptr< restbed::Session > session );
+                void method_not_allowed_handler( const std::shared_ptr< Session > session );
                 
-                void method_not_implemenented_handler( const std::shared_ptr< restbed::Session > session );
+                void method_not_implemenented_handler( const std::shared_ptr< Session > session );
                 
-                void internal_server_error_handler( const int status, const std::exception& error, const std::shared_ptr< restbed::Session > session );
+                void internal_server_error_handler( const int status, const std::exception& error, const std::shared_ptr< Session > session );
                 
                 //Getters
                 

@@ -12,12 +12,12 @@
 #include <functional>
 
 //Project Includes
+#include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/detail/rule/content_type.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/string.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -29,7 +29,6 @@ using std::shared_ptr;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Session;
 using restbed::Request;
 
 namespace restq
@@ -49,12 +48,12 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< restbed::Session > session ) final override
+                bool condition( const shared_ptr< Session > session ) final override
                 {
                     return session->get_request( )->has_header( "Content-Encoding" );
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     const auto request = session->get_request( );
                     const auto encoding = request->get_header( "Content-Encoding", String::lowercase );

@@ -20,66 +20,7 @@
 
 namespace restq
 {
-    //Forward Declarations
-    
-    class SSLSettings : public restbed::SSLSettings
-    {
-        public:
-            //Friends
-            
-            //Definitions
-            
-            //Constructors
-            SSLSettings( void ) = default;
-            
-            virtual ~SSLSettings( void ) = default;
-            
-            //Functionality
-            
-            //Getters
-            
-            //Setters
-            
-            //Operators
-            
-            //Properties
-            
-        protected:
-            //Friends
-            
-            //Definitions
-            
-            //Constructors
-            SSLSettings( const SSLSettings& original ) = delete;
-            
-            //Functionality
-            
-            //Getters
-            
-            //Setters
-            
-            //Operators
-            SSLSettings& operator =( const SSLSettings& value ) = delete;
-            
-            //Properties
-            
-        private:
-            //Friends
-            
-            //Definitions
-            
-            //Constructors
-            
-            //Functionality
-            
-            //Getters
-            
-            //Setters
-            
-            //Operators
-            
-            //Properties
-    };
+    using SSLSettings = restbed::SSLSettings;
 }
 
 #endif  /* _RESTQ_SSL_SETTINGS_H */

@@ -13,11 +13,11 @@
 #include <functional>
 
 //Project Includes
+#include <corvusoft/restq/string.hpp>
+#include <corvusoft/restq/session.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/string.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -31,7 +31,6 @@ using std::shared_ptr;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Session;
 
 namespace restq
 {
@@ -50,17 +49,17 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< restbed::Session > ) final override
+                bool condition( const shared_ptr< Session > ) final override
                 {
                     return false;
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     callback( session );
                 }
                 
-                static string make( const shared_ptr< restbed::Session >& session, const list< multimap< string, Bytes > >& resources )
+                static string make( const shared_ptr< Session >& session, const list< multimap< string, Bytes > >& resources )
                 {
                     const string host = session->get( "host" );
                     const auto type = resources.back( ).lower_bound( "type" )->second;

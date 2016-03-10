@@ -11,10 +11,10 @@
 #include <functional>
 
 //Project Includes
+#include <corvusoft/restq/session.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -27,7 +27,6 @@ using std::shared_ptr;
 //External Namespaces
 using restbed::Rule;
 using restbed::Request;
-using restbed::Session;
 
 namespace restq
 {
@@ -46,12 +45,12 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< restbed::Session > session ) final override
+                bool condition( const shared_ptr< Session > session ) final override
                 {
                     return session->get_request( )->has_header( "Range" );
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     session->set_header( "Accept-Ranges", "none" );
                     callback( session );

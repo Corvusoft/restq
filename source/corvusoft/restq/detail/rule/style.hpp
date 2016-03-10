@@ -13,10 +13,10 @@
 
 //Project Includes
 #include <corvusoft/restq/string.hpp>
+#include <corvusoft/restq/session.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -29,7 +29,6 @@ using std::shared_ptr;
 //External Namespaces
 using restbed::Rule;
 using restbed::Request;
-using restbed::Session;
 
 namespace restq
 {
@@ -48,7 +47,7 @@ namespace restq
                     return;
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     const auto request = session->get_request( );
                     const auto parameters = request->get_query_parameters( "style" );

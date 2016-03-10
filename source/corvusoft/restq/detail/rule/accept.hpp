@@ -15,6 +15,7 @@
 #include <functional>
 
 //Project Includes
+#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/formatter.hpp>
 #include <corvusoft/restq/status_code.hpp>
 #include <corvusoft/restq/detail/rule/date.hpp>
@@ -25,7 +26,6 @@
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -42,7 +42,6 @@ using std::regex_constants::icase;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Session;
 using restbed::Request;
 
 namespace restq
@@ -63,7 +62,7 @@ namespace restq
                     return;
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& callback ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
                     const auto request = session->get_request( );
                     const auto header = request->get_header( "Accept" );
@@ -82,7 +81,7 @@ namespace restq
                     not_acceptable_handler( session, body );
                 }
                 
-                static void not_acceptable_handler( const shared_ptr< restbed::Session > session, const string& message )
+                static void not_acceptable_handler( const shared_ptr< Session > session, const string& message )
                 {
                     Bytes body;
                     

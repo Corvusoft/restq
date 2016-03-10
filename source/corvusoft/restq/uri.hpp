@@ -21,74 +21,7 @@
 
 namespace restq
 {
-    //Forward Declarations
-    
-    class Uri : public restbed::Uri
-    {
-        public:
-            //Friends
-            
-            //Definitions
-            
-            //Constructors
-            explicit Uri( const std::string& value, bool relative = false ) : restbed::Uri( value, relative )
-            {
-                return;
-            };
-            
-            Uri( const Uri& original ) : restbed::Uri( original )
-            {
-                return;
-            };
-            
-            virtual ~Uri( void ) = default;
-            
-            //Functionality
-            
-            //Getters
-            
-            //Setters
-            
-            //Operators
-            
-            //Properties
-            
-        protected:
-            //Friends
-            
-            //Definitions
-            
-            //Constructors
-            
-            //Functionality
-            
-            //Getters
-            
-            //Setters
-            
-            //Operators
-            
-            //Properties
-            
-        private:
-            //Friends
-            
-            //Definitions
-            
-            //Constructors
-            Uri( void ) = default;
-            
-            //Functionality
-            
-            //Getters
-            
-            //Setters
-            
-            //Operators
-            Uri& operator =( const Uri& value ) = default;
-            
-            //Properties
-    };
+    using Uri = restbed::Uri;
 }
 
 #endif  /* _RESTQ_URI_H */

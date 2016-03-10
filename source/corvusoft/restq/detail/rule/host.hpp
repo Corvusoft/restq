@@ -16,6 +16,7 @@
 #include <corvusoft/restq/uri.hpp>
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
+#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/formatter.hpp>
 #include <corvusoft/restq/status_code.hpp>
 #include <corvusoft/restq/detail/rule/date.hpp>
@@ -24,7 +25,6 @@
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/session.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
@@ -39,7 +39,6 @@ using std::shared_ptr;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Session;
 using restbed::Request;
 
 namespace restq
@@ -59,7 +58,7 @@ namespace restq
                     return;
                 }
                 
-                bool condition( const shared_ptr< restbed::Session > session ) final override
+                bool condition( const shared_ptr< Session > session ) final override
                 {
                     const auto request = session->get_request( );
                     const auto host = request->get_header( "Host", String::lowercase );
@@ -69,13 +68,13 @@ namespace restq
                     return not Uri::is_valid( host );
                 }
                 
-                void action( const shared_ptr< restbed::Session > session, const function< void ( const shared_ptr< restbed::Session > ) >& ) final override
+                void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& ) final override
                 {
                     static const string message = "The exchange is refusing to process the request because it was missing or contained a malformed Host request-header.";
                     bad_request_handler( message, session );
                 }
                 
-                static void bad_request_handler( const string& message, const shared_ptr< restbed::Session >& session )
+                static void bad_request_handler( const string& message, const shared_ptr< Session >& session )
                 {
                     const list< multimap< string, Bytes > > values { {
                             { "status", { '4', '0', '0' } },

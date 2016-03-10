@@ -11,6 +11,8 @@
 #include <functional>
 
 //Project Includes
+#include <corvusoft/restq/logger.hpp>
+#include <corvusoft/restq/settings.hpp>
 
 //External Includes
 
@@ -23,8 +25,6 @@
 namespace restq
 {
     //Forward Declarations
-    class Logger;
-    class Settings;
     class Formatter;
     class Repository;
     

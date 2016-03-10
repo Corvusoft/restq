@@ -14,6 +14,8 @@
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/settings.hpp>
 
 //External Includes
 
@@ -26,8 +28,6 @@
 namespace restq
 {
     //Forward Declarations
-    class Session;
-    class Settings;
     
     class Repository
     {
