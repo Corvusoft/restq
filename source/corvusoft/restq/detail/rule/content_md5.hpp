@@ -60,8 +60,6 @@ namespace restq
                     const auto body = request->get_body( );
                     const auto checksum = make( body );
                     
-                    fprintf( stderr, "CSUM: %s\n", checksum.data( ) );
-                    
                     if ( checksum not_eq request->get_header( "Content-MD5", String::lowercase ) )
                     {
                         return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the entity-body failed Content-MD5 end-to-end message integrity check.", session );
