@@ -68,7 +68,7 @@ Feature: Host request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "202"
-        And I should see a "Content-MD5" header value "C6C13CF54DAFF367AFF61C868AF2FFA5"
+        And I should see a "Content-MD5" header value "c6c13cf54daff367aff61c868af2ffa5"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -120,7 +120,7 @@ Feature: Host request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "202"
-        And I should see a "Content-MD5" header value "C6C13CF54DAFF367AFF61C868AF2FFA5"
+        And I should see a "Content-MD5" header value "c6c13cf54daff367aff61c868af2ffa5"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -172,7 +172,7 @@ Feature: Host request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "202"
-        And I should see a "Content-MD5" header value "C6C13CF54DAFF367AFF61C868AF2FFA5"
+        And I should see a "Content-MD5" header value "c6c13cf54daff367aff61c868af2ffa5"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

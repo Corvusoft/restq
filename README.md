@@ -12,6 +12,7 @@ HTTP message broker enabling software solutions to decouple, connect and scale. 
 | Discovery | The ability to query and discover Queues/Subscriptions of importance.  |
 | Decoration | Queues/Subscriptions can be annotated with properties to tag, categorise and aid discovery. |
 | PubSub  | Support for the Publish-Subscribe messaging pattern. |
+| Message Integrity | Content-MD5 end-to-end message integrity checking (MIC). |
 | Logging |	Customise how and where log entries are created. |
 | IPv4/IPv6 |	Internet Protocol Version 4/6 Network Support. |
 | Architecture | Asynchronous single or multi-threaded architecture, capable of addressing the C10K problem. |

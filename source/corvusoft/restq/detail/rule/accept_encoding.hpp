@@ -6,29 +6,23 @@
 #define _RESTQ_DETAIL_RULE_ACCEPT_ENCODING_H 1
 
 //System Includes
-#include <map>
-#include <list>
 #include <string>
 #include <memory>
 #include <ciso646>
 #include <functional>
 
 //Project Includes
-#include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
-#include <corvusoft/restq/formatter.hpp>
-#include <corvusoft/restq/status_code.hpp>
+#include <corvusoft/restq/detail/error_handler_impl.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
-using std::list;
 using std::string;
 using std::function;
-using std::multimap;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -69,8 +63,8 @@ namespace restq
                         return callback( session );
                     }
                     
-                    static const string body = "The exchange is only capable of generating response entities which have content characteristics not acceptable according to the accept-encoding header sent in the request.";
-                    Accept::not_acceptable_handler( session, body );
+                    static const string message = "The exchange is only capable of generating response entities which have content characteristics not acceptable according to the accept-encoding header sent in the request.";
+                    ErrorHandlerImpl::not_acceptable( message, session );
                 }
         };
     }

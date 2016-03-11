@@ -39,7 +39,7 @@ Feature: End-to-end HTTP message delivery
         And I should see a message "Cache-Control" header value "private,max-age=0,no-cache,no-store"
         And I should see a message "Content-Type" header value "text/plain"
         And I should see a message "Content-Length" header value "15"
-        And I should see a message "Content-MD5" header value "CDFD4C824484B345C35B372963060B83"
+        And I should see a message "Content-MD5" header value "cdfd4c824484b345c35b372963060b83"
         And I should see a message "Last-Modified" header value
         And I should see a message "Via" header value "HTTP/1.1 localhost:1984"
         And I should see a message "From" header value "not implemented"

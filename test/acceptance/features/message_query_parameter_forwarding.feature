@@ -42,7 +42,7 @@ Feature: HTTP query parameter forwarding
         And I should see a message "Cache-Control" header value "private,max-age=0,no-cache,no-store"
         And I should see a message "Content-Type" header value "text/plain"
         And I should see a message "Content-Length" header value "26"
-        And I should see a message "Content-MD5" header value "EF2554DD1738BB957DF43EC64E29C1EF"
+        And I should see a message "Content-MD5" header value "ef2554dd1738bb957df43ec64e29c1ef"
         And I should see a message "Last-Modified" header value
         And I should see a message "Via" header value "HTTP/1.1 localhost:1984"
         And I should see a message "From" header value "not implemented"

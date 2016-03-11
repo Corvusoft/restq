@@ -65,7 +65,7 @@ Feature: Accept request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "text/plain; charset=utf-8"
         And I should see a "Content-Length" header value "162"
-        And I should see a "Content-MD5" header value "ABDF0CB26FA034C5C1B2AD112A7E3B53"
+        And I should see a "Content-MD5" header value "abdf0cb26fa034c5c1b2ad112a7e3b53"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -108,7 +108,7 @@ Feature: Accept request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "text/plain; charset=utf-8"
         And I should see a "Content-Length" header value "162"
-        And I should see a "Content-MD5" header value "ABDF0CB26FA034C5C1B2AD112A7E3B53"
+        And I should see a "Content-MD5" header value "abdf0cb26fa034c5c1b2ad112a7e3b53"
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
         And I should see a "Expires" header value "0"
@@ -151,7 +151,7 @@ Feature: Accept request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "text/plain; charset=utf-8"
         And I should see a "Content-Length" header value "162"
-        And I should see a "Content-MD5" header value "ABDF0CB26FA034C5C1B2AD112A7E3B53"
+        And I should see a "Content-MD5" header value "abdf0cb26fa034c5c1b2ad112a7e3b53"
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
         And I should see a "Expires" header value "0"

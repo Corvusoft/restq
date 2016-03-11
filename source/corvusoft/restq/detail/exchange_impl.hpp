@@ -11,7 +11,6 @@
 #include <string>
 #include <memory>
 #include <utility>
-#include <stdexcept>
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
@@ -174,12 +173,6 @@ namespace restq
                 void asterisk_resource_handler( const std::shared_ptr< Session > session );
                 
                 void options_resource_handler( const std::shared_ptr< Session > session, const Bytes& type, const std::string& options );
-                
-                void method_not_allowed_handler( const std::shared_ptr< Session > session );
-                
-                void method_not_implemenented_handler( const std::shared_ptr< Session > session );
-                
-                void internal_server_error_handler( const int status, const std::exception& error, const std::shared_ptr< Session > session );
                 
                 //Getters
                 

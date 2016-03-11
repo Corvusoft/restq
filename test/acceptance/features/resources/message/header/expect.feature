@@ -33,7 +33,7 @@ Feature: Expect request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "193"
-        And I should see a "Content-MD5" header value "DA27569D32B5D6F7B8F7950DEA05995F"
+        And I should see a "Content-MD5" header value "da27569d32b5d6f7b8f7950dea05995f"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -98,7 +98,7 @@ Feature: Expect request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "193"
-        And I should see a "Content-MD5" header value "DA27569D32B5D6F7B8F7950DEA05995F"
+        And I should see a "Content-MD5" header value "da27569d32b5d6f7b8f7950dea05995f"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -163,7 +163,7 @@ Feature: Expect request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "193"
-        And I should see a "Content-MD5" header value "DA27569D32B5D6F7B8F7950DEA05995F"
+        And I should see a "Content-MD5" header value "da27569d32b5d6f7b8f7950dea05995f"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

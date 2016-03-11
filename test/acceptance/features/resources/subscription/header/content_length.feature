@@ -82,7 +82,7 @@ Feature: Content-Length entity-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "159"
-        And I should see a "Content-MD5" header value "8670D665E9701C41D3A3BABA9AB2ED9C"
+        And I should see a "Content-MD5" header value "8670d665e9701c41d3a3baba9ab2ed9c"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -159,7 +159,7 @@ Feature: Content-Length entity-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "185"
-        And I should see a "Content-MD5" header value "91FB953C1CD977119E980541B598A4C0"
+        And I should see a "Content-MD5" header value "91fb953c1cd977119e980541b598a4c0"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -213,7 +213,7 @@ Feature: Content-Length entity-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "159"
-        And I should see a "Content-MD5" header value "8670D665E9701C41D3A3BABA9AB2ED9C"
+        And I should see a "Content-MD5" header value "8670d665e9701c41d3a3baba9ab2ed9c"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -271,7 +271,7 @@ Feature: Content-Length entity-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "185"
-        And I should see a "Content-MD5" header value "91FB953C1CD977119E980541B598A4C0"
+        And I should see a "Content-MD5" header value "91fb953c1cd977119e980541b598a4c0"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -329,7 +329,7 @@ Feature: Content-Length entity-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "185"
-        And I should see a "Content-MD5" header value "91FB953C1CD977119E980541B598A4C0"
+        And I should see a "Content-MD5" header value "91fb953c1cd977119e980541b598a4c0"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

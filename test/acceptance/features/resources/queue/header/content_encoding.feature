@@ -70,7 +70,7 @@ Feature: Content-Encoding entity-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "267"
-        And I should see a "Content-MD5" header value "236CE24D241A419C76CD3417DAA20B46"
+        And I should see a "Content-MD5" header value "236ce24d241a419c76cd3417daa20b46"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

@@ -50,7 +50,7 @@ Feature: Accept-Charset request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "259"
-        And I should see a "Content-MD5" header value "8E246229B3DF5FC57042D77F4C9632E5"
+        And I should see a "Content-MD5" header value "8e246229b3df5fc57042d77f4c9632e5"
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
         And I should see a "Expires" header value "0"
@@ -132,7 +132,7 @@ Feature: Accept-Charset request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "259"
-        And I should see a "Content-MD5" header value "8E246229B3DF5FC57042D77F4C9632E5"
+        And I should see a "Content-MD5" header value "8e246229b3df5fc57042d77f4c9632e5"
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
         And I should see a "Expires" header value "0"

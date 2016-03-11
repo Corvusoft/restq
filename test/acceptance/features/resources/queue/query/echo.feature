@@ -152,7 +152,7 @@ Feature: Echo Cancellation
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "206"
         And I should see a "Server" header value "corvusoft/restq"
-        And I should see a "Content-MD5" header value "7242942A42B52C2B6CCF198CBEDF0E4C"
+        And I should see a "Content-MD5" header value "7242942a42b52c2b6ccf198cbedf0e4c"
         And I should see a "Connection" header value "close"
         And I should see a "Allow" header value "GET,PUT,POST,HEAD,DELETE,OPTIONS"
         And I should see a "Expires" header value "0"

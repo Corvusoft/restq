@@ -69,7 +69,7 @@ Feature: Client-side identifiers
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "168"
-        And I should see a "Content-MD5" header value "0E30DAB4C73BB453986E69517CD5A953"
+        And I should see a "Content-MD5" header value "0e30dab4c73bb453986e69517cd5a953"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -220,7 +220,7 @@ Feature: Client-side identifiers
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "168"
-        And I should see a "Content-MD5" header value "0E30DAB4C73BB453986E69517CD5A953"
+        And I should see a "Content-MD5" header value "0e30dab4c73bb453986e69517cd5a953"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

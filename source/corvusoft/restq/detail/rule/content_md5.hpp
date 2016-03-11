@@ -14,7 +14,7 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
-#include <corvusoft/restq/status_code.hpp>
+#include <corvusoft/restq/detail/error_handler_impl.hpp>
 
 //External Includes
 #include <md5.h>
@@ -56,6 +56,17 @@ namespace restq
                 
                 void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
+                    const auto request = session->get_request( );
+                    const auto body = request->get_body( );
+                    const auto checksum = make( body );
+                    
+                    fprintf( stderr, "CSUM: %s\n", checksum.data( ) );
+                    
+                    if ( checksum not_eq request->get_header( "Content-MD5", String::lowercase ) )
+                    {
+                        return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the entity-body failed Content-MD5 end-to-end message integrity check.", session );
+                    }
+                    
                     callback( session );
                 }
                 
@@ -67,7 +78,7 @@ namespace restq
                     md5_append( &state, static_cast< const md5_byte_t* >( &value[ 0 ] ), value.size( ) );
                     md5_finish( &state, digest );
                     
-                    static const char* character_set = "0123456789ABCDEF";
+                    static const char* character_set = "0123456789abcdef";
                     
                     string checksum = String::empty;
                     

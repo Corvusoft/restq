@@ -54,7 +54,7 @@ Feature: HTTP HEAD
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "197"
-        And I should see a "Content-MD5" header value "8CF1A2ABE9CF949D737D4AAE1DD3B45C"
+        And I should see a "Content-MD5" header value "8cf1a2abe9cf949d737d4aae1dd3b45c"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

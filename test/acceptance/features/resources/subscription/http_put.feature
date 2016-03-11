@@ -83,7 +83,7 @@ Feature: HTTP PUT
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "192"
         And I should see a "Server" header value "corvusoft/restq"
-        And I should see a "Content-MD5" header value "88923F53298B028CBB396A492B9F40DC"
+        And I should see a "Content-MD5" header value "88923f53298b028cbb396a492b9f40dc"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -182,7 +182,7 @@ Feature: HTTP PUT
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "197"
-        And I should see a "Content-MD5" header value "8CF1A2ABE9CF949D737D4AAE1DD3B45C"
+        And I should see a "Content-MD5" header value "8cf1a2abe9cf949d737d4aae1dd3b45c"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value
@@ -229,7 +229,7 @@ Feature: HTTP PUT
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "159"
         And I should see a "Server" header value "corvusoft/restq"
-        And I should see a "Content-MD5" header value "8670D665E9701C41D3A3BABA9AB2ED9C"
+        And I should see a "Content-MD5" header value "8670d665e9701c41d3a3baba9ab2ed9c"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

@@ -15,8 +15,32 @@
 #include "corvusoft/restq/formatter.hpp"
 #include "corvusoft/restq/repository.hpp"
 #include "corvusoft/restq/status_code.hpp"
-#include "corvusoft/restq/detail/ruleset.hpp"
 #include "corvusoft/restq/detail/exchange_impl.hpp"
+#include "corvusoft/restq/detail/error_handler_impl.hpp"
+#include "corvusoft/restq/detail/rule/key.hpp"
+#include "corvusoft/restq/detail/rule/keys.hpp"
+#include "corvusoft/restq/detail/rule/etag.hpp"
+#include "corvusoft/restq/detail/rule/date.hpp"
+#include "corvusoft/restq/detail/rule/echo.hpp"
+#include "corvusoft/restq/detail/rule/host.hpp"
+#include "corvusoft/restq/detail/rule/style.hpp"
+#include "corvusoft/restq/detail/rule/range.hpp"
+#include "corvusoft/restq/detail/rule/paging.hpp"
+#include "corvusoft/restq/detail/rule/expect.hpp"
+#include "corvusoft/restq/detail/rule/accept.hpp"
+#include "corvusoft/restq/detail/rule/fields.hpp"
+#include "corvusoft/restq/detail/rule/filters.hpp"
+#include "corvusoft/restq/detail/rule/location.hpp"
+#include "corvusoft/restq/detail/rule/content_md5.hpp"
+#include "corvusoft/restq/detail/rule/content_type.hpp"
+#include "corvusoft/restq/detail/rule/last_modified.hpp"
+#include "corvusoft/restq/detail/rule/accept_ranges.hpp"
+#include "corvusoft/restq/detail/rule/content_length.hpp"
+#include "corvusoft/restq/detail/rule/accept_charset.hpp"
+#include "corvusoft/restq/detail/rule/accept_encoding.hpp"
+#include "corvusoft/restq/detail/rule/accept_language.hpp"
+#include "corvusoft/restq/detail/rule/content_encoding.hpp"
+#include "corvusoft/restq/detail/rule/content_language.hpp"
 
 //External Includes
 #include <corvusoft/restbed/http.hpp>
@@ -34,14 +58,11 @@ using std::string;
 using std::vector;
 using std::multimap;
 using std::to_string;
-using std::exception;
 using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
 using std::regex_match;
 using std::placeholders::_1;
-using std::placeholders::_2;
-using std::placeholders::_3;
 using std::chrono::system_clock;
 
 //Project Namespaces
@@ -109,10 +130,10 @@ namespace restq
             settings->set_properties( m_settings->get_properties( ) );
             
             m_service = make_shared< restbed::Service >( );
-            m_service->set_not_found_handler( Key::not_found_handler );
-            m_service->set_error_handler( bind( &ExchangeImpl::internal_server_error_handler, this, _1, _2, _3 ) );
-            m_service->set_method_not_allowed_handler( bind( &ExchangeImpl::method_not_allowed_handler, this, _1 ) );
-            m_service->set_method_not_implemented_handler( bind( &ExchangeImpl::method_not_implemenented_handler, this, _1 ) );
+            m_service->set_error_handler( ErrorHandlerImpl::internal_server_error );
+            m_service->set_method_not_allowed_handler( ErrorHandlerImpl::method_not_allowed );
+            m_service->set_method_not_implemented_handler( ErrorHandlerImpl::method_not_implemenented );
+            m_service->set_not_found_handler( bind( ErrorHandlerImpl::not_found, "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", _1 ) );
             m_service->set_ready_handler( [ this ]( Service & service )
             {
                 log( Logger::INFO, String::format( "Exchange accepting HTTP connections at '%s'.",  service.get_http_uri( )->to_string( ).data( ) ) );
@@ -263,9 +284,10 @@ namespace restq
             m_service->add_rule( make_shared< AcceptEncoding >( )   ,  3 );
             m_service->add_rule( make_shared< AcceptLanguage >( )   ,  3 );
             m_service->add_rule( make_shared< Host >( )             ,  4 );
-            m_service->add_rule( make_shared< ContentLength >( )    ,  4 );
-            m_service->add_rule( make_shared< Range >( )            ,  4 );
-            m_service->add_rule( make_shared< Expect >( )           ,  5 );
+            m_service->add_rule( make_shared< Expect >( )           ,  4 );
+            m_service->add_rule( make_shared< ContentLength >( )    ,  5 );
+            m_service->add_rule( make_shared< ContentMD5 >( )       ,  6 );
+            m_service->add_rule( make_shared< Range >( )            ,  6 );
             m_service->add_rule( make_shared< Filters >( )          , 99 );
             m_service->add_rule( make_shared< Fields >( )           , 99 );
         }
@@ -545,7 +567,7 @@ namespace restq
             if ( request->get_header( "Content-Type" ).empty( ) )
             {
                 static const string message = "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-type header sent in the request.";
-                return ContentType::unsupported_media_type_handler( message, session );
+                return ErrorHandlerImpl::unsupported_media_type( message, session );
             }
             
             vector< string > keys = session->get( "keys" );
@@ -568,7 +590,7 @@ namespace restq
             {
                 if ( status not_eq OK )
                 {
-                    return Key::not_found_handler( session );
+                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
                 }
                 
                 session->set( "keys", vector< string >( ) );
@@ -685,14 +707,14 @@ namespace restq
             
             if ( not parsing_success )
             {
-                return Host::bad_request_handler( "The exchange is refusing to process the request because it was malformed.", session );
+                return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because it was malformed.", session );
             }
             
             for ( auto& resource : resources )
             {
                 if ( is_invalid( resource, type ) )
                 {
-                    return Host::bad_request_handler( "The exchange is refusing to process the request because the body contains invalid property values.", session );
+                    return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the body contains invalid property values.", session );
                 }
                 
                 Bytes key;
@@ -703,7 +725,7 @@ namespace restq
                     
                     if ( Key::is_invalid( key ) )
                     {
-                        return Host::bad_request_handler( "The exchange is refusing to process the request because of a malformed identifier.", session );
+                        return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because of a malformed identifier.", session );
                     }
                 }
                 else
@@ -727,7 +749,7 @@ namespace restq
             {
                 if ( status not_eq CREATED )
                 {
-                    return Key::conflict_handler( session );
+                    return ErrorHandlerImpl::conflict( "The exchange is refusing to process the request because of a conflict with an existing resource.", session );
                 }
                 
                 const shared_ptr< Formatter > composer = session->get( "accept-format" );
@@ -770,7 +792,7 @@ namespace restq
             {
                 if ( status not_eq OK )
                 {
-                    return Key::not_found_handler( session );
+                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
                 }
                 
                 const shared_ptr< Formatter > composer = session->get( "accept-format" );
@@ -804,19 +826,19 @@ namespace restq
             
             if ( not parsing_success )
             {
-                return Host::bad_request_handler( "The exchange is refusing to process the request because it was malformed.", session );
+                return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because it was malformed.", session );
             }
             
             if ( changeset.size( ) > 1 )
             {
-                return Host::bad_request_handler( "The exchange is refusing to process the request because multiple resources in an update are not supported.", session );
+                return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because multiple resources in an update are not supported.", session );
             }
             
             auto& change = changeset.back( );
             
             if ( is_invalid( change, type ) )
             {
-                return Host::bad_request_handler( "The exchange is refusing to process the request because the body contains invalid property values.", session );
+                return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the body contains invalid property values.", session );
             }
             
             remove_reserved_words( change );
@@ -839,7 +861,7 @@ namespace restq
             {
                 if ( status == NOT_FOUND )
                 {
-                    return Key::not_found_handler( session );
+                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
                 }
                 
                 multimap< string, string > headers
@@ -884,7 +906,7 @@ namespace restq
             {
                 if ( status not_eq OK )
                 {
-                    return Key::not_found_handler( session );
+                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
                 }
                 
                 session->close( NO_CONTENT, { { "Date", Date::make( ) } } );
@@ -924,7 +946,7 @@ namespace restq
             {
                 if ( status not_eq OK )
                 {
-                    return Key::not_found_handler( session );
+                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
                 }
                 
                 multimap< string, string > headers
@@ -940,97 +962,6 @@ namespace restq
                 
                 session->close( NO_CONTENT, headers );
             } );
-        }
-        
-        void ExchangeImpl::method_not_allowed_handler( const shared_ptr< Session > session )
-        {
-            static const Resources values { {
-                    { "type", String::to_bytes( "error" ) },
-                    { "code", String::to_bytes( "40005" ) },
-                    { "status", String::to_bytes( "405" ) },
-                    { "title", String::to_bytes( "Method Not Allowed" ) },
-                    { "message", String::to_bytes( "The exchange is refusing to process the request because the requested method is not allowed for this resource." ) }
-                } };
-                
-            const shared_ptr< Formatter > composer = session->get( "accept-format" );
-            const auto body = composer->compose( values, session->get( "style" ) );
-            
-            auto allow = "GET,POST,HEAD,DELETE,OPTIONS";
-            const auto path = session->get_request( )->get_path( );
-            
-            const auto has_key_parameter = session->get_request( )->has_path_parameter( "key" );
-            
-            if ( path == "/*" )
-            {
-                allow = "OPTIONS";
-            }
-            else if ( regex_match( path, regex( ".*messages.*" ) ) )
-            {
-                allow = ( has_key_parameter ) ? "OPTIONS" : "POST,OPTIONS";
-            }
-            else if ( has_key_parameter )
-            {
-                allow = "GET,PUT,HEAD,DELETE,OPTIONS";
-            }
-            
-            const multimap< string, string > headers
-            {
-                { "Allow", allow },
-                { "Date", Date::make( ) },
-                { "Content-MD5", ContentMD5::make( body ) },
-                { "Content-Language", ContentLanguage::make( ) },
-                { "Content-Type", ContentType::make( session ) },
-                { "Content-Length", ContentLength::make( body ) }
-            };
-            
-            const bool echo = session->get( "echo" );
-            ( echo ) ? session->close( METHOD_NOT_ALLOWED, body, headers ) : session->close( METHOD_NOT_ALLOWED, headers );
-        }
-        
-        void ExchangeImpl::method_not_implemenented_handler( const shared_ptr< Session > session )
-        {
-            static const Resources values { {
-                    { "type", String::to_bytes( "error" ) },
-                    { "code", String::to_bytes( "50001" ) },
-                    { "status", String::to_bytes( "501" ) },
-                    { "title", String::to_bytes( "Not Implemented" ) },
-                    { "message", String::to_bytes( "The exchange is refusing to process the request because the requested method is not implemented within this service." ) }
-                } };
-                
-                
-            const shared_ptr< Formatter > composer = session->get( "accept-format" );
-            const auto body = composer->compose( values, session->get( "style" ) );
-            
-            const multimap< string, string > headers
-            {
-                { "Date", Date::make( ) },
-                { "Content-MD5", ContentMD5::make( body ) },
-                { "Allow", "GET,PUT,POST,HEAD,DELETE,OPTIONS" },
-                { "Content-Language", ContentLanguage::make( ) },
-                { "Content-Type",  ContentType::make( session ) },
-                { "Content-Length", ContentLength::make( body ) },
-            };
-            
-            const bool echo = session->get( "echo" );
-            ( echo ) ? session->close( NOT_IMPLEMENTED, body, headers ) : session->close( NOT_IMPLEMENTED, headers );
-        }
-        
-        void ExchangeImpl::internal_server_error_handler( const int status, const exception& error, const shared_ptr< Session > session )
-        {
-            const string message = error.what( );
-            
-            log( Logger::FATAL, String::format( "Internal Server Error: %s", message.data( ) ) );
-            
-            const multimap< string, string > headers
-            {
-                { "Date", Date::make( ) },
-                { "Content-MD5", ContentMD5::make( message ) },
-                { "Content-Language", ContentLanguage::make( ) },
-                { "Content-Type",  ContentType::make( session ) },
-                { "Content-Length", ContentLength::make( message ) }
-            };
-            
-            session->close( status, message, headers );
         }
     }
 }

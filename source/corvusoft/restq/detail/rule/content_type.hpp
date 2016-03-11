@@ -7,23 +7,16 @@
 
 //System Includes
 #include <map>
-#include <list>
 #include <regex>
 #include <string>
 #include <memory>
 #include <ciso646>
-#include <utility>
 #include <functional>
 
 //Project Includes
-#include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
-#include <corvusoft/restq/formatter.hpp>
-#include <corvusoft/restq/status_code.hpp>
-#include <corvusoft/restq/detail/rule/date.hpp>
-#include <corvusoft/restq/detail/rule/content_md5.hpp>
-#include <corvusoft/restq/detail/rule/content_language.hpp>
+#include <corvusoft/restq/detail/error_handler_impl.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
@@ -31,12 +24,9 @@
 
 //System Namespaces
 using std::map;
-using std::list;
 using std::regex;
 using std::string;
-using std::multimap;
 using std::function;
-using std::to_string;
 using std::shared_ptr;
 using std::regex_constants::icase;
 
@@ -87,33 +77,7 @@ namespace restq
                     }
                     
                     static const string message = "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-type header sent in the request.";
-                    unsupported_media_type_handler( message, session );
-                }
-                
-                static void unsupported_media_type_handler( const string message, const shared_ptr< Session > session )
-                {
-                    const list< multimap< string, Bytes > > values { {
-                            { "status", String::to_bytes( "415" ) },
-                            { "code", String::to_bytes( "40015" ) },
-                            { "type", String::to_bytes( "error" ) },
-                            { "message", String::to_bytes( message ) },
-                            { "title", String::to_bytes( "Unsupported Media Type" ) }
-                        } };
-                        
-                    const shared_ptr< Formatter > formatter = session->get( "accept-format" );
-                    const auto body = formatter->compose( values, session->get( "style" ) );
-                    
-                    const multimap< string, string > headers
-                    {
-                        { "Date", Date::make( ) },
-                        { "Content-MD5", ContentMD5::make( body ) },
-                        { "Content-Language", ContentLanguage::make( ) },
-                        { "Content-Type",  ContentType::make( session ) },
-                        { "Content-Length", ::to_string( body.size( ) ) }
-                    };
-                    
-                    const bool echo = session->get( "echo" );
-                    ( echo ) ? session->close( UNSUPPORTED_MEDIA_TYPE, body, headers ) : session->close( UNSUPPORTED_MEDIA_TYPE, headers );
+                    ErrorHandlerImpl::unsupported_media_type( message, session );
                 }
                 
                 static string make( const shared_ptr< Session >& session )

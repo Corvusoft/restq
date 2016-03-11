@@ -65,7 +65,7 @@ Feature: Accept-Encoding request-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "260"
-        And I should see a "Content-MD5" header value "8E82ED985A3D5BA8177BF1F44A84815C"
+        And I should see a "Content-MD5" header value "8e82ed985a3d5ba8177bf1f44a84815c"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

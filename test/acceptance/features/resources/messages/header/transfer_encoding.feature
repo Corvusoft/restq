@@ -69,7 +69,7 @@ Feature: Transfer-Encoding general-header field
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "185"
-        And I should see a "Content-MD5" header value "91FB953C1CD977119E980541B598A4C0"
+        And I should see a "Content-MD5" header value "91fb953c1cd977119e980541b598a4c0"
         And I should see a "Connection" header value "close"
         And I should see a "Expires" header value "0"
         And I should see a "Date" header value

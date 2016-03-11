@@ -15,6 +15,7 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/detail/rule/date.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
@@ -24,6 +25,7 @@
 using std::hash;
 using std::string;
 using std::function;
+using std::to_string;
 using std::shared_ptr;
 
 //Project Namespaces

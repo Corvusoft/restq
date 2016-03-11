@@ -16,13 +16,7 @@
 
 //Project Includes
 #include <corvusoft/restq/session.hpp>
-#include <corvusoft/restq/formatter.hpp>
-#include <corvusoft/restq/status_code.hpp>
-#include <corvusoft/restq/detail/rule/date.hpp>
-#include <corvusoft/restq/detail/rule/content_md5.hpp>
-#include <corvusoft/restq/detail/rule/content_type.hpp>
-#include <corvusoft/restq/detail/rule/content_length.hpp>
-#include <corvusoft/restq/detail/rule/content_language.hpp>
+#include <corvusoft/restq/detail/error_handler_impl.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
@@ -77,43 +71,8 @@ namespace restq
                         }
                     }
                     
-                    static const string body = "The exchange is only capable of generating response entities which have content characteristics not acceptable according to the accept header sent in the request.";
-                    not_acceptable_handler( session, body );
-                }
-                
-                static void not_acceptable_handler( const shared_ptr< Session > session, const string& message )
-                {
-                    Bytes body;
-                    
-                    if ( not session->has( "accept-format" ) )
-                    {
-                        body = String::to_bytes( message );
-                    }
-                    else
-                    {
-                        const list< multimap< string, Bytes > > values { {
-                                { "status", { '4', '0', '6' } },
-                                { "type",   { 'e', 'r', 'r', 'o', 'r' } },
-                                { "code",   { '4', '0', '0', '0', '6' } },
-                                { "title",  { 'N', 'o', 't', ' ', 'A', 'c', 'c', 'e', 'p', 't', 'a', 'b', 'l', 'e' } },
-                                { "message", String::to_bytes( message ) }
-                            } };
-                            
-                        const shared_ptr< Formatter > formatter = session->get( "accept-format" );
-                        body = formatter->compose( values, session->get( "style" ) );
-                    }
-                    
-                    const multimap< string, string > headers
-                    {
-                        { "Date", Date::make( ) },
-                        { "Content-MD5", ContentMD5::make( body ) },
-                        { "Content-Language", ContentLanguage::make( ) },
-                        { "Content-Type", ContentType::make( session ) },
-                        { "Content-Length", ContentLength::make( body ) }
-                    };
-                    
-                    const bool echo = session->get( "echo" );
-                    ( echo ) ? session->close( NOT_ACCEPTABLE, body, headers ) : session->close( NOT_ACCEPTABLE, headers );
+                    static const string message = "The exchange is only capable of generating response entities which have content characteristics not acceptable according to the accept header sent in the request.";
+                    ErrorHandlerImpl::not_acceptable( message, session );
                 }
                 
             private:

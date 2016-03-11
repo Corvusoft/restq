@@ -12,9 +12,9 @@
 #include <functional>
 
 //Project Includes
-#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/string.hpp>
-#include <corvusoft/restq/detail/rule/content_type.hpp>
+#include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/detail/error_handler_impl.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
@@ -64,7 +64,7 @@ namespace restq
                     }
                     
                     static const string message = "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-encoding header sent in the request.";
-                    ContentType::unsupported_media_type_handler( message, session );
+                    ErrorHandlerImpl::unsupported_media_type( message, session );
                 }
         };
     }

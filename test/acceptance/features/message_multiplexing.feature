@@ -59,7 +59,7 @@ Feature: Message multiplexing
         And I should see a message "Cache-Control" header value "private,max-age=0,no-cache,no-store"
         And I should see a message "Content-Type" header value "text/plain"
         And I should see a message "Content-Length" header value "34"
-        And I should see a message "Content-MD5" header value "98715E57F4DE5798C61FC7585970C3A4"
+        And I should see a message "Content-MD5" header value "98715e57f4de5798c61fc7585970c3a4"
         And I should see a message "Last-Modified" header value
         And I should see a message "Via" header value "HTTP/1.1 localhost:1984"
         And I should see a message "From" header value "not implemented"
@@ -76,7 +76,7 @@ Feature: Message multiplexing
         And I should see a message "Cache-Control" header value "private,max-age=0,no-cache,no-store"
         And I should see a message "Content-Type" header value "text/plain"
         And I should see a message "Content-Length" header value "34"
-        And I should see a message "Content-MD5" header value "98715E57F4DE5798C61FC7585970C3A4"
+        And I should see a message "Content-MD5" header value "98715e57f4de5798c61fc7585970c3a4"
         And I should see a message "Last-Modified" header value
         And I should see a message "Via" header value "HTTP/1.1 localhost:1984"
         And I should see a message "From" header value "not implemented"
@@ -137,7 +137,7 @@ Feature: Message multiplexing
         And I should see a message "Cache-Control" header value "private,max-age=0,no-cache,no-store"
         And I should see a message "Content-Type" header value "text/plain"
         And I should see a message "Content-Length" header value "34"
-        And I should see a message "Content-MD5" header value "98715E57F4DE5798C61FC7585970C3A4"
+        And I should see a message "Content-MD5" header value "98715e57f4de5798c61fc7585970c3a4"
         And I should see a message "Last-Modified" header value
         And I should see a message "Via" header value "HTTP/1.1 localhost:1984"
         And I should see a message "From" header value "not implemented"
@@ -154,7 +154,7 @@ Feature: Message multiplexing
         And I should see a message "Cache-Control" header value "private,max-age=0,no-cache,no-store"
         And I should see a message "Content-Type" header value "text/plain"
         And I should see a message "Content-Length" header value "34"
-        And I should see a message "Content-MD5" header value "98715E57F4DE5798C61FC7585970C3A4"
+        And I should see a message "Content-MD5" header value "98715e57f4de5798c61fc7585970c3a4"
         And I should see a message "Last-Modified" header value
         And I should see a message "Via" header value "HTTP/1.1 localhost:1984"
         And I should see a message "From" header value "not implemented"
