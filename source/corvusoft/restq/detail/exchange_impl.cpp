@@ -43,6 +43,7 @@
 #include "corvusoft/restq/detail/rule/content_language.hpp"
 
 //External Includes
+#include <corvusoft/restbed/uri.hpp>
 #include <corvusoft/restbed/http.hpp>
 #include <corvusoft/restbed/request.hpp>
 #include <corvusoft/restbed/response.hpp>
@@ -69,6 +70,7 @@ using std::chrono::system_clock;
 
 //External Namespaces
 using loadis::System;
+using restbed::Uri;
 using restbed::Http;
 using restbed::Request;
 using restbed::Service;
@@ -693,7 +695,7 @@ namespace restq
                             headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
                         }
                         
-                        session->close( OK, headers );
+                        session->close( OK, headers ); //This should be CREATED
                     }
                 } );
             } );

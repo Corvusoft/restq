@@ -6,12 +6,12 @@
 #define _RESTQ_DETAIL_RULE_HOST_H 1
 
 //System Includes
+#include <regex>
 #include <string>
 #include <memory>
 #include <functional>
 
 //Project Includes
-#include <corvusoft/restq/uri.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/detail/error_handler_impl.hpp>
@@ -21,9 +21,11 @@
 #include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
+using std::regex;
 using std::string;
 using std::function;
 using std::shared_ptr;
+using std::regex_match;
 
 //Project Namespaces
 
@@ -55,7 +57,9 @@ namespace restq
                     
                     session->set( "host", host );
                     
-                    return not Uri::is_valid( host );
+                    static const auto pattern = regex{ "^(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\])(:[0-9]+)?$" };
+                    
+                    return not regex_match( host, pattern );
                 }
                 
                 void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& ) final override
