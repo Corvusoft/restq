@@ -46,7 +46,7 @@ def before_each( senario ):
 
 def delete_resources( ):
     headers = { }
-    headers[ "Host" ] = world.url
+    headers[ "Host" ] = "localhost:1984"
     headers[ "Accept" ] = "application/json"
     headers[ "Accept-Encoding" ] = "identity"
     response = requests.delete( world.url + "/queues", headers = headers )
