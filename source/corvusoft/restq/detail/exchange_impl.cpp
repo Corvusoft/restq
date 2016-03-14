@@ -170,7 +170,7 @@ namespace restq
         
         bool ExchangeImpl::is_valid( const pair< const string, const string >& header ) const
         {
-            static const set< const string > invalid_headers
+            static const set< string > invalid_headers
             {
                 "upgrade", "connection",
                 "te", "trailer", "transfer-encoding",
