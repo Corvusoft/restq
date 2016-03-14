@@ -38,7 +38,7 @@ namespace restq
                 //Functionality
                 static void method_not_allowed( const std::shared_ptr< Session > session );
                 
-                static void method_not_implemenented( const std::shared_ptr< Session > session );
+                static void method_not_implemented( const std::shared_ptr< Session > session );
                 
                 static void conflict( const std::string& message, const std::shared_ptr< Session >& session );
                 
@@ -56,6 +56,7 @@ namespace restq
                 
                 static void internal_server_error( const int status, const std::exception& error, const std::shared_ptr< Session > session );
                 
+                static void find_and_invoke_for( const int status, const std::string& message, const std::shared_ptr< Session > session );
                 
                 //Getters
                 

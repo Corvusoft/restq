@@ -29,6 +29,7 @@ using std::multimap;
 using std::to_string;
 using std::exception;
 using std::shared_ptr;
+using std::runtime_error;
 
 //Project Namespaces
 
@@ -83,7 +84,7 @@ namespace restq
             ( echo ) ? session->close( METHOD_NOT_ALLOWED, body, headers ) : session->close( METHOD_NOT_ALLOWED, headers );
         }
         
-        void ErrorHandlerImpl::method_not_implemenented( const shared_ptr< Session > session )
+        void ErrorHandlerImpl::method_not_implemented( const shared_ptr< Session > session )
         {
             static const Resources values { {
                     { "type", String::to_bytes( "error" ) },
@@ -169,9 +170,9 @@ namespace restq
         {
             const list< multimap< string, Bytes > > values { {
                     { "status", { '4', '0', '0' } },
-                    { "type", { 'e', 'r', 'r', 'o', 'r' } },
-                    { "code", { '4', '0', '0', '0', '0' } },
-                    { "title", { 'B', 'a', 'd', ' ', 'R', 'e', 'q', 'u', 'e', 's', 't' } },
+                    { "type",   { 'e', 'r', 'r', 'o', 'r' } },
+                    { "code",   { '4', '0', '0', '0', '0' } },
+                    { "title",  { 'B', 'a', 'd', ' ', 'R', 'e', 'q', 'u', 'e', 's', 't' } },
                     { "message", String::to_bytes( message ) }
                 } };
                 
@@ -254,8 +255,6 @@ namespace restq
         
         void ErrorHandlerImpl::expectation_failed( const string& message, const shared_ptr< Session >& session )
         {
-            const auto request = session->get_request( );
-            
             const list< multimap< string, Bytes > > values { {
                     { "status", String::to_bytes( "417" ) },
                     { "code", String::to_bytes( "40017" ) },
@@ -264,13 +263,8 @@ namespace restq
                     { "title", String::to_bytes( "Expectation Failed" ) }
                 } };
                 
-            const bool echo = session->get( "echo" );
-            const bool styled = session->get( "style" );
-            const string accept = session->get( "accept" );
-            const string charset = session->get( "charset" );
             const shared_ptr< Formatter > formatter = session->get( "accept-format" );
-            
-            const auto body = formatter->compose( values, styled );
+            const auto body = formatter->compose( values, session->get( "style" ) );
             
             const multimap< string, string > headers
             {
@@ -281,6 +275,7 @@ namespace restq
                 { "Content-Length", ContentLength::make( body ) }
             };
             
+            const bool echo = session->get( "echo" );
             ( echo ) ? session->close( EXPECTATION_FAILED, body, headers ) : session->close( EXPECTATION_FAILED, headers );
         }
         
@@ -314,8 +309,6 @@ namespace restq
         {
             const string message = error.what( );
             
-            //log( Logger::FATAL, String::format( "Internal Server Error: %s", message.data( ) ) );
-            
             const multimap< string, string > headers
             {
                 { "Date", Date::make( ) },
@@ -326,6 +319,51 @@ namespace restq
             };
             
             session->close( status, message, headers );
+        }
+        
+        void ErrorHandlerImpl::find_and_invoke_for( const int status, const string& message, const shared_ptr< Session > session )
+        {
+            switch ( status )
+            {
+                case NOT_FOUND:
+                    not_found( message, session );
+                    break;
+                    
+                case METHOD_NOT_ALLOWED:
+                    method_not_allowed( session );
+                    break;
+                    
+                case CONFLICT:
+                    conflict( message, session );
+                    break;
+                    
+                case BAD_REQUEST:
+                    bad_request( message, session );
+                    break;
+                    
+                case NOT_IMPLEMENTED:
+                    method_not_implemented( session );
+                    break;
+                    
+                case LENGTH_REQUIRED:
+                    length_required( message, session );
+                    break;
+                    
+                case NOT_ACCEPTABLE:
+                    not_acceptable( message, session );
+                    break;
+                    
+                case EXPECTATION_FAILED:
+                    expectation_failed( message, session );
+                    break;
+                    
+                case UNSUPPORTED_MEDIA_TYPE:
+                    unsupported_media_type( message, session );
+                    break;
+                    
+                default:
+                    internal_server_error( status, runtime_error( message ), session );
+            }
         }
     }
 }

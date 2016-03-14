@@ -134,7 +134,7 @@ namespace restq
             m_service = make_shared< restbed::Service >( );
             m_service->set_error_handler( ErrorHandlerImpl::internal_server_error );
             m_service->set_method_not_allowed_handler( ErrorHandlerImpl::method_not_allowed );
-            m_service->set_method_not_implemented_handler( ErrorHandlerImpl::method_not_implemenented );
+            m_service->set_method_not_implemented_handler( ErrorHandlerImpl::method_not_implemented );
             m_service->set_not_found_handler( bind( ErrorHandlerImpl::not_found, "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", _1 ) );
             m_service->set_ready_handler( [ this ]( Service & service )
             {
@@ -594,9 +594,13 @@ namespace restq
             
             m_repository->read( session, [ this ]( const int status, const Resources queues, const shared_ptr< Session > session )
             {
-                if ( status not_eq OK )
+                if ( status == NOT_FOUND )
                 {
-                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
+                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested Queue(s) URI could not be found within the exchange.", session );
+                }
+                else if ( status not_eq OK )
+                {
+                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the desired Queue(s).", session );
                 }
                 
                 session->set( "keys", vector< string >( ) );
@@ -616,11 +620,9 @@ namespace restq
                 
                 m_repository->read( session, [ queues, this ]( const int status, const Resources subscriptions, const shared_ptr< Session > session )
                 {
-                    if ( status not_eq 200 )
+                    if ( status not_eq OK )
                     {
-                        //a subscription may have been purged; how to proceed?
-                        //if 404 ignore?
-                        return session->close( 500 );
+                        return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the associated Queue(s) Subscriptions.", session );
                     }
                     
                     const auto message = make_message( session );
@@ -662,14 +664,14 @@ namespace restq
                         {
                             if ( status not_eq CREATED )
                             {
-                                return session->close( 500 );
+                                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message entry.", session );
                             }
                             
                             m_repository->create( states, session, [ this, message_key ]( const int status, const Resources, const shared_ptr< Session > session )
                             {
                                 if ( status not_eq CREATED )
                                 {
-                                    return session->close( 500 );
+                                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message state entries.", session );
                                 }
                                 
                                 const auto location = String::format( "/messages/%.*s", message_key.second.size( ), message_key.second.data( ) );
@@ -756,9 +758,13 @@ namespace restq
             
             m_repository->create( resources, session, [ ]( const int status, const Resources resources, const shared_ptr< Session > session )
             {
-                if ( status not_eq CREATED )
+                if ( status == CONFLICT )
                 {
                     return ErrorHandlerImpl::conflict( "The exchange is refusing to process the request because of a conflict with an existing resource.", session );
+                }
+                else if ( status not_eq CREATED )
+                {
+                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository resource entry.", session );
                 }
                 
                 const shared_ptr< Formatter > composer = session->get( "accept-format" );
@@ -799,9 +805,13 @@ namespace restq
             
             m_repository->read( session, [ ]( const int status, const Resources resources, const shared_ptr< Session > session )
             {
-                if ( status not_eq OK )
+                if ( status == NOT_FOUND )
                 {
                     return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
+                }
+                else if ( status not_eq OK )
+                {
+                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to read the repository resource entries.", session );
                 }
                 
                 const shared_ptr< Formatter > composer = session->get( "accept-format" );
@@ -872,6 +882,10 @@ namespace restq
                 {
                     return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
                 }
+                else if ( status not_eq OK )
+                {
+                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to update the repository resource entries.", session );
+                }
                 
                 multimap< string, string > headers
                 {
@@ -913,9 +927,13 @@ namespace restq
             
             m_repository->destroy( session, [ ]( const int status, const shared_ptr< Session > session )
             {
-                if ( status not_eq OK )
+                if ( status == NOT_FOUND )
                 {
                     return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
+                }
+                else if ( status not_eq OK )
+                {
+                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to update the repository resource entries.", session );
                 }
                 
                 session->close( NO_CONTENT, { { "Date", Date::make( ) } } );
