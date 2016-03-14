@@ -14,7 +14,10 @@ compiler:
   - gcc
 
 install:
-    - if [ "$CXX" = "g++"     ]; then export CXX="g++-5" CC="gcc-5"; fi
+  - git clone --recursive https://github.com/$TRAVIS_REPO_SLUG.git $TRAVIS_REPO_SLUG
+  - cd $TRAVIS_REPO_SLUG
+  - git checkout -qf $TRAVIS_COMMIT
+  - if [ "$CXX" = "g++"     ]; then export CXX="g++-5" CC="gcc-5"; fi
 
 before_script:  
     - mkdir build
