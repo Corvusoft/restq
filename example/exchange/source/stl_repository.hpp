@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <mutex>
 #include <memory>
 #include <functional>
 
@@ -99,6 +100,8 @@ class STLRepository final : public restq::Repository
         STLRepository& operator =( const STLRepository& value ) = delete;
         
         //Properties
+        std::mutex m_resources_lock;
+        
         restq::Resources m_resources;
 };
 

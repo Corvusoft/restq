@@ -16,6 +16,7 @@
 
 //System Namespaces
 using std::pair;
+using std::mutex;
 using std::size_t;
 using std::vector;
 using std::string;
@@ -24,6 +25,7 @@ using std::find_if;
 using std::function;
 using std::multimap;
 using std::shared_ptr;
+using std::unique_lock;
 
 //Project Namespaces
 
@@ -43,6 +45,7 @@ using restq::Resources;
 using restq::Repository;
 
 STLRepository::STLRepository( void ) : Repository( ),
+    m_resources_lock( ),
     m_resources( )
 {
     return;
@@ -65,6 +68,8 @@ void STLRepository::start( const shared_ptr< const Settings >& )
 
 void STLRepository::create( const Resources values, const shared_ptr< Session > session, const function< void ( const int, const Resources, const shared_ptr< Session > ) >& callback )
 {
+    unique_lock< mutex> lock( m_resources_lock );
+    
     for ( const auto value : values )
     {
         bool conflict = any_of( m_resources.begin( ), m_resources.end( ), [ &value ]( const Resource & resource )
@@ -83,6 +88,8 @@ void STLRepository::create( const Resources values, const shared_ptr< Session > 
     
     m_resources.insert( m_resources.end( ), values.begin( ), values.end( ) );
     
+    lock.unlock( );
+    
     callback( CREATED, values, session );
 }
 
@@ -91,6 +98,8 @@ void STLRepository::read( const shared_ptr< Session > session, const function< v
     Resources values;
     Resources resources;
     const vector< string > keys = session->get( "keys" );
+    
+    unique_lock< mutex> lock( m_resources_lock );
     
     if ( not keys.empty( ) )
     {
@@ -118,6 +127,8 @@ void STLRepository::read( const shared_ptr< Session > session, const function< v
     {
         resources = m_resources;
     }
+    
+    lock.unlock( );
     
     filter( resources, session->get( "inclusive_filters" ), session->get( "exclusive_filters" ) );
     
@@ -153,6 +164,8 @@ void STLRepository::update( const Resource changeset, const shared_ptr< Session 
         
         auto resources = values;
         
+        unique_lock< mutex> lock( m_resources_lock );
+        
         for ( auto& value : resources )
         {
             for ( const auto& change : changeset )
@@ -187,6 +200,8 @@ void STLRepository::update( const Resource changeset, const shared_ptr< Session 
             *resource = value;
         }
         
+        lock.unlock( );
+        
         callback( status, resources, session );
     } );
 }
@@ -200,6 +215,8 @@ void STLRepository::destroy( const shared_ptr< Session > session, const function
             return callback( status, session );
         }
         
+        unique_lock< mutex> lock( m_resources_lock );
+        
         for ( const auto resource : resources )
         {
             auto iterator = find_if( m_resources.begin( ), m_resources.end( ), [ &resource ]( const Resource & value )
@@ -212,6 +229,8 @@ void STLRepository::destroy( const shared_ptr< Session > session, const function
             
             m_resources.erase( iterator );
         }
+        
+        lock.unlock( );
         
         callback( OK, session );
     } );
