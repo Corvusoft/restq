@@ -882,7 +882,7 @@ namespace restq
                 {
                     return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
                 }
-                else if ( status not_eq OK )
+                else if ( status not_eq OK and status not_eq NO_CONTENT )
                 {
                     return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to update the repository resource entries.", session );
                 }
