@@ -112,21 +112,6 @@ namespace restq
                 //Friends
                 
                 //Definitions
-                static const Bytes PENDING;
-                
-                static const Bytes REJECTED;
-                
-                static const Bytes INFLIGHT;
-                
-                static const Bytes DISPATCHED;
-                
-                static const Bytes QUEUE;
-                
-                static const Bytes STATE;
-                
-                static const Bytes MESSAGE;
-                
-                static const Bytes SUBSCRIPTION;
                 
                 //Constructors
                 ExchangeImpl( const ExchangeImpl& original ) = delete;

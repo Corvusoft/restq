@@ -81,14 +81,14 @@ namespace restq
 {
     namespace detail
     {
-        const auto ExchangeImpl::QUEUE = String::to_bytes( "queue" );
-        const auto ExchangeImpl::STATE = String::to_bytes( "state" );
-        const auto ExchangeImpl::MESSAGE = String::to_bytes( "message" );
-        const auto ExchangeImpl::SUBSCRIPTION = String::to_bytes( "subscription" );
-        const auto ExchangeImpl::PENDING = String::to_bytes( "pending" );
-        const auto ExchangeImpl::REJECTED = String::to_bytes( "rejected" );
-        const auto ExchangeImpl::INFLIGHT = String::to_bytes( "in-flight" );
-        const auto ExchangeImpl::DISPATCHED = String::to_bytes( "dispatched" );
+        const auto QUEUE = String::to_bytes( "queue" );
+        const auto STATE = String::to_bytes( "state" );
+        const auto MESSAGE = String::to_bytes( "message" );
+        const auto SUBSCRIPTION = String::to_bytes( "subscription" );
+        const auto PENDING = String::to_bytes( "pending" );
+        const auto REJECTED = String::to_bytes( "rejected" );
+        const auto INFLIGHT = String::to_bytes( "in-flight" );
+        const auto DISPATCHED = String::to_bytes( "dispatched" );
         
         ExchangeImpl::ExchangeImpl( void ) : m_boot_time( 0 ),
             m_logger( nullptr ),
