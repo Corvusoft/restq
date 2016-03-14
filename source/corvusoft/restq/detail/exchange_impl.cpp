@@ -264,7 +264,7 @@ namespace restq
             }
             
             string query = String::empty;
-            Resource parameters = session->get( "filtered_parameters" );
+            multimap< string, Bytes > parameters = session->get( "filters" );
             
             for ( const auto parameter : parameters )
             {
@@ -401,8 +401,12 @@ namespace restq
             const pair< size_t, size_t > range = { 0, 1 };
             session->set( "paging", range );
             
-            const Resource filters = { { "type", STATE }, { "status", PENDING } };
-            session->set( "filters", filters );
+            multimap< string, Bytes > filters;
+            session->set( "inclusive_filters", filters );
+            
+            filters.insert( { "type", STATE } );
+            filters.insert( { "status", PENDING } );
+            session->set( "exclusive_filters", filters );
             
             m_repository->read( session, [ this ]( const int status, const Resources states, shared_ptr< Session > session )
             {
@@ -424,8 +428,8 @@ namespace restq
                 const pair< size_t, size_t > range = { 0, 1 };
                 session->set( "paging", range );
                 
-                const Resource filters = { { "type", STATE }, { "status", PENDING } };
-                session->set( "filters", filters );
+                const multimap< string, Bytes > filters = { { "type", STATE }, { "status", PENDING } };
+                session->set( "exclusive_filters", filters );
                 
                 m_repository->update( { { "status", INFLIGHT } }, session, [ this, state_key ]( const int status, const Resources states, shared_ptr< Session > session )
                 {
@@ -447,8 +451,8 @@ namespace restq
                     const pair< size_t, size_t > range = { 0, 1 };
                     session->set( "paging", range );
                     
-                    const Resource filters = { { "type", MESSAGE } };
-                    session->set( "filters", filters );
+                    const multimap< string, Bytes > filters = { { "type", MESSAGE } };
+                    session->set( "exclusive_filters", filters );
                     
                     m_repository->read( session, [ this, state_key, states ]( const int status, const Resources messages, shared_ptr< Session > session )
                     {
@@ -458,8 +462,8 @@ namespace restq
                             vector< string > keys = { state_key };
                             session->set( "keys", keys );
                             
-                            const Resource filters = { { "type", STATE } };
-                            session->set( "filters", filters );
+                            const multimap< string, Bytes > filters = { { "type", STATE } };
+                            session->set( "exclusive_filters", filters );
                             
                             return m_repository->destroy( session, [ ]( const int, shared_ptr< Session > )
                             {
@@ -541,9 +545,9 @@ namespace restq
                         keys.push_back( state_key );
                         session->set( "keys", keys );
                         
-                        Resource filters;
+                        multimap< string, Bytes > filters;
                         filters.insert( make_pair( "type", STATE ) );
-                        session->set( "filters", filters );
+                        session->set( "exclusive_filters", filters );
                         
                         m_repository->update( change, session, [ this ]( const int status, const Resources, shared_ptr< Session > session )
                         {
@@ -573,19 +577,19 @@ namespace restq
             }
             
             vector< string > keys = session->get( "keys" );
-            Resource filters = session->get( "filters" );
+            multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             
             if ( request->has_path_parameter( "key" ) )
             {
                 keys.clear( );
                 filters.clear( );
                 keys.push_back( request->get_path_parameter( "key" ) );
-                session->set( "filters", filters );
+                session->set( "exclusive_filters", filters );
                 session->set( "keys", keys );
             }
             
             filters.insert( make_pair( "type", QUEUE ) );
-            session->set( "filters", filters );
+            session->set( "exclusive_filters", filters );
             session->set( "paging", Paging::default_value );
             
             m_repository->read( session, [ this ]( const int status, const Resources queues, const shared_ptr< Session > session )
@@ -597,15 +601,18 @@ namespace restq
                 
                 session->set( "keys", vector< string >( ) );
                 
-                Resource filters;
+                multimap< string, Bytes > filters;
                 filters.insert( make_pair( "type", SUBSCRIPTION ) );
+                session->set( "exclusive_filters", filters );
+                
+                filters.clear( );
                 
                 for ( const auto& queue : queues )
                 {
                     filters.insert( make_pair( "queues", queue.lower_bound( "key" )->second ) );
                 }
                 
-                session->set( "filters", filters );
+                session->set( "inclusive_filters", filters );
                 
                 m_repository->read( session, [ queues, this ]( const int status, const Resources subscriptions, const shared_ptr< Session > session )
                 {
@@ -786,9 +793,9 @@ namespace restq
                 session->set( "paging", Paging::default_value );
             }
             
-            Resource filters = session->get( "filters" );
+            multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             filters.insert( make_pair( "type", type ) );
-            session->set( "filters", filters );
+            session->set( "exclusive_filters", filters );
             
             m_repository->read( session, [ ]( const int status, const Resources resources, const shared_ptr< Session > session )
             {
@@ -855,9 +862,9 @@ namespace restq
                 session->set( "paging", Paging::default_value );
             }
             
-            Resource filters = session->get( "filters" );
+            multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             filters.insert( make_pair( "type", type ) );
-            session->set( "filters", filters );
+            session->set( "exclusive_filters", filters );
             
             m_repository->update( change, session, [ changeset ]( const int status, const Resources resources, const shared_ptr< Session > session )
             {
@@ -900,9 +907,9 @@ namespace restq
         {
             session->set( "paging", Paging::default_value );
             
-            Resource filters = session->get( "filters" );
+            multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             filters.insert( make_pair( "type", type ) );
-            session->set( "filters", filters );
+            session->set( "exclusive_filters", filters );
             
             m_repository->destroy( session, [ ]( const int status, const shared_ptr< Session > session )
             {
@@ -941,9 +948,9 @@ namespace restq
         {
             session->set( "paging", Paging::default_value );
             
-            Resource filters = session->get( "filters" );
+            multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             filters.insert( make_pair( "type", type ) );
-            session->set( "filters", filters );
+            session->set( "exclusive_filters", filters );
             m_repository->read( session, [ options ]( const int status, const Resources, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )

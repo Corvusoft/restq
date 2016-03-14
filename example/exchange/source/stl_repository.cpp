@@ -22,6 +22,7 @@ using std::string;
 using std::advance;
 using std::find_if;
 using std::function;
+using std::multimap;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -88,11 +89,8 @@ void STLRepository::create( const Resources values, const shared_ptr< Session > 
 void STLRepository::read( const shared_ptr< Session > session, const function< void ( const int, const Resources, const shared_ptr< Session > ) >& callback )
 {
     Resources values;
-    const vector< string > keys = session->get( "keys" );
-    const pair< size_t, size_t > range = session->get( "paging" );
-    const Resource filters = session->get( "filters" );
-    
     Resources resources;
+    const vector< string > keys = session->get( "keys" );
     
     if ( not keys.empty( ) )
     {
@@ -121,50 +119,9 @@ void STLRepository::read( const shared_ptr< Session > session, const function< v
         resources = m_resources;
     }
     
-    bool matched = false;
+    filter( resources, session->get( "inclusive_filters" ), session->get( "exclusive_filters" ) );
     
-    for ( auto resource = resources.begin( ); resource not_eq resources.end( ); resource++ )
-    {
-        for ( auto filter = filters.begin( ); filter not_eq filters.end( ); )
-        {
-            matched = false;
-            const auto filter_range = filters.equal_range( filter->first );
-            const auto property_range = resource->equal_range( filter->first );
-            
-            for ( auto filter_iterator = filter_range.first; filter_iterator not_eq filter_range.second; filter_iterator++ )
-            {
-                matched = std::any_of( property_range.first, property_range.second, [ &filter_iterator ]( const pair< string, Bytes >& property )
-                {
-                    return property.second == filter_iterator->second;
-                } );
-                
-                if ( matched )
-                {
-                    break;
-                }
-            }
-            
-            if ( matched == false )
-            {
-                break;
-            }
-            
-            if ( filter_range.second not_eq filters.end( ) )
-            {
-                filter = filter_range.second;
-            }
-            else
-            {
-                filter++;
-            }
-        }
-        
-        if ( matched == false )
-        {
-            resources.erase( resource );
-        }
-    }
-    
+    const pair< size_t, size_t > range = session->get( "paging" );
     const auto& index = range.first;
     const auto& limit = range.second;
     
@@ -263,4 +220,88 @@ void STLRepository::destroy( const shared_ptr< Session > session, const function
 void STLRepository::set_logger( const shared_ptr< Logger >& )
 {
     return;
+}
+
+void STLRepository::filter( Resources& resources, const multimap< string, Bytes >& inclusive_filters, const multimap< string, Bytes >& exclusive_filters ) const
+{
+    for ( auto resource = resources.begin( ); resource not_eq resources.end( ); resource++ )
+    {
+        bool failed = true;
+        
+        for ( const auto filter : exclusive_filters )
+        {
+            failed = true;
+            
+            const auto properties = resource->equal_range( filter.first );
+            
+            for ( auto property = properties.first; property not_eq properties.second; property++ )
+            {
+                if ( property->second == filter.second )
+                {
+                    failed = false;
+                    break;
+                }
+            }
+            
+            if ( failed )
+            {
+                break;
+            }
+        }
+        
+        if ( failed and not exclusive_filters.empty( ) )
+        {
+            resources.erase( resource );
+            continue;
+        }
+        
+        
+        
+        if ( inclusive_filters.empty( ) )
+        {
+            continue;
+        }
+        
+        failed = true;
+        
+        for ( auto filter_iterator = inclusive_filters.begin( ); filter_iterator not_eq inclusive_filters.end( ); filter_iterator++ )
+        {
+            failed = true;
+            
+            const auto properties = resource->equal_range( filter_iterator->first );
+            const auto filters = inclusive_filters.equal_range( filter_iterator->first );
+            
+            for ( auto filter = filters.first; filter not_eq filters.second; filter++ )
+            {
+                for ( auto property = properties.first; property not_eq properties.second; property++ )
+                {
+                    if ( property->second == filter->second )
+                    {
+                        failed = false;
+                        break;
+                    }
+                }
+                
+                if ( not failed )
+                {
+                    break;
+                }
+            }
+            
+            if ( failed )
+            {
+                break;
+            }
+            
+            if ( filters.second not_eq inclusive_filters.end( ) )
+            {
+                filter_iterator = filters.second;
+            }
+        }
+        
+        if ( failed )
+        {
+            resources.erase( resource );
+        }
+    }
 }

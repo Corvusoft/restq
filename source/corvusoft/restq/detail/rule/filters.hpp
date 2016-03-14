@@ -58,7 +58,9 @@ namespace restq
                     const auto request = session->get_request( );
                     const auto parameters = request->get_query_parameters( );
                     
-                    multimap< string, Bytes > filters = { };
+                    auto filters = multimap< string, Bytes > { };
+                    auto inclusive_filters = multimap< string, Bytes > { };
+                    auto exclusive_filters = multimap< string, Bytes > { };
                     
                     for ( const auto parameter : parameters )
                     {
@@ -66,15 +68,27 @@ namespace restq
                         
                         if ( reserved.count( name ) == 0 )
                         {
-                            for ( const auto value : String::split( parameter.second, ',' ) )
+                            const auto value = parameter.second;
+                            
+                            if ( value.find( ',' ) not_eq string::npos )
                             {
-                                filters.insert( make_pair( name, String::to_bytes( value ) ) );
+                                for ( const auto item : String::split( value, ',' ) )
+                                {
+                                    inclusive_filters.insert( make_pair( name, String::to_bytes( item ) ) );
+                                }
                             }
+                            else
+                            {
+                                exclusive_filters.insert( make_pair( name, String::to_bytes( value ) ) );
+                            }
+                            
+                            filters.insert( make_pair( name, String::to_bytes( value ) ) );
                         }
                     }
                     
                     session->set( "filters", filters );
-                    session->set( "filtered_parameters", filters );
+                    session->set( "inclusive_filters", inclusive_filters );
+                    session->set( "exclusive_filters", exclusive_filters );
                     callback( session );
                 }
         };

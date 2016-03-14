@@ -6,6 +6,7 @@
 #define _STL_REPOSITORY_H 1
 
 //System Includes
+#include <map>
 #include <memory>
 #include <functional>
 
@@ -88,6 +89,7 @@ class STLRepository final : public restq::Repository
         STLRepository( const STLRepository& original ) = delete;
         
         //Functionality
+        void filter( restq::Resources& resources, const std::multimap< std::string, restq::Bytes >& inclusive_filters, const std::multimap< std::string, restq::Bytes >& exclusive_filters ) const;
         
         //Getters
         
