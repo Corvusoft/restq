@@ -642,7 +642,7 @@ namespace restq
                             
                             for ( auto property = properties.first; property not_eq properties.second; property++ )
                             {
-                                if ( property->second == queue_key ) //lowercase this see keycase test case as well
+                                if ( String::lowercase( String::to_string( property->second ) ) == String::lowercase( String::to_string( queue_key ) ) )
                                 {
                                     Resource state;
                                     state.insert( make_pair( "type", STATE ) );

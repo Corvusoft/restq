@@ -69,7 +69,7 @@ namespace restq
                 {
                     vector< string > keys = session->get( "keys", vector< string >( ) );
                     
-                    const auto key = session->get_request( )->get_path_parameter( "key", &String::lowercase );
+                    const auto key = session->get_request( )->get_path_parameter( "key", String::lowercase );
                     keys.push_back( key );
                     
                     session->set( "keys", keys );
