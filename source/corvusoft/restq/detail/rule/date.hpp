@@ -60,7 +60,7 @@ namespace restq
                 static string make( const time_t value = 0 )
                 {
                     const time_t now = ( value ) ? value : time( 0 );
-                    struct tm components = { };
+                    struct tm components = tm( );
                     gmtime_r( &now, &components );
                     
                     char datastamp[ 50 ] = { };
