@@ -704,7 +704,7 @@ namespace restq
                             headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
                         }
                         
-                        session->close( OK, headers ); //This should be CREATED
+                        session->close( CREATED, headers );
                     }
                 } );
             } );

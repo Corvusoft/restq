@@ -65,7 +65,7 @@ Feature: Location response-header field
         """
         " ftp://localhost/reading "
         """
-        Then I should see a response status code of "200" "OK"
+        Then I should see a response status code of "201" "Created"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
