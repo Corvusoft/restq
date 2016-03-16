@@ -64,6 +64,8 @@ using std::shared_ptr;
 using std::make_shared;
 using std::regex_match;
 using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
 using std::chrono::system_clock;
 
 //Project Namespaces
@@ -592,122 +594,7 @@ namespace restq
             session->set( "exclusive_filters", filters );
             session->set( "paging", Paging::default_value );
             
-            m_repository->read( session, [ this ]( const int status, const Resources queues, const shared_ptr< Session > session )
-            {
-                if ( status == NOT_FOUND )
-                {
-                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested Queue(s) URI could not be found within the exchange.", session );
-                }
-                else if ( status not_eq OK )
-                {
-                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the desired Queue(s).", session );
-                }
-                
-                session->set( "keys", vector< string >( ) );
-                
-                multimap< string, Bytes > filters;
-                filters.insert( make_pair( "type", SUBSCRIPTION ) );
-                session->set( "exclusive_filters", filters );
-                
-                filters.clear( );
-                
-                for ( const auto& queue : queues )
-                {
-                    filters.insert( make_pair( "queues", queue.lower_bound( "key" )->second ) );
-                }
-                
-                session->set( "inclusive_filters", filters );
-                
-                m_repository->read( session, [ queues, this ]( const int status, const Resources subscriptions, const shared_ptr< Session > session )
-                {
-                    if ( status not_eq OK )
-                    {
-                        return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the associated Queue(s) Subscriptions.", session );
-                    }
-                    
-                    const auto message = make_message( session );
-                    const auto message_key = make_pair( "message-key", message.lower_bound( "key" )->second );
-                    
-                    Resources states;
-                    
-                    for ( const auto& subscription : subscriptions )
-                    {
-                        const auto properties = subscription.equal_range( "queues" );
-                        const auto subscription_key = make_pair( "subscription-key", subscription.lower_bound( "key" )->second );
-                        const auto subscription_endpoint = make_pair( "subscription-endpoint", subscription.lower_bound( "endpoint" )->second );
-                        
-                        for ( const auto& queue : queues )
-                        {
-                            const auto queue_key = queue.lower_bound( "key" )->second;
-                            
-                            for ( auto property = properties.first; property not_eq properties.second; property++ )
-                            {
-                                if ( String::lowercase( String::to_string( property->second ) ) == String::lowercase( String::to_string( queue_key ) ) )
-                                {
-                                    Resource state;
-                                    state.insert( make_pair( "type", STATE ) );
-                                    state.insert( make_pair( "key", Key::make( ) ) );
-                                    state.insert( make_pair( "status", PENDING ) );
-                                    state.insert( make_pair( "queue-key", queue_key ) );
-                                    state.insert( message_key );
-                                    state.insert( subscription_key );
-                                    state.insert( subscription_endpoint );
-                                    states.push_back( state );
-                                }
-                            }
-                        }
-                    }
-                    
-                    if ( not states.empty( ) )
-                    {
-                        m_repository->create( { message }, session, [ states, this, message_key ]( const int status, const Resources, const shared_ptr< Session > session )
-                        {
-                            if ( status not_eq CREATED )
-                            {
-                                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message entry.", session );
-                            }
-                            
-                            m_repository->create( states, session, [ this, message_key ]( const int status, const Resources, const shared_ptr< Session > session )
-                            {
-                                if ( status not_eq CREATED )
-                                {
-                                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message state entries.", session );
-                                }
-                                
-                                const auto location = String::format( "/messages/%.*s", message_key.second.size( ), message_key.second.data( ) );
-                                multimap< string, string > headers
-                                {
-                                    { "Allow", "OPTIONS" },
-                                    { "Location", location },
-                                    { "Date", Date::make( ) },
-                                };
-                                
-                                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
-                                {
-                                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
-                                }
-                                
-                                session->close( ACCEPTED, headers );
-                                m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
-                            } );
-                        } );
-                    }
-                    else
-                    {
-                        multimap< string, string > headers
-                        {
-                            { "Date", Date::make( ) },
-                        };
-                        
-                        if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
-                        {
-                            headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
-                        }
-                        
-                        session->close( CREATED, headers );
-                    }
-                } );
-            } );
+            m_repository->read( session, bind( &ExchangeImpl::create_message_and_read_queues_callback, this, _1, _2, _3 ) );
         }
         
         void ExchangeImpl::create_resource_handler( const shared_ptr< Session > session, const Bytes& type )
@@ -756,40 +643,7 @@ namespace restq
                 resource.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
             }
             
-            m_repository->create( resources, session, [ ]( const int status, const Resources resources, const shared_ptr< Session > session )
-            {
-                if ( status == CONFLICT )
-                {
-                    return ErrorHandlerImpl::conflict( "The exchange is refusing to process the request because of a conflict with an existing resource.", session );
-                }
-                else if ( status not_eq CREATED )
-                {
-                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository resource entry.", session );
-                }
-                
-                const shared_ptr< Formatter > composer = session->get( "accept-format" );
-                const auto body = composer->compose( resources, session->get( "style" ) );
-                
-                multimap< string, string > headers
-                {
-                    { "Date", Date::make( ) },
-                    { "ETag", ETag::make( resources ) },
-                    { "Last-Modified", LastModified::make( ) },
-                    { "Allow", "GET,PUT,HEAD,DELETE,OPTIONS" },
-                    { "Content-MD5", ContentMD5::make( body ) },
-                    { "Content-Length", ContentLength::make( body ) },
-                    { "Content-Type",  ContentType::make( session ) },
-                    { "Location", Location::make( session, resources ) }
-                };
-                
-                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
-                {
-                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
-                }
-                
-                const bool echo = session->get( "echo" );
-                ( echo ) ? session->close( CREATED, body, headers ) : session->close( NO_CONTENT, headers );
-            } );
+            m_repository->create( resources, session, bind( &ExchangeImpl::create_resource_callback, this, _1, _2, _3 ) );
         }
         
         void ExchangeImpl::read_resource_handler( const shared_ptr< Session > session, const Bytes& type )
@@ -803,37 +657,7 @@ namespace restq
             filters.insert( make_pair( "type", type ) );
             session->set( "exclusive_filters", filters );
             
-            m_repository->read( session, [ ]( const int status, const Resources resources, const shared_ptr< Session > session )
-            {
-                if ( status == NOT_FOUND )
-                {
-                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
-                }
-                else if ( status not_eq OK )
-                {
-                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to read the repository resource entries.", session );
-                }
-                
-                const shared_ptr< Formatter > composer = session->get( "accept-format" );
-                const auto body = composer->compose( resources, session->get( "style" ) );
-                
-                multimap< string, string > headers
-                {
-                    { "Date", Date::make( ) },
-                    { "Content-MD5", ContentMD5::make( body ) },
-                    { "Content-Type", ContentType::make( session ) },
-                    { "Content-Length", ContentLength::make( body ) }
-                };
-                
-                if ( not resources.empty( ) )
-                {
-                    headers.insert( make_pair( "ETag", ETag::make( resources ) ) );
-                    headers.insert( make_pair( "Last-Modified", LastModified::make( resources ) ) );
-                }
-                
-                const bool echo = session->get( "echo" );
-                ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
-            } );
+            m_repository->read( session, bind( &ExchangeImpl::read_resource_callback, this, _1, _2, _3 ) );
         }
         
         void ExchangeImpl::update_resource_handler( const shared_ptr< Session > session, const Bytes& type )
@@ -876,45 +700,7 @@ namespace restq
             filters.insert( make_pair( "type", type ) );
             session->set( "exclusive_filters", filters );
             
-            m_repository->update( change, session, [ changeset ]( const int status, const Resources resources, const shared_ptr< Session > session )
-            {
-                if ( status == NOT_FOUND )
-                {
-                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
-                }
-                else if ( status not_eq OK and status not_eq NO_CONTENT )
-                {
-                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to update the repository resource entries.", session );
-                }
-                
-                multimap< string, string > headers
-                {
-                    { "Date", Date::make( ) },
-                    { "Last-Modified", LastModified::make( resources ) }
-                };
-                
-                if ( status == NO_CONTENT )
-                {
-                    return session->close( NO_CONTENT, headers );
-                }
-                
-                const shared_ptr< Formatter > composer = session->get( "accept-format" );
-                const auto body = composer->compose( resources, session->get( "style" ) );
-                
-                headers.insert( make_pair( "ETag", ETag::make( changeset ) ) );
-                headers.insert( make_pair( "Allow", "GET,PUT,HEAD,DELETE,OPTIONS" ) );
-                headers.insert( make_pair( "Content-MD5", ContentMD5::make( body ) ) );
-                headers.insert( make_pair( "Content-Type",  ContentType::make( session ) ) );
-                headers.insert( make_pair( "Content-Length", ContentLength::make( body ) ) );
-                
-                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
-                {
-                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
-                }
-                
-                const bool echo = session->get( "echo" );
-                ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
-            } );
+            m_repository->update( change, session, bind( &ExchangeImpl::update_resource_callback, this, _1, _2, _3 ) );
         }
         
         void ExchangeImpl::delete_resource_handler( const shared_ptr< Session > session, const Bytes& type )
@@ -989,6 +775,234 @@ namespace restq
                 
                 session->close( NO_CONTENT, headers );
             } );
+        }
+        
+        void ExchangeImpl::create_resource_callback( const int status, const Resources resources, const shared_ptr< Session > session )
+        {
+            if ( status == CONFLICT )
+            {
+                return ErrorHandlerImpl::conflict( "The exchange is refusing to process the request because of a conflict with an existing resource.", session );
+            }
+            else if ( status not_eq CREATED )
+            {
+                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository resource entry.", session );
+            }
+            
+            const shared_ptr< Formatter > composer = session->get( "accept-format" );
+            const auto body = composer->compose( resources, session->get( "style" ) );
+            
+            multimap< string, string > headers
+            {
+                { "Date", Date::make( ) },
+                { "ETag", ETag::make( resources ) },
+                { "Last-Modified", LastModified::make( ) },
+                { "Allow", "GET,PUT,HEAD,DELETE,OPTIONS" },
+                { "Content-MD5", ContentMD5::make( body ) },
+                { "Content-Length", ContentLength::make( body ) },
+                { "Content-Type",  ContentType::make( session ) },
+                { "Location", Location::make( session, resources ) }
+            };
+            
+            if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+            {
+                headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+            }
+            
+            const bool echo = session->get( "echo" );
+            ( echo ) ? session->close( CREATED, body, headers ) : session->close( NO_CONTENT, headers );
+        }
+        
+        void ExchangeImpl::read_resource_callback( const int status, const Resources resources, const shared_ptr< Session > session )
+        {
+            if ( status == NOT_FOUND )
+            {
+                return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
+            }
+            else if ( status not_eq OK )
+            {
+                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to read the repository resource entries.", session );
+            }
+            
+            const shared_ptr< Formatter > composer = session->get( "accept-format" );
+            const auto body = composer->compose( resources, session->get( "style" ) );
+            
+            multimap< string, string > headers
+            {
+                { "Date", Date::make( ) },
+                { "Content-MD5", ContentMD5::make( body ) },
+                { "Content-Type", ContentType::make( session ) },
+                { "Content-Length", ContentLength::make( body ) }
+            };
+            
+            if ( not resources.empty( ) )
+            {
+                headers.insert( make_pair( "ETag", ETag::make( resources ) ) );
+                headers.insert( make_pair( "Last-Modified", LastModified::make( resources ) ) );
+            }
+            
+            const bool echo = session->get( "echo" );
+            ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
+        }
+        
+        void ExchangeImpl::update_resource_callback( const int status, const Resources resources, const shared_ptr< Session > session )
+        {
+            if ( status == NOT_FOUND )
+            {
+                return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
+            }
+            else if ( status not_eq OK and status not_eq NO_CONTENT )
+            {
+                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to update the repository resource entries.", session );
+            }
+            
+            multimap< string, string > headers
+            {
+                { "Date", Date::make( ) },
+                { "Last-Modified", LastModified::make( resources ) }
+            };
+            
+            if ( status == NO_CONTENT )
+            {
+                return session->close( NO_CONTENT, headers );
+            }
+            
+            const shared_ptr< Formatter > composer = session->get( "accept-format" );
+            const auto body = composer->compose( resources, session->get( "style" ) );
+            
+            headers.insert( make_pair( "ETag", ETag::make( resources ) ) );
+            headers.insert( make_pair( "Allow", "GET,PUT,HEAD,DELETE,OPTIONS" ) );
+            headers.insert( make_pair( "Content-MD5", ContentMD5::make( body ) ) );
+            headers.insert( make_pair( "Content-Type",  ContentType::make( session ) ) );
+            headers.insert( make_pair( "Content-Length", ContentLength::make( body ) ) );
+            
+            if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+            {
+                headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+            }
+            
+            const bool echo = session->get( "echo" );
+            ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
+        }
+        
+        void ExchangeImpl::create_message_callback( const int status, const Resources resources, const shared_ptr< Session > session, const Resources states )
+        {
+            if ( status not_eq CREATED )
+            {
+                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message entry.", session );
+            }
+            
+            const auto message_key = resources.back( ).lower_bound( "key" )->second;
+            
+            m_repository->create( states, session, [ this, message_key ]( const int status, const Resources, const shared_ptr< Session > session )
+            {
+                if ( status not_eq CREATED )
+                {
+                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message state entries.", session );
+                }
+                
+                const auto location = String::format( "/messages/%.*s", message_key.size( ), message_key.data( ) );
+                multimap< string, string > headers
+                {
+                    { "Allow", "OPTIONS" },
+                    { "Location", location },
+                    { "Date", Date::make( ) },
+                };
+                
+                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+                {
+                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+                }
+                
+                session->close( ACCEPTED, headers );
+                m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
+            } );
+        }
+        
+        void ExchangeImpl::create_message_and_read_queues_callback( const int status, const Resources queues, const shared_ptr< Session > session )
+        {
+            if ( status == NOT_FOUND )
+            {
+                return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested Queue(s) URI could not be found within the exchange.", session );
+            }
+            else if ( status not_eq OK )
+            {
+                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the desired Queue(s).", session );
+            }
+            
+            session->set( "keys", vector< string >( ) );
+            
+            multimap< string, Bytes > filters;
+            filters.insert( make_pair( "type", SUBSCRIPTION ) );
+            session->set( "exclusive_filters", filters );
+            
+            filters.clear( );
+            
+            for ( const auto& queue : queues )
+            {
+                filters.insert( make_pair( "queues", queue.lower_bound( "key" )->second ) );
+            }
+            
+            session->set( "inclusive_filters", filters );
+            
+            m_repository->read( session, bind( &ExchangeImpl::create_message_and_read_subscriptions_callback, this, _1, _2, _3, queues ) );
+        }
+        
+        void ExchangeImpl::create_message_and_read_subscriptions_callback( const int status, const Resources subscriptions, const shared_ptr< Session > session, const Resources queues )
+        {
+            if ( status not_eq OK )
+            {
+                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the associated Queue(s) Subscriptions.", session );
+            }
+            
+            const auto message = make_message( session );
+            const auto message_key = make_pair( "message-key", message.lower_bound( "key" )->second );
+            
+            Resources states;
+            
+            for ( const auto& subscription : subscriptions )
+            {
+                const auto properties = subscription.equal_range( "queues" );
+                const auto subscription_key = make_pair( "subscription-key", subscription.lower_bound( "key" )->second );
+                const auto subscription_endpoint = make_pair( "subscription-endpoint", subscription.lower_bound( "endpoint" )->second );
+                
+                for ( const auto& queue : queues )
+                {
+                    const auto queue_key = queue.lower_bound( "key" )->second;
+                    
+                    for ( auto property = properties.first; property not_eq properties.second; property++ )
+                    {
+                        if ( String::lowercase( String::to_string( property->second ) ) == String::lowercase( String::to_string( queue_key ) ) )
+                        {
+                            Resource state;
+                            state.insert( make_pair( "type", STATE ) );
+                            state.insert( make_pair( "key", Key::make( ) ) );
+                            state.insert( make_pair( "status", PENDING ) );
+                            state.insert( make_pair( "queue-key", queue_key ) );
+                            state.insert( message_key );
+                            state.insert( subscription_key );
+                            state.insert( subscription_endpoint );
+                            states.push_back( state );
+                        }
+                    }
+                }
+            }
+            
+            if ( states.empty( ) )
+            {
+                multimap< string, string > headers
+                {
+                    { "Date", Date::make( ) },
+                };
+                
+                if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
+                {
+                    headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );
+                }
+                
+                return session->close( CREATED, headers );
+            }
+            
+            m_repository->create( { message }, session, bind( &ExchangeImpl::create_message_callback, this, _1, _2, _3, states ) );
         }
     }
 }
