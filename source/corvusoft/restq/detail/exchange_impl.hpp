@@ -83,8 +83,6 @@ namespace restq
                 
                 std::shared_ptr< restbed::Rule > m_keys_rule;
                 
-                std::shared_ptr< restbed::Rule > m_paging_rule;
-                
                 std::shared_ptr< restbed::Rule > m_content_type_rule;
                 
                 std::shared_ptr< restbed::Rule > m_content_encoding_rule;

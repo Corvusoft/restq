@@ -101,7 +101,6 @@ namespace restq
             m_ready_handler( nullptr ),
             m_key_rule( make_shared< Key >( ) ),
             m_keys_rule( make_shared< Keys >( ) ),
-            m_paging_rule( make_shared< Paging >( ) ),
             m_content_type_rule( make_shared< ContentType >( m_formats ) ),
             m_content_encoding_rule( make_shared< ContentEncoding >( ) ),
             m_formats( )
@@ -294,6 +293,7 @@ namespace restq
             m_service->add_rule( make_shared< Range >( )            ,  6 );
             m_service->add_rule( make_shared< Filters >( )          , 99 );
             m_service->add_rule( make_shared< Fields >( )           , 99 );
+            m_service->add_rule( make_shared< Paging >( )           , 99 );
         }
         
         void ExchangeImpl::setup_queue_resource( void )
@@ -317,7 +317,6 @@ namespace restq
             auto resource = make_shared< restbed::Resource >( );
             resource->set_path( "/queues" );
             resource->add_rule( m_keys_rule );
-            resource->add_rule( m_paging_rule );
             resource->add_rule( m_content_type_rule );
             resource->add_rule( m_content_encoding_rule );
             resource->set_method_handler( "GET", bind( &ExchangeImpl::read_resource_handler, this, _1, QUEUE ) );
@@ -381,7 +380,6 @@ namespace restq
             auto resource = make_shared< restbed::Resource >( );
             resource->set_path( "/subscriptions" );
             resource->add_rule( m_keys_rule );
-            resource->add_rule( m_paging_rule );
             resource->add_rule( m_content_type_rule );
             resource->add_rule( m_content_encoding_rule );
             resource->set_method_handler( "GET", bind( &ExchangeImpl::read_resource_handler, this, _1, SUBSCRIPTION ) );
@@ -574,23 +572,18 @@ namespace restq
             
             if ( request->get_header( "Content-Type" ).empty( ) )
             {
-                static const string message = "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-type header sent in the request.";
-                return ErrorHandlerImpl::unsupported_media_type( message, session );
+                return ErrorHandlerImpl::unsupported_media_type( "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-type header sent in the request.", session );
             }
-            
-            vector< string > keys = session->get( "keys" );
-            multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             
             if ( request->has_path_parameter( "key" ) )
             {
-                keys.clear( );
-                filters.clear( );
-                keys.push_back( request->get_path_parameter( "key" ) );
-                session->set( "exclusive_filters", filters );
-                session->set( "keys", keys );
+                session->set( "keys", vector< string > { request->get_path_parameter( "key" ) } );
+                session->set( "exclusive_filters", multimap< string, Bytes > { } );
             }
             
+            multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             filters.insert( make_pair( "type", QUEUE ) );
+            
             session->set( "exclusive_filters", filters );
             session->set( "paging", Paging::default_value );
             
@@ -615,7 +608,7 @@ namespace restq
                     return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the body contains invalid property values.", session );
                 }
                 
-                Bytes key;
+                auto key = Key::make( );
                 
                 if ( resource.count( "key" ) )
                 {
@@ -625,10 +618,6 @@ namespace restq
                     {
                         return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because of a malformed identifier.", session );
                     }
-                }
-                else
-                {
-                    key = Key::make( );
                 }
                 
                 remove_reserved_words( resource );
@@ -648,11 +637,6 @@ namespace restq
         
         void ExchangeImpl::read_resource_handler( const shared_ptr< Session > session, const Bytes& type )
         {
-            if ( not session->has( "paging" ) )
-            {
-                session->set( "paging", Paging::default_value );
-            }
-            
             multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             filters.insert( make_pair( "type", type ) );
             session->set( "exclusive_filters", filters );
@@ -662,9 +646,8 @@ namespace restq
         
         void ExchangeImpl::update_resource_handler( const shared_ptr< Session > session, const Bytes& type )
         {
-            const shared_ptr< Formatter > parser = session->get( "content-format" );
-            
             Resources changeset;
+            const shared_ptr< Formatter > parser = session->get( "content-format" );
             const bool parsing_success = parser->try_parse( session->get_request( )->get_body( ), changeset );
             
             if ( not parsing_success )
@@ -689,12 +672,6 @@ namespace restq
             change.insert( make_pair( "type", type ) );
             change.insert( make_pair( "revision", ETag::make( ) ) );
             change.insert( make_pair( "modified", String::to_bytes( ::to_string( time( 0 ) ) ) ) );
-            
-            
-            if ( not session->has( "paging" ) )
-            {
-                session->set( "paging", Paging::default_value );
-            }
             
             multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             filters.insert( make_pair( "type", type ) );
@@ -755,6 +732,7 @@ namespace restq
             multimap< string, Bytes > filters = session->get( "exclusive_filters" );
             filters.insert( make_pair( "type", type ) );
             session->set( "exclusive_filters", filters );
+            
             m_repository->read( session, [ options ]( const int status, const Resources, const shared_ptr< Session > session )
             {
                 if ( status not_eq OK )
