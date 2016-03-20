@@ -169,11 +169,11 @@ namespace restq
         void ErrorHandlerImpl::bad_request( const string& message, const shared_ptr< Session >& session )
         {
             const list< multimap< string, Bytes > > values { {
-                    { "status", { '4', '0', '0' } },
-                    { "type",   { 'e', 'r', 'r', 'o', 'r' } },
-                    { "code",   { '4', '0', '0', '0', '0' } },
-                    { "title",  { 'B', 'a', 'd', ' ', 'R', 'e', 'q', 'u', 'e', 's', 't' } },
-                    { "message", String::to_bytes( message ) }
+                    { "type", String::to_bytes( "error" ) },
+                    { "code", String::to_bytes( "40000" ) },
+                    { "status", String::to_bytes( "400" ) },
+                    { "message", String::to_bytes( message ) },
+                    { "title", String::to_bytes(  "Bad Request" ) }
                 } };
                 
             const shared_ptr< Formatter > composer = session->get( "accept-format" );
@@ -203,11 +203,11 @@ namespace restq
             else
             {
                 const list< multimap< string, Bytes > > values { {
-                        { "status", { '4', '0', '6' } },
-                        { "type",   { 'e', 'r', 'r', 'o', 'r' } },
-                        { "code",   { '4', '0', '0', '0', '6' } },
-                        { "title",  { 'N', 'o', 't', ' ', 'A', 'c', 'c', 'e', 'p', 't', 'a', 'b', 'l', 'e' } },
-                        { "message", String::to_bytes( message ) }
+                        { "type", String::to_bytes( "error" ) },
+                        { "code", String::to_bytes( "40006" ) },
+                        { "status", String::to_bytes( "406" ) },
+                        { "message", String::to_bytes( message ) },
+                        { "title", String::to_bytes(  "Not Acceptable" ) }
                     } };
                     
                 const shared_ptr< Formatter > formatter = session->get( "accept-format" );
