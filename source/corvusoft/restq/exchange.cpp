@@ -174,4 +174,17 @@ namespace restq
             m_pimpl->m_ready_handler = bind( value, std::ref( *this ) );
         }
     }
+    
+    void Exchange::set_signal_handler( const int signal, const function< void ( const int ) >& value )
+    {
+        if ( m_pimpl->m_boot_time )
+        {
+            throw runtime_error( "Runtime modifications of the exchange are prohibited." );
+        }
+        
+        if ( value not_eq nullptr )
+        {
+            m_pimpl->m_service->set_signal_handler( signal, value );
+        }
+    }
 }

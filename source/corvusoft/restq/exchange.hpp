@@ -63,6 +63,8 @@ namespace restq
             
             void set_ready_handler( const std::function< void ( Exchange& ) >& value );
             
+            void set_signal_handler( const int signal, const std::function< void ( const int ) >& value );
+            
             //Operators
             
             //Properties
