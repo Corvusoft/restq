@@ -175,10 +175,10 @@ The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tr
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |             Secure Socket Layer                 |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |     Simultaneous Network Ports (HTTP/HTTPS)     |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |               Signal Handling                   |      pending    |
-|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |                 Worker Queue                    |      pending    |
-|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |                 Queue Limits                    |      pending    |
-|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |              Subscription Limits                |      pending    |
-|   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |             Client Functionality                |      pending    |
+|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |             Queue Message Limit                 |      pending    |
+|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |           Queue Subscription Limit              |      pending    |
+|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |           Queue Message Size Limit              |      pending    |
+|   [1.5](https://github.com/Corvusoft/restq/milestones/2.0)  |                 Worker Queue                    |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |                 Compression                     |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |          Subscription Header Filters            |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |             Custom Authentication               |      pending    |
