@@ -119,6 +119,8 @@ namespace restq
                 
                 bool is_invalid( const Resource& values, const Bytes& type ) const;
                 
+                void initialise_default_values( Resource& value, const Bytes& type ) const;
+                
                 void remove_reserved_words( Resource& value ) const;
                 
                 void remove_reserved_words( Resources& values ) const;

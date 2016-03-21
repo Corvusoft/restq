@@ -22,3 +22,7 @@ add_test( string_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/string_unit_test_suit
 add_executable( exchange_unit_test_suite ${SOURCE_DIR}/exchange_suite.cpp )
 target_link_libraries( exchange_unit_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( exchange_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/exchange_unit_test_suite )
+
+add_executable( settings_unit_test_suite ${SOURCE_DIR}/settings_suite.cpp )
+target_link_libraries( settings_unit_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( settings_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/settings_unit_test_suite )

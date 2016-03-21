@@ -42,7 +42,7 @@ namespace restq
                 
                 static void conflict( const std::string& message, const std::shared_ptr< Session >& session );
                 
-                static void not_found( const std::string& message, const std::shared_ptr< Session > session );
+                static void not_found( const std::string& message, const std::shared_ptr< Session >& session );
                 
                 static void bad_request( const std::string& message, const std::shared_ptr< Session >& session );
                 
@@ -54,9 +54,11 @@ namespace restq
                 
                 static void unsupported_media_type( const std::string& message, const std::shared_ptr< Session >& session );
                 
+                static void request_entity_too_large( const std::string& message, const std::shared_ptr< Session >& session );
+                
                 static void internal_server_error( const int status, const std::exception& error, const std::shared_ptr< Session > session );
                 
-                static void find_and_invoke_for( const int status, const std::string& message, const std::shared_ptr< Session > session );
+                static void find_and_invoke_for( const int status, const std::string& message, const std::shared_ptr< Session >& session );
                 
                 //Getters
                 

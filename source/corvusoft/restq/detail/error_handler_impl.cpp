@@ -138,7 +138,7 @@ namespace restq
             ( echo ) ? session->close( CONFLICT, body, headers ) : session->close( CONFLICT, headers );
         }
         
-        void ErrorHandlerImpl::not_found( const string& message, const shared_ptr< Session > session )
+        void ErrorHandlerImpl::not_found( const string& message, const shared_ptr< Session >& session )
         {
             const list< multimap< string, Bytes > > values { {
                     { "type", String::to_bytes( "error" ) },
@@ -305,6 +305,32 @@ namespace restq
             ( echo ) ? session->close( UNSUPPORTED_MEDIA_TYPE, body, headers ) : session->close( UNSUPPORTED_MEDIA_TYPE, headers );
         }
         
+        void ErrorHandlerImpl::request_entity_too_large( const string& message, const shared_ptr< Session >& session )
+        {
+            const list< multimap< string, Bytes > > values { {
+                    { "type", String::to_bytes( "error" ) },
+                    { "code", String::to_bytes( "40013" ) },
+                    { "status", String::to_bytes( "413" ) },
+                    { "message", String::to_bytes( message ) },
+                    { "title", String::to_bytes(  "Request Entity Too Large" ) }
+                } };
+                
+            const shared_ptr< Formatter > composer = session->get( "accept-format" );
+            const auto body = composer->compose( values, session->get( "style" ) );
+            
+            const multimap< string, string > headers
+            {
+                { "Date", Date::make( ) },
+                { "Content-MD5", ContentMD5::make( body ) },
+                { "Content-Language", ContentLanguage::make( ) },
+                { "Content-Type", ContentType::make( session ) },
+                { "Content-Length", ContentLength::make( body ) }
+            };
+            
+            const bool echo = session->get( "echo" );
+            ( echo ) ? session->close( REQUEST_ENTITY_TOO_LARGE, body, headers ) : session->close( REQUEST_ENTITY_TOO_LARGE, headers );
+        }
+        
         void ErrorHandlerImpl::internal_server_error( const int status, const exception& error, const shared_ptr< Session > session )
         {
             const string message = error.what( );
@@ -321,7 +347,7 @@ namespace restq
             session->close( status, message, headers );
         }
         
-        void ErrorHandlerImpl::find_and_invoke_for( const int status, const string& message, const shared_ptr< Session > session )
+        void ErrorHandlerImpl::find_and_invoke_for( const int status, const string& message, const shared_ptr< Session >& session )
         {
             switch ( status )
             {

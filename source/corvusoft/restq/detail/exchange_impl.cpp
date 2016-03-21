@@ -97,7 +97,7 @@ namespace restq
             m_system( make_shared< System >( ) ),
             m_repository( nullptr ),
             m_settings( nullptr ),
-            m_service( nullptr ),
+            m_service( make_shared< restbed::Service >( ) ),
             m_ready_handler( nullptr ),
             m_key_rule( make_shared< Key >( ) ),
             m_keys_rule( make_shared< Keys >( ) ),
@@ -130,9 +130,7 @@ namespace restq
             settings->set_bind_address( m_settings->get_bind_address( ) );
             settings->set_connection_timeout( m_settings->get_connection_timeout( ) );
             settings->set_ssl_settings( m_settings->get_ssl_settings( ) );
-            settings->set_properties( m_settings->get_properties( ) );
             
-            m_service = make_shared< restbed::Service >( );
             m_service->set_error_handler( ErrorHandlerImpl::internal_server_error );
             m_service->set_method_not_allowed_handler( ErrorHandlerImpl::method_not_allowed );
             m_service->set_method_not_implemented_handler( ErrorHandlerImpl::method_not_implemented );
@@ -214,6 +212,33 @@ namespace restq
             }
             
             return false;
+        }
+        
+        void ExchangeImpl::initialise_default_values( Resource& value, const Bytes& type ) const
+        {
+            if ( type == QUEUE )
+            {
+                const auto message_limit = String::to_bytes( ::to_string( m_settings->get_default_queue_message_limit( ) ) );
+                
+                if ( not value.count( "message-limit" ) )
+                {
+                    value.insert( make_pair( "message-limit", message_limit ) );
+                }
+                
+                const auto message_size_limit = String::to_bytes( ::to_string( m_settings->get_default_queue_message_size_limit( ) ) );
+                
+                if ( not value.count( "message-size-limit" ) )
+                {
+                    value.insert( make_pair( "message-size-limit", message_size_limit ) );
+                }
+                
+                const auto subscription_limit = String::to_bytes( ::to_string( m_settings->get_default_queue_subscription_limit( ) ) );
+                
+                if ( not value.count( "subscription-limit" ) )
+                {
+                    value.insert( make_pair( "subscription-limit", subscription_limit ) );
+                }
+            }
         }
         
         void ExchangeImpl::remove_reserved_words( Resource& resource ) const
@@ -473,6 +498,8 @@ namespace restq
                         
                         auto message = messages.back( );
                         
+                        //status = Dispatch::direct( message );
+                        
                         auto request = make_shared< Request >( Uri( String::to_string( states.back( ).lower_bound( "subscription-endpoint" )->second ) ) );
                         request->set_method( "POST" );
                         request->set_body( message.lower_bound( "data" )->second );
@@ -515,9 +542,11 @@ namespace restq
                             request->set_header( property.first, String::to_string( property.second ) );
                         }
                         
+                        
                         auto response = Http::sync( request );
                         int status_code = response->get_status_code( );
                         Http::close( request );
+                        //status = Dispatch::direct( message ); end
                         
                         string log_message = "";
                         Resource change;
@@ -621,6 +650,7 @@ namespace restq
                 }
                 
                 remove_reserved_words( resource );
+                initialise_default_values( resource, type );
                 
                 const auto datastamp = String::to_bytes( ::to_string( time( 0 ) ) );
                 
@@ -870,6 +900,7 @@ namespace restq
             }
             
             const auto message_key = resources.back( ).lower_bound( "key" )->second;
+            //session->set_header( "Location", String::format( "/messages/%.*s", message_key.size( ), message_key.data( ) ) );
             
             m_repository->create( states, session, [ this, message_key ]( const int status, const Resources, const shared_ptr< Session > session )
             {
@@ -878,12 +909,11 @@ namespace restq
                     return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message state entries.", session );
                 }
                 
-                const auto location = String::format( "/messages/%.*s", message_key.size( ), message_key.data( ) );
                 multimap< string, string > headers
                 {
                     { "Allow", "OPTIONS" },
-                    { "Location", location },
                     { "Date", Date::make( ) },
+                    { "Location", String::format( "/messages/%.*s", message_key.size( ), message_key.data( ) ) }
                 };
                 
                 if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
@@ -907,20 +937,31 @@ namespace restq
                 return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the desired Queue(s).", session );
             }
             
-            session->set( "keys", vector< string >( ) );
+            const auto request = session->get_request( );
+            auto message_size_limit = numeric_limits< unsigned long >::min( );
+            request->get_header( "Content-Length", message_size_limit );
             
-            multimap< string, Bytes > filters;
-            filters.insert( make_pair( "type", SUBSCRIPTION ) );
-            session->set( "exclusive_filters", filters );
+            multimap< string, Bytes > exclusive_filters;
+            exclusive_filters.insert( make_pair( "type", SUBSCRIPTION ) );
             
-            filters.clear( );
+            multimap< string, Bytes > inclusive_filters;
             
             for ( const auto& queue : queues )
             {
-                filters.insert( make_pair( "queues", queue.lower_bound( "key" )->second ) );
+                const auto queue_key = queue.lower_bound( "key" )->second;
+                const auto queue_message_size_limit = stoul( String::to_string( queue.lower_bound( "message-size-limit" )->second ) );
+                
+                if ( message_size_limit > queue_message_size_limit )
+                {
+                    return ErrorHandlerImpl::request_entity_too_large( String::format( "The exchange is refusing to process a request because the message entity is larger than the one or more of the queues is willing or able to process.", String::to_string( queue_key ).data( ) ), session );
+                }
+                
+                inclusive_filters.insert( make_pair( "queues", queue_key ) );
             }
             
-            session->set( "inclusive_filters", filters );
+            session->set( "keys", vector< string > { } );
+            session->set( "exclusive_filters", exclusive_filters );
+            session->set( "inclusive_filters", inclusive_filters );
             
             m_repository->read( session, bind( &ExchangeImpl::create_message_and_read_subscriptions_callback, this, _1, _2, _3, queues ) );
         }
