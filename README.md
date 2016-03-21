@@ -176,9 +176,9 @@ The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tr
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |     Simultaneous Network Ports (HTTP/HTTPS)     |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |               Signal Handling                   |     complete    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |             Queue Message Limit                 |      pending    |
+|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |           Queue Message Size Limit              |     complete    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |           Queue Subscription Limit              |      pending    |
-|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |           Queue Message Size Limit              |      pending    |
-|   [1.5](https://github.com/Corvusoft/restq/milestones/2.0)  |                 Worker Queue                    |      pending    |
+|   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |                 Worker Queue                    |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |              Custom Compression                 |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |          Subscription Header Filters            |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |             Custom Authentication               |      pending    |
