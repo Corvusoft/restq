@@ -83,10 +83,6 @@ namespace restq
 {
     namespace detail
     {
-        const auto QUEUE = String::to_bytes( "queue" );
-        const auto STATE = String::to_bytes( "state" );
-        const auto MESSAGE = String::to_bytes( "message" );
-        const auto SUBSCRIPTION = String::to_bytes( "subscription" );
         const auto PENDING = String::to_bytes( "pending" );
         const auto REJECTED = String::to_bytes( "rejected" );
         const auto INFLIGHT = String::to_bytes( "in-flight" );
@@ -490,7 +486,7 @@ namespace restq
                             const multimap< string, Bytes > filters = { { "type", STATE } };
                             session->set( "exclusive_filters", filters );
                             
-                            return m_repository->destroy( session, [ ]( const int, shared_ptr< Session > )
+                            return m_repository->destroy( session, [ ]( const int, shared_ptr< Session > ) //nullptr
                             {
                                 return; //repo should cehck for nullptr before invoking
                             } );
@@ -615,6 +611,7 @@ namespace restq
             
             session->set( "exclusive_filters", filters );
             session->set( "paging", Paging::default_value );
+            session->set( "include", STATE ); //in fields query use message:key
             
             m_repository->read( session, bind( &ExchangeImpl::create_message_and_read_queues_callback, this, _1, _2, _3 ) );
         }
@@ -926,7 +923,7 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::create_message_and_read_queues_callback( const int status, const Resources queues, const shared_ptr< Session > session )
+        void ExchangeImpl::create_message_and_read_queues_callback( const int status, const Resources resources, const shared_ptr< Session > session )
         {
             if ( status == NOT_FOUND )
             {
@@ -935,6 +932,37 @@ namespace restq
             else if ( status not_eq OK )
             {
                 return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the desired Queue(s).", session );
+            }
+            
+            Resources queues;
+            Resources states;
+            
+            for ( const auto& resource : resources )
+            {
+                const auto type = resource.lower_bound( "type" )->second;
+                
+                if ( type == QUEUE )
+                {
+                    queues.push_back( resource );
+                }
+                else if ( type == STATE )
+                {
+                    const auto key = String::lowercase( String::to_string( resource.lower_bound( "key" )->second ) );
+                    
+                    auto state = find_if( states.begin( ), states.end( ), [ &key ]( const Resource & state )
+                    {
+                        return key == String::lowercase( String::to_string( state.lower_bound( "key" )->second ) );
+                    } );
+                    
+                    if ( state == states.end( ) )
+                    {
+                        states.push_back( resource );
+                    }
+                }
+                else
+                {
+                    log( Logger::ERROR, "Read Queue with related Messages. However received additional resource type from repository; skipping selected resource." );
+                }
             }
             
             const auto request = session->get_request( );
@@ -953,10 +981,22 @@ namespace restq
                 
                 if ( message_size_limit > queue_message_size_limit )
                 {
-                    return ErrorHandlerImpl::request_entity_too_large( String::format( "The exchange is refusing to process a request because the message entity is larger than the one or more of the queues is willing or able to process.", String::to_string( queue_key ).data( ) ), session );
+                    return ErrorHandlerImpl::request_entity_too_large( "The exchange is refusing to process a request because the message entity is larger than the one or more of the queues is willing or able to process.", session );
                 }
                 
                 inclusive_filters.insert( make_pair( "queues", queue_key ) );
+                
+                const size_t message_limit = count_if( states.begin( ), states.end( ), [ &queue_key ]( const Resource & state )
+                {
+                    return queue_key == state.lower_bound( "queue-key" )->second;
+                } );
+                
+                const auto queue_message_limit = stoul( String::to_string( queue.lower_bound( "message-limit" )->second ) );
+                
+                if ( ( message_limit + 1 ) > queue_message_limit )
+                {
+                    return ErrorHandlerImpl::service_unavailable( "The exchange is refusing to process a request because the message would violate a queue(s) capacity.", session );
+                }
             }
             
             session->set( "keys", vector< string > { } );

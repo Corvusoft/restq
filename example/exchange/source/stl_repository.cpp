@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <set>
 #include <string>
 #include <memory>
 #include <algorithm>
@@ -15,6 +16,7 @@
 #include <corvusoft/restq/status_code.hpp>
 
 //System Namespaces
+using std::set;
 using std::pair;
 using std::mutex;
 using std::size_t;
@@ -148,6 +150,9 @@ void STLRepository::read( const shared_ptr< Session > session, const function< v
         }
     }
     
+    const Bytes relationship = session->get( "include", Bytes{ } );
+    include( relationship, values );
+    
     callback( OK, values, session );
 }
 
@@ -239,6 +244,40 @@ void STLRepository::destroy( const shared_ptr< Session > session, const function
 void STLRepository::set_logger( const shared_ptr< Logger >& )
 {
     return;
+}
+
+void STLRepository::include( const Bytes& relationship, Resources& values )
+{
+    if ( relationship.empty( ) )
+    {
+        return;
+    }
+    
+    Resources relationships;
+    
+    unique_lock< mutex> lock( m_resources_lock );
+    
+    for ( const auto& value : values )
+    {
+        const auto key = String::lowercase( String::to_string( value.lower_bound( "key" )->second ) );
+        const auto type = value.lower_bound( "type" )->second;
+        const auto foreign_key = String::to_string( type ) + "-key";
+        
+        for ( const auto& resource : m_resources )
+        {
+            if ( resource.lower_bound( "type" )->second == relationship )
+            {
+                if ( resource.count( foreign_key ) and key == String::lowercase( String::to_string( resource.lower_bound( foreign_key )->second ) ) )
+                {
+                    relationships.push_back( resource );
+                }
+            }
+        }
+    }
+    
+    lock.unlock( );
+    
+    values.insert( values.end( ), relationships.begin( ), relationships.end( ) );
 }
 
 void STLRepository::filter( Resources& resources, const multimap< string, Bytes >& inclusive_filters, const multimap< string, Bytes >& exclusive_filters ) const

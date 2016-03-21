@@ -90,6 +90,8 @@ class STLRepository final : public restq::Repository
         STLRepository( const STLRepository& original ) = delete;
         
         //Functionality
+        void include( const restq::Bytes& relationship, restq::Resources& values );
+        
         void filter( restq::Resources& resources, const std::multimap< std::string, restq::Bytes >& inclusive_filters, const std::multimap< std::string, restq::Bytes >& exclusive_filters ) const;
         
         //Getters

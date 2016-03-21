@@ -52,6 +52,8 @@ namespace restq
                 
                 static void expectation_failed( const std::string& message, const std::shared_ptr< Session >& session );
                 
+                static void service_unavailable( const std::string& message, const std::shared_ptr< Session >& session );
+                
                 static void unsupported_media_type( const std::string& message, const std::shared_ptr< Session >& session );
                 
                 static void request_entity_too_large( const std::string& message, const std::shared_ptr< Session >& session );

@@ -53,7 +53,7 @@ namespace restq
                 
                 void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
-                    static const auto reserved = set< string > { "echo", "keys", "style", "index", "limit", "fields", "type" };
+                    static const auto reserved = set< string > { "echo", "keys", "style", "index", "limit", "fields", "type", "include" };
                     
                     const auto request = session->get_request( );
                     const auto parameters = request->get_query_parameters( );

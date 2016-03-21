@@ -279,6 +279,32 @@ namespace restq
             ( echo ) ? session->close( EXPECTATION_FAILED, body, headers ) : session->close( EXPECTATION_FAILED, headers );
         }
         
+        void ErrorHandlerImpl::service_unavailable( const string& message, const shared_ptr< Session >& session )
+        {
+            const list< multimap< string, Bytes > > values { {
+                    { "status", String::to_bytes( "503" ) },
+                    { "code", String::to_bytes( "50003" ) },
+                    { "type", String::to_bytes( "error" ) },
+                    { "message", String::to_bytes( message ) },
+                    { "title", String::to_bytes( "Service Unavailable" ) }
+                } };
+                
+            const shared_ptr< Formatter > formatter = session->get( "accept-format" );
+            const auto body = formatter->compose( values, session->get( "style" ) );
+            
+            const multimap< string, string > headers
+            {
+                { "Date", Date::make( ) },
+                { "Content-MD5", ContentMD5::make( body ) },
+                { "Content-Language", ContentLanguage::make( ) },
+                { "Content-Type",  ContentType::make( session ) },
+                { "Content-Length", ContentLength::make( body ) }
+            };
+            
+            const bool echo = session->get( "echo" );
+            ( echo ) ? session->close( SERVICE_UNAVAILABLE, body, headers ) : session->close( SERVICE_UNAVAILABLE, headers );
+        }
+        
         void ErrorHandlerImpl::unsupported_media_type( const string& message, const shared_ptr< Session >& session )
         {
             const list< multimap< string, Bytes > > values { {
