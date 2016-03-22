@@ -148,8 +148,7 @@ The [lettuce.py](http://lettuce.it) behaviour driven development tool is require
 cd restq
 ./distribution/example/http_example
 
-lettuce --failfast --random -t-order_dependent test/acceptance
-lettuce --failfast -torder_dependent test/acceptance
+lettuce --failfast --random test/acceptance/features
 ```
 
 The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features). They're also a good starting point for developers wishing to integrate with RestQ.
@@ -176,9 +175,9 @@ The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tr
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |             Secure Socket Layer                 |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |     Simultaneous Network Ports (HTTP/HTTPS)     |      pending    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |               Signal Handling                   |     complete    |
-|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |             Queue Message Limit                 |      pending    |
+|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |             Queue Message Limit                 |     complete    |
 |   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |           Queue Message Size Limit              |     complete    |
-|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |           Queue Subscription Limit              |      pending    |
+|   [1.5](https://github.com/Corvusoft/restq/milestones/1.5)  |           Queue Subscription Limit              |     complete    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |                 Worker Queue                    |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |              Custom Compression                 |      pending    |
 |   [2.0](https://github.com/Corvusoft/restq/milestones/2.0)  |          Subscription Header Filters            |      pending    |

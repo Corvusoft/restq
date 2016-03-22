@@ -257,19 +257,46 @@ void STLRepository::include( const Bytes& relationship, Resources& values )
     
     unique_lock< mutex> lock( m_resources_lock );
     
-    for ( const auto& value : values )
+    if ( relationship == restq::SUBSCRIPTION )
     {
-        const auto key = String::lowercase( String::to_string( value.lower_bound( "key" )->second ) );
-        const auto type = value.lower_bound( "type" )->second;
-        const auto foreign_key = String::to_string( type ) + "-key";
-        
         for ( const auto& resource : m_resources )
         {
-            if ( resource.lower_bound( "type" )->second == relationship )
+            if ( resource.lower_bound( "type" )->second == restq::SUBSCRIPTION )
             {
-                if ( resource.count( foreign_key ) and key == String::lowercase( String::to_string( resource.lower_bound( foreign_key )->second ) ) )
+                auto iterators = resource.equal_range( "queues" );
+                
+                for ( const auto& queue : values )
                 {
-                    relationships.push_back( resource );
+                    auto key = String::lowercase( String::to_string( queue.lower_bound( "key" )->second ) );
+                    
+                    for ( auto iterator = iterators.first; iterator not_eq iterators.second; iterator++ )
+                    {
+                        if ( key == String::lowercase( String::to_string( iterator->second ) ) )
+                        {
+                            relationships.push_back( resource );
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        for ( const auto& value : values )
+        {
+            const auto key = String::lowercase( String::to_string( value.lower_bound( "key" )->second ) );
+            const auto type = value.lower_bound( "type" )->second;
+            const auto foreign_key = String::to_string( type ) + "-key";
+            
+            for ( const auto& resource : m_resources )
+            {
+                if ( resource.lower_bound( "type" )->second == relationship )
+                {
+                    if ( resource.count( foreign_key ) and key == String::lowercase( String::to_string( resource.lower_bound( foreign_key )->second ) ) )
+                    {
+                        relationships.push_back( resource );
+                    }
                 }
             }
         }

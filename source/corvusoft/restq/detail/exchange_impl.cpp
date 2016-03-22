@@ -63,6 +63,8 @@ using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
 using std::regex_match;
+using std::out_of_range;
+using std::invalid_argument;
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
@@ -181,30 +183,56 @@ namespace restq
             return invalid_headers.count( String::lowercase( header.first ) ) == 0;
         }
         
-        bool ExchangeImpl::is_invalid( const Resource& value, const Bytes& type ) const
+        bool ExchangeImpl::is_invalid( Resource& value, const Bytes& type ) const
         {
-            if ( type not_eq SUBSCRIPTION )
+            if ( type == SUBSCRIPTION )
             {
-                return false;
+                if ( value.count( "endpoint" ) not_eq 1 )
+                {
+                    return true;
+                }
+                
+                const auto endpoint = String::to_string( value.lower_bound( "endpoint" )->second );
+                
+                if ( not Uri::is_valid( endpoint ) )
+                {
+                    return true;
+                }
+                
+                const Uri uri( endpoint );
+                
+                if ( uri.get_scheme( ) not_eq "http" )
+                {
+                    return true;
+                }
             }
-            
-            if ( value.count( "endpoint" ) not_eq 1 )
+            else if ( type == QUEUE )
             {
-                return true;
-            }
-            
-            const auto endpoint = String::to_string( value.lower_bound( "endpoint" )->second );
-            
-            if ( not Uri::is_valid( endpoint ) )
-            {
-                return true;
-            }
-            
-            const Uri uri( endpoint );
-            
-            if ( uri.get_scheme( ) not_eq "http" )
-            {
-                return true;
+                try
+                {
+                    if ( value.count( "message-limit" ) )
+                    {
+                        stoul( String::to_string( value.lower_bound( "message-limit" )->second ) );
+                    }
+                    
+                    if ( value.count( "message-size-limit" ) )
+                    {
+                        stoul( String::to_string( value.lower_bound( "message-size-limit" )->second ) );
+                    }
+                    
+                    if ( value.count( "subscription-limit" ) )
+                    {
+                        stoul( String::to_string( value.lower_bound( "subscription-limit" )->second ) );
+                    }
+                }
+                catch ( const invalid_argument& ia )
+                {
+                    return false;
+                }
+                catch ( const out_of_range& ofr )
+                {
+                    return false;
+                }
             }
             
             return false;
@@ -659,7 +687,92 @@ namespace restq
                 resource.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
             }
             
-            m_repository->create( resources, session, bind( &ExchangeImpl::create_resource_callback, this, _1, _2, _3 ) );
+            if ( type not_eq SUBSCRIPTION )
+            {
+                return m_repository->create( resources, session, bind( &ExchangeImpl::create_resource_callback, this, _1, _2, _3 ) );
+            }
+            
+            auto queue_keys = set< string > { };
+            
+            for ( auto& resource : resources )
+            {
+                auto iterators = resource.equal_range( "queues" );
+                
+                for ( auto iterator = iterators.first; iterator not_eq iterators.second; iterator++ )
+                {
+                    queue_keys.insert( String::to_string( iterator->second ) );
+                }
+            }
+            
+            session->set( "keys", vector< string >( queue_keys.begin( ), queue_keys.end( ) ) );
+            session->set( "paging", Paging::default_value );
+            session->set( "inclusive_filters", multimap< string, Bytes > { } );
+            session->set( "include", SUBSCRIPTION );
+            
+            const auto filters = multimap< string, Bytes > { { "type", QUEUE } };
+            session->set( "exclusive_filters", filters );
+            
+            m_repository->read( session, [ this, resources ]( const int status, const Resources items, const shared_ptr< Session > session )
+            {
+                if ( status == NOT_FOUND )
+                {
+                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because one or more subscription queues property values could not be found.", session );
+                }
+                else if ( status not_eq OK )
+                {
+                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to read the repository resource entries.", session );
+                }
+                
+                Resources queues;
+                Resources subscriptions;
+                
+                for ( const auto& item : items )
+                {
+                    const auto type = item.lower_bound( "type" )->second;
+                    
+                    if ( type == QUEUE )
+                    {
+                        queues.push_back( item );
+                    }
+                    else if ( type == SUBSCRIPTION )
+                    {
+                        subscriptions.push_back( item );
+                    }
+                    else
+                    {
+                        log( Logger::ERROR, "Read Queue with related Subscriptions. However received additional resource type from repository; skipping selected resource." );
+                    }
+                }
+                
+                for ( const auto queue : queues )
+                {
+                    const auto key = String::lowercase( String::to_string( queue.lower_bound( "key" )->second ) );
+                    const auto queue_subscription_limit = stoul( String::to_string( queue.lower_bound( "subscription-limit" )->second ) );
+                    
+                    const size_t new_count = count_if( resources.begin( ), resources.end( ), [ key ]( const Resource & resource )
+                    {
+                        return find_if( resource.begin( ), resource.end( ), [ key ]( const pair< string, Bytes >& property )
+                        {
+                            return property.first == "queues" and key == String::lowercase( String::to_string( property.second ) );
+                        } ) not_eq resource.end( );
+                    } );
+                    
+                    const size_t current_count = count_if( subscriptions.begin( ), subscriptions.end( ), [ key ]( const Resource & subscription )
+                    {
+                        return find_if( subscription.begin( ), subscription.end( ), [ key ]( const pair< string, Bytes >& property )
+                        {
+                            return property.first == "queues" and key == String::lowercase( String::to_string( property.second ) );
+                        } ) not_eq subscription.end( );
+                    } );
+                    
+                    if ( ( new_count + current_count ) > queue_subscription_limit )
+                    {
+                        return ErrorHandlerImpl::service_unavailable( "The exchange is refusing to process a request because a new subscription would violate a queue(s) subscription capacity.", session );
+                    }
+                }
+                
+                m_repository->create( resources, session, bind( &ExchangeImpl::create_resource_callback, this, _1, _2, _3 ) );
+            } );
         }
         
         void ExchangeImpl::read_resource_handler( const shared_ptr< Session > session, const Bytes& type )

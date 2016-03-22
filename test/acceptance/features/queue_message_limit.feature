@@ -1,6 +1,6 @@
 # language: en
 
-Feature: Queue Message Size Limit
+Feature: Queue Message Limit
     In order to restrict the maximum allowed number of messages on a queue
     As a Queue owner
     I want support for limiting a queue's message capacity
