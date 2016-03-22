@@ -8,7 +8,7 @@ Feature: Echo Cancellation
     Scenario Outline: Read collection.
         Given I have started a message exchange
         When I perform a HTTP "GET" request to "/queues?echo=off" with headers "Accept: application/json, Host: localhost:1984"
-        Then I should see a response status code of "204" "No Content"
+        Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "11"
@@ -82,7 +82,7 @@ Feature: Echo Cancellation
         "   }                                                "
         " }                                                  "
         """
-        Then I should see a response status code of "204" "No Content"
+        Then I should see a response status code of "201" "Created"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "265"

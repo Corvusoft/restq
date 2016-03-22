@@ -1043,7 +1043,7 @@ namespace restq
             }
             
             const bool echo = session->get( "echo" );
-            ( echo ) ? session->close( CREATED, body, headers ) : session->close( NO_CONTENT, headers );
+            ( echo ) ? session->close( CREATED, body, headers ) : session->close( CREATED, headers );
         }
         
         void ExchangeImpl::read_resource_callback( const int status, const Resources resources, const shared_ptr< Session > session )
@@ -1074,8 +1074,13 @@ namespace restq
                 headers.insert( make_pair( "Last-Modified", LastModified::make( resources ) ) );
             }
             
+            if ( session->get_request( )->get_method( String::lowercase ) == "head" )
+            {
+                return session->close( NO_CONTENT, headers );
+            }
+            
             const bool echo = session->get( "echo" );
-            ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
+            ( echo ) ? session->close( OK, body, headers ) : session->close( OK, headers );
         }
         
         void ExchangeImpl::update_resource_callback( const int status, const Resources resources, const shared_ptr< Session > session )
@@ -1115,7 +1120,7 @@ namespace restq
             }
             
             const bool echo = session->get( "echo" );
-            ( echo ) ? session->close( OK, body, headers ) : session->close( NO_CONTENT, headers );
+            ( echo ) ? session->close( OK, body, headers ) : session->close( OK, headers );
         }
         
         void ExchangeImpl::create_message_callback( const int status, const Resources resources, const shared_ptr< Session > session, const Resources states )

@@ -51,21 +51,12 @@ namespace restq
                 
                 void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
                 {
-                    const auto request = session->get_request( );
+                    session->set( "echo", true );
                     
-                    if ( request->get_method( String::lowercase ) == "head" )
+                    for ( const auto parameter : session->get_request( )->get_query_parameters( "echo" ) )
                     {
-                        session->set( "echo", false );
-                    }
-                    else
-                    {
-                        session->set( "echo", true );
-                        
-                        for ( const auto parameter : request->get_query_parameters( "echo" ) )
-                        {
-                            const auto value = String::lowercase( parameter.second );
-                            session->set( "echo", ( value == "false" or value == "no" or value == "off" or value == "0" ) ? false : true );
-                        }
+                        const auto value = String::lowercase( parameter.second );
+                        session->set( "echo", ( value == "false" or value == "no" or value == "off" or value == "0" ) ? false : true );
                     }
                     
                     callback( session );

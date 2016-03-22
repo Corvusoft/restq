@@ -16,7 +16,7 @@ Feature: Echo Cancellation
         " }                                                  "
         """
         When I perform a HTTP "GET" request to "/queues/39698865-8794-4851-85f7-0dbe15be477b?echo=off" with headers "Accept: application/json, Host: localhost:1984"
-        Then I should see a response status code of "204" "No Content"
+        Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
         And I should see a "Content-Length" header value "265"
@@ -106,7 +106,7 @@ Feature: Echo Cancellation
         "   }                                   "
         " }                                     "
         """
-        Then I should see a response status code of "204" "No Content"
+        Then I should see a response status code of "200" "OK"
         And I should not see a "Location" header value
         And I should not see a "Age" header value
         And I should not see a "Retry-After" header value
