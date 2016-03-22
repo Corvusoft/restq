@@ -79,10 +79,7 @@ namespace restq
                             location += String::to_string( resource.lower_bound( "key" )->second ) + ",";
                         }
                         
-                        if ( location.back( ) == ',' ) //String::trim_lagging( location, ',' );
-                        {
-                            location = location.substr( 0, location.length( ) - 1 );
-                        }
+                        location = String::trim_lagging( location, "," );
                     }
                     
                     return location;

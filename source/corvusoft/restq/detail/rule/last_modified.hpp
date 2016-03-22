@@ -62,6 +62,11 @@ namespace restq
                 
                 static string make( const list< multimap< string, Bytes > >& resources )
                 {
+                    if ( resources.empty( ) or resources.back( ).count( "modified" ) == 0 )
+                    {
+                        return make( );
+                    }
+                    
                     const auto datestamp = String::to_string( resources.back( ).lower_bound( "modified" )->second );
                     
                     return Date::make( stoul( datestamp ) );
