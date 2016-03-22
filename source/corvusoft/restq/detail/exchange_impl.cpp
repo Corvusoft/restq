@@ -733,15 +733,16 @@ namespace restq
                 }
             }
             
-            session->set( "keys", vector< string >( queue_keys.begin( ), queue_keys.end( ) ) );
-            session->set( "paging", Paging::default_value );
-            session->set( "inclusive_filters", multimap< string, Bytes > { } );
-            session->set( "include", SUBSCRIPTION );
+            auto query_session = make_shared< Session >( "Query Session" );
+            query_session->set( "keys", vector< string >( queue_keys.begin( ), queue_keys.end( ) ) );
+            query_session->set( "paging", Paging::default_value );
+            query_session->set( "inclusive_filters", multimap< string, Bytes > { } );
+            query_session->set( "include", SUBSCRIPTION );
             
             const auto filters = multimap< string, Bytes > { { "type", QUEUE } };
-            session->set( "exclusive_filters", filters );
+            query_session->set( "exclusive_filters", filters );
             
-            m_repository->read( session, [ this, resources ]( const int status, const Resources items, const shared_ptr< Session > session )
+            m_repository->read( query_session, [ this, session, resources ]( const int status, const Resources items, const shared_ptr< Session > )
             {
                 if ( status == NOT_FOUND )
                 {
@@ -863,15 +864,16 @@ namespace restq
                 }
             }
             
-            session->set( "keys", vector< string >( queue_keys.begin( ), queue_keys.end( ) ) );
-            session->set( "paging", Paging::default_value );
-            session->set( "inclusive_filters", multimap< string, Bytes > { } );
-            session->set( "include", SUBSCRIPTION );
+            auto query_session = make_shared< Session >( "Query Session" );
+            query_session->set( "keys", vector< string >( queue_keys.begin( ), queue_keys.end( ) ) );
+            query_session->set( "paging", Paging::default_value );
+            query_session->set( "inclusive_filters", multimap< string, Bytes > { } );
+            query_session->set( "include", SUBSCRIPTION );
             
             const auto update_filters = multimap< string, Bytes > { { "type", QUEUE } };
-            session->set( "exclusive_filters", update_filters );
+            query_session->set( "exclusive_filters", update_filters );
             
-            m_repository->read( session, [ this, changeset ]( const int status, const Resources items, const shared_ptr< Session > session )
+            m_repository->read( query_session, [ this, changeset, session ]( const int status, const Resources items, const shared_ptr< Session > )
             {
                 if ( status == NOT_FOUND )
                 {
