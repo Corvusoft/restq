@@ -62,29 +62,20 @@ namespace restq
                 
                 static Bytes make( void )
                 {
-                    const auto etag = make( String::empty );
-                    return String::to_bytes( etag );
-                }
-                
-                static string make( string etag )
-                {
-                    if ( etag.empty( ) )
-                    {
-                        static hash< string > hasher;
-                        static const size_t minimum_length = 20;
-                        
-                        etag = ::to_string( hasher( Date::make( ) ) );
-                        etag.append( minimum_length - etag.length( ), '0' );
-                    }
+                    static hash< string > hasher;
+                    static const size_t minimum_length = 20;
                     
-                    return String::format( "%s", etag.data( ) );
+                    auto etag = ::to_string( hasher( Date::make( ) ) );
+                    etag.append( minimum_length - etag.length( ), '0' );
+                    
+                    return String::to_bytes( String::format( "%s", etag.data( ) ) );
                 }
                 
                 static string make( const list< multimap< string, Bytes > >& values )
                 {
-                    string etag = String::empty;
+                    auto etag = string{ "00000000000000000000" };
                     
-                    if ( values.back( ).count( "revision" ) )
+                    if ( not values.empty( ) and values.back( ).count( "revision" ) )
                     {
                         etag = String::to_string( values.back( ).lower_bound( "revision" )->second );
                     }
