@@ -265,3 +265,119 @@ Feature: HTTP PUT
         "   }                                                                                        "
         " }                                                                                          "
         """
+
+    Scenario Outline: Update resource with unknown Queue key.
+        Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "key": "04fcf1a5-f88a-4d8a-82fa-e3ef6b53b5c3",       "
+        "     "endpoint": "http://localhost:8080"                  "
+        "   }                                                      "
+        " }                                                        "
+        """
+        When I perform a HTTP "PUT" request to "/subscriptions/04fcf1a5-f88a-4d8a-82fa-e3ef6b53b5c3" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "queues": [ "39fda381-7d0a-48e2-9723-b6362f1e2a1e" ] "
+        "   }                                                      "
+        " }                                                        "
+        """
+        Then I should see a response status code of "404" "Not Found"
+        And I should see a "Server" header value "corvusoft/restq"
+        And I should see a "Content-Type" header value "application/json; charset=utf-8"
+        And I should see a "Content-Length" header value "207"
+        And I should see a "Content-MD5" header value "633ff088f4b7425851f4150b5cd8f41a"
+        And I should see a "Connection" header value "close"
+        And I should see a "Expires" header value "0"
+        And I should see a "Date" header value
+        And I should see a "Pragma" header value "no-cache"
+        And I should see a "Cache-Control" header value "private,max-age=0,no-cache,no-store"
+        And I should see a "Content-Language" header value "en"
+        And I should see a "Vary" header value "Accept,Accept-Encoding,Accept-Charset,Accept-Language"
+        And I should not see a "WWW-Authenticate" header value
+        And I should not see a "Trailer" header value
+        And I should not see a "Warning" header value
+        And I should not see a "Accept-Ranges" header value
+        And I should not see a "ETag" header value
+        And I should not see a "Last-Modified" header value
+        And I should not see a "Allow" header value
+        And I should not see a "Age" header value
+        And I should not see a "Via" header value
+        And I should not see a "Upgrade" header value
+        And I should not see a "Transfer-Encoding" header value
+        And I should not see a "Proxy-Authentication" header value
+        And I should not see a "Retry-After" header value
+        And I should not see a "Content-Range" header value
+        And I should not see a "Content-Encoding" header value
+        And I should not see a "Content-Location" header value
+        And I should not see a "Location" header value
+        And I should see the error response:
+        """
+        " { "data": {                                                                                                                                  "
+        "     "type": "error",                                                                                                                         "
+        "     "code": 40004,                                                                                                                           "
+        "     "status": 404,                                                                                                                           "
+        "     "title": "Not Found",                                                                                                                    "
+        "     "message": "The exchange is refusing to process the request because one or more subscription queues property values could not be found." "
+        "   }                                                                                                                                          "
+        " }                                                                                                                                            "
+        """
+
+    Scenario Outline: Update resource with malformed endpoint.
+        Given I have started a message exchange
+        And I perform a HTTP "POST" request to "/subscriptions" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {                                              "
+        "     "key": "04fcf1a5-f88a-4d8a-82fa-e3ef6b53b5c3",       "
+        "     "endpoint": "http://localhost:8080"                  "
+        "   }                                                      "
+        " }                                                        "
+        """
+        When I perform a HTTP "PUT" request to "/subscriptions/04fcf1a5-f88a-4d8a-82fa-e3ef6b53b5c3" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
+        """
+        " { "data": {              "
+        "     "endpoint": "haagen" "
+        "   }                      "
+        " }                        "
+        """
+        Then I should see a response status code of "400" "Bad Request"
+        And I should see a "Content-Type" header value "application/json; charset=utf-8"
+        And I should see a "Content-Length" header value "184"
+        And I should see a "Server" header value "corvusoft/restq"
+        And I should see a "Content-MD5" header value "9225118ddfd16d770600530a3e0ad4c0"
+        And I should see a "Connection" header value "close"
+        And I should see a "Expires" header value "0"
+        And I should see a "Date" header value
+        And I should see a "Pragma" header value "no-cache"
+        And I should see a "Cache-Control" header value "private,max-age=0,no-cache,no-store"
+        And I should see a "Content-Language" header value "en"
+        And I should see a "Vary" header value "Accept,Accept-Encoding,Accept-Charset,Accept-Language"
+        And I should not see a "WWW-Authenticate" header value
+        And I should not see a "Allow" header value
+        And I should not see a "Trailer" header value
+        And I should not see a "Warning" header value
+        And I should not see a "Via" header value
+        And I should not see a "Upgrade" header value
+        And I should not see a "Transfer-Encoding" header value
+        And I should not see a "Proxy-Authentication" header value
+        And I should not see a "Content-Range" header value
+        And I should not see a "Content-Encoding" header value
+        And I should not see a "Content-Location" header value
+        And I should not see a "Accept-Ranges" header value
+        And I should not see a "Retry-After" header value
+        And I should not see a "ETag" header value
+        And I should not see a "Age" header value
+        And I should not see a "Location" header value
+        And I should not see a "Last-Modified" header value
+        And I should see the error response:
+        """
+        " { "data": {                                                                                                         "
+        "     "type": "error",                                                                                                "
+        "     "code": 40000,                                                                                                  "
+        "     "status": 400,                                                                                                  "
+        "     "title": "Bad Request",                                                                                         "
+        "     "message": "The exchange is refusing to process the request because the body contains invalid property values." "
+        "   }                                                                                                                 "
+        " }                                                                                                                   "
+        """
