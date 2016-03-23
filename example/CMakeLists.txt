@@ -19,7 +19,11 @@ add_executable( exchange exchange/source/example.cpp
                          exchange/source/json_formatter.cpp
                          exchange/source/stl_repository.cpp )
 
-target_link_libraries( exchange ${CMAKE_PROJECT_NAME} )
+if ( BUILD_SSL )
+    target_link_libraries( exchange ${CMAKE_PROJECT_NAME} ${ssl_LIBRARY} ${crypto_LIBRARY} )
+else ( )
+    target_link_libraries( exchange ${CMAKE_PROJECT_NAME} )
+endif ( )
 
 #
 # Install
