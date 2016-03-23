@@ -6,8 +6,15 @@
 #define _RESTQ_QUERY_H 1
 
 //System Includes
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+#include <cstddef>
 
 //Project Includes
+#include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/session.hpp>
 
 //External Includes
 
@@ -20,6 +27,7 @@
 namespace restq
 {
     //Forward Declarations
+    
     namespace detail
     {
         struct QueryImpl;
@@ -40,8 +48,34 @@ namespace restq
             //Functionality
             
             //Getters
+            Bytes get_include( void ) const;
+            
+            std::size_t get_index( void ) const;
+            
+            std::size_t get_limit( void ) const;
+            
+            std::vector< std::string > get_keys( void ) const;
+            
+            std::shared_ptr< Session > get_session( void ) const;
+            
+            std::multimap< std::string, Bytes > get_inclusive_filters( void ) const;
+            
+            std::multimap< std::string, Bytes > get_exclusive_filters( void ) const;
             
             //Setters
+            void set_index( const std::size_t start );
+            
+            void set_limit( const std::size_t stop );
+            
+            void set_include( const Bytes& relationship );
+            
+            void set_keys( const std::vector< std::string >& values );
+            
+            void set_session( const std::shared_ptr< Session >& value );
+            
+            void set_inclusive_filters( const std::multimap< std::string, Bytes >& values );
+            
+            void set_exclusive_filters( const std::multimap< std::string, Bytes >& values );
             
             //Operators
             

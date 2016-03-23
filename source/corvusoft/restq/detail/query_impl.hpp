@@ -6,8 +6,16 @@
 #define _RESTQ_DETAIL_QUERY_IMPL_H 1
 
 //System Includes
+#include <map>
+#include <memory>
+#include <limits>
+#include <string>
+#include <vector>
+#include <cstddef>
 
 //Project Includes
+#include "corvusoft/restq/byte.hpp"
+#include "corvusoft/restq/session.hpp"
 
 //External Includes
 
@@ -27,6 +35,19 @@ namespace restq
         
         struct QueryImpl
         {
+            Bytes m_include = { };
+            
+            std::vector< std::string > m_keys = { };
+            
+            std::shared_ptr< Session > m_session = nullptr;
+            
+            std::multimap< std::string, Bytes > m_inclusive_filters = { };
+            
+            std::multimap< std::string, Bytes > m_exclusive_filters = { };
+            
+            std::size_t m_index = std::numeric_limits< std::size_t >::min( );
+            
+            std::size_t m_limit = std::numeric_limits< std::size_t >::max( );
         };
     }
 }
