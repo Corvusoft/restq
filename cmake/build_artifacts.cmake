@@ -2,6 +2,7 @@
 
 set( BUILD_ARTIFACTS
    ${SOURCE_DIR}/byte.hpp
+   ${SOURCE_DIR}/query.hpp
    ${SOURCE_DIR}/string.hpp
    ${SOURCE_DIR}/logger.hpp
    ${SOURCE_DIR}/session.hpp
