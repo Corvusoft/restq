@@ -38,7 +38,7 @@ denotes the implementation of the functionality defined in one class by another 
 ###Sterotypes###
 
 | &lt;&lt;Sterotype&gt;&gt; | Description |
-|------------|-------------| 
+|:----------:|-------------| 
 | static | Indicates an entity whose lifetime or "extent" extends across the entire run of the program. |
 | class | Represents an entity providing initial values for state and implementations of behavior. |
 | typedef | Used to create an alias for any other data-type. As such, it is often used to simplify the syntax of declaring complex data structures. |
