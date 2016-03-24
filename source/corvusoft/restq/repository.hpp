@@ -14,8 +14,8 @@
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/query.hpp>
 #include <corvusoft/restq/logger.hpp>
-#include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/settings.hpp>
 #include <corvusoft/restq/resource.hpp>
 
@@ -46,17 +46,17 @@ namespace restq
             virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
             
             virtual void create( const Resources values,
-                                 const std::shared_ptr< Session > session,
-                                 const std::function< void ( const int, const Resources, const std::shared_ptr< Session > ) >& callback ) = 0;
+                                 const std::shared_ptr< Query > query,
+                                 const std::function< void ( const int, const Resources, const std::shared_ptr< Query > ) >& callback ) = 0;
                                  
-            virtual void read( const std::shared_ptr< Session > session,
-                               const std::function< void ( const int, const Resources, const std::shared_ptr< Session > ) >& callback ) = 0;
+            virtual void read( const std::shared_ptr< Query > query,
+                               const std::function< void ( const int, const Resources, const std::shared_ptr< Query > ) >& callback ) = 0;
                                
             virtual void update( const Resource changeset,
-                                 const std::shared_ptr< Session > session,
-                                 const std::function< void (  const int, const Resources, const std::shared_ptr< Session > ) >& callback ) = 0;
+                                 const std::shared_ptr< Query > query,
+                                 const std::function< void (  const int, const Resources, const std::shared_ptr< Query > ) >& callback ) = 0;
                                  
-            virtual void destroy( const std::shared_ptr< Session > session, const std::function< void ( const int, const std::shared_ptr< Session > ) >& callback ) = 0;
+            virtual void destroy( const std::shared_ptr< Query > query, const std::function< void ( const int, const std::shared_ptr< Query > ) >& callback ) = 0;
             
             //Getters
             

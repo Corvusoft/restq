@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <set>
 #include <memory>
 #include <string>
 #include <vector>
@@ -43,11 +44,18 @@ namespace restq
             //Constructors
             Query( void );
             
+            Query( const std::shared_ptr< Session >& value );
+            
             virtual ~Query( void );
             
             //Functionality
+            void clear( void );
             
             //Getters
+            //int get_error_code( void ) const;
+            //std::string get_error_message( void ) const;
+            //Resources get_results( void ) const;
+            
             Bytes get_include( void ) const;
             
             std::size_t get_index( void ) const;
@@ -69,11 +77,19 @@ namespace restq
             
             void set_include( const Bytes& relationship );
             
+            void set_key( const Bytes& value );
+            
+            void set_key( const std::string& value );
+            
             void set_keys( const std::vector< std::string >& values );
             
             void set_session( const std::shared_ptr< Session >& value );
             
+            void set_inclusive_filter( const std::string& name, const Bytes& value );
+            
             void set_inclusive_filters( const std::multimap< std::string, Bytes >& values );
+            
+            void set_exclusive_filter( const std::string& name, const Bytes& value );
             
             void set_exclusive_filters( const std::multimap< std::string, Bytes >& values );
             

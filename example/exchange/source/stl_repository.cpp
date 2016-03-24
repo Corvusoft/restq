@@ -38,9 +38,9 @@ using restq::CONFLICT;
 using restq::NOT_FOUND;
 using restq::NO_CONTENT;
 using restq::Bytes;
+using restq::Query;
 using restq::String;
 using restq::Logger;
-using restq::Session;
 using restq::Settings;
 using restq::Resource;
 using restq::Resources;
@@ -68,7 +68,7 @@ void STLRepository::start( const shared_ptr< const Settings >& )
     return;
 }
 
-void STLRepository::create( const Resources values, const shared_ptr< Session > session, const function< void ( const int, const Resources, const shared_ptr< Session > ) >& callback )
+void STLRepository::create( const Resources values, const shared_ptr< Query > query, const function< void ( const int, const Resources, const shared_ptr< Query > ) >& callback )
 {
     unique_lock< mutex> lock( m_resources_lock );
     
@@ -84,7 +84,7 @@ void STLRepository::create( const Resources values, const shared_ptr< Session > 
         
         if ( conflict )
         {
-            return callback( CONFLICT, values, session );
+            return callback( CONFLICT, values, query );
         }
     }
     
@@ -92,14 +92,14 @@ void STLRepository::create( const Resources values, const shared_ptr< Session > 
     
     lock.unlock( );
     
-    callback( CREATED, values, session );
+    callback( CREATED, values, query );
 }
 
-void STLRepository::read( const shared_ptr< Session > session, const function< void ( const int, const Resources, const shared_ptr< Session > ) >& callback )
+void STLRepository::read( const shared_ptr< Query > query, const function< void ( const int, const Resources, const shared_ptr< Query > ) >& callback )
 {
     Resources values;
     Resources resources;
-    const vector< string > keys = session->get( "keys" );
+    const auto keys = query->get_keys( );
     
     unique_lock< mutex> lock( m_resources_lock );
     
@@ -119,7 +119,7 @@ void STLRepository::read( const shared_ptr< Session > session, const function< v
             
             if ( resource == m_resources.end( ) )
             {
-                return callback( NOT_FOUND, values, session );
+                return callback( NOT_FOUND, values, query );
             }
             
             resources.push_back( *resource );
@@ -132,11 +132,10 @@ void STLRepository::read( const shared_ptr< Session > session, const function< v
     
     lock.unlock( );
     
-    filter( resources, session->get( "inclusive_filters" ), session->get( "exclusive_filters" ) );
+    filter( resources, query->get_inclusive_filters( ), query->get_exclusive_filters( ) ); //just pass query
     
-    const pair< size_t, size_t > range = session->get( "paging" );
-    const auto& index = range.first;
-    const auto& limit = range.second;
+    const auto& index = query->get_index( );
+    const auto& limit = query->get_limit( );
     
     if ( index < resources.size( ) and limit not_eq 0 )
     {
@@ -150,19 +149,18 @@ void STLRepository::read( const shared_ptr< Session > session, const function< v
         }
     }
     
-    const Bytes relationship = session->get( "include", Bytes{ } );
-    include( relationship, values );
+    include( query->get_include( ), values ); //just pass query
     
-    callback( OK, values, session );
+    callback( OK, values, query );
 }
 
-void STLRepository::update( const Resource changeset, const shared_ptr< Session > session, const function< void (  const int, const Resources, const shared_ptr< Session > ) >& callback  )
+void STLRepository::update( const Resource changeset, const shared_ptr< Query > query, const function< void (  const int, const Resources, const shared_ptr< Query > ) >& callback  )
 {
-    read( session, [ changeset, callback, this ]( const int status_code, const Resources values, const shared_ptr< Session > session )
+    read( query, [ changeset, callback, this ]( const int status_code, const Resources values, const shared_ptr< Query > query )
     {
         if ( status_code not_eq OK )
         {
-            return callback( status_code, values, session );
+            return callback( status_code, values, query );
         }
         
         int status = NO_CONTENT;
@@ -207,17 +205,17 @@ void STLRepository::update( const Resource changeset, const shared_ptr< Session 
         
         lock.unlock( );
         
-        callback( status, resources, session );
+        callback( status, resources, query );
     } );
 }
 
-void STLRepository::destroy( const shared_ptr< Session > session, const function< void ( const int, const shared_ptr< Session > ) >& callback )
+void STLRepository::destroy( const shared_ptr< Query > query, const function< void ( const int, const shared_ptr< Query > ) >& callback )
 {
-    read( session, [ callback, this ]( const int status, const Resources resources, const shared_ptr< Session > session )
+    read( query, [ callback, this ]( const int status, const Resources resources, const shared_ptr< Query > query )
     {
         if ( status not_eq OK )
         {
-            return callback( status, session );
+            return callback( status, query );
         }
         
         unique_lock< mutex> lock( m_resources_lock );
@@ -237,7 +235,7 @@ void STLRepository::destroy( const shared_ptr< Session > session, const function
         
         lock.unlock( );
         
-        callback( OK, session );
+        callback( OK, query );
     } );
 }
 

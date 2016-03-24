@@ -13,6 +13,7 @@
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
+#include <corvusoft/restq/query.hpp>
 #include <corvusoft/restq/resource.hpp>
 #include <corvusoft/restq/settings.hpp>
 #include <corvusoft/restq/repository.hpp>
@@ -43,17 +44,17 @@ class STLRepository final : public restq::Repository
         void start( const std::shared_ptr< const restq::Settings >& settings );
         
         void create( const restq::Resources values,
-                     const std::shared_ptr< restq::Session > session,
-                     const std::function< void ( const int, const restq::Resources, const std::shared_ptr< restq::Session > ) >& callback );
+                     const std::shared_ptr< restq::Query > query,
+                     const std::function< void ( const int, const restq::Resources, const std::shared_ptr< restq::Query > ) >& callback );
                      
-        void read( const std::shared_ptr< restq::Session > session,
-                   const std::function< void ( const int, const restq::Resources, const std::shared_ptr< restq::Session > ) >& callback );
+        void read( const std::shared_ptr< restq::Query > query,
+                   const std::function< void ( const int, const restq::Resources, const std::shared_ptr< restq::Query > ) >& callback );
                    
         void update( const restq::Resource changeset,
-                     const std::shared_ptr< restq::Session > session,
-                     const std::function< void (  const int, const restq::Resources, const std::shared_ptr< restq::Session > ) >& callback );
+                     const std::shared_ptr< restq::Query > query,
+                     const std::function< void (  const int, const restq::Resources, const std::shared_ptr< restq::Query > ) >& callback );
                      
-        void destroy( const std::shared_ptr< restq::Session > session, const std::function< void ( const int, const std::shared_ptr< restq::Session > ) >& callback );
+        void destroy( const std::shared_ptr< restq::Query > query, const std::function< void ( const int, const std::shared_ptr< restq::Query > ) >& callback );
         
         //Getters
         
