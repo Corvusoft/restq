@@ -39,12 +39,12 @@ denotes the implementation of the functionality defined in one class by another 
 
 | &lt;&lt;Sterotype&gt;&gt; | Description |
 |------------|-------------| 
-| static | Static class |
-| class | class |
-| typedef | type definition |
-| enum | enumeration |
-| interface | interface |
-| abstract | abstract class |
+| static | Indicates an entity whose lifetime or "extent" extends across the entire run of the program. |
+| class | Represents an entity providing initial values for state and implementations of behavior. |
+| typedef | Used to create an alias for any other data-type. As such, it is often used to simplify the syntax of declaring complex data structures. |
+| enum | enumeration sterotype shows a set of named values called elements, members, enumeral, or enumerators of the type. The enumerator names are usually identifiers that behave as constants in the program. |
+| interface | Shows a common means for unrelated objects to communicate with each other. These are definitions of methods and values which the objects agree upon in order to co-operate. |
+| abstract | Describes an entity in a nominative type system that cannot be instantiated directly. Abstract types are also known as existential types. An abstract type may provide no implementation, or an incomplete implementation. |
 
 ### Example ###
 
