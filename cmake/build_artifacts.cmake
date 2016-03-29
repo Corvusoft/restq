@@ -11,6 +11,5 @@ set( BUILD_ARTIFACTS
    ${SOURCE_DIR}/settings.hpp
    ${SOURCE_DIR}/formatter.hpp
    ${SOURCE_DIR}/repository.hpp
-   ${SOURCE_DIR}/status_code.hpp
    ${SOURCE_DIR}/ssl_settings.hpp
 )

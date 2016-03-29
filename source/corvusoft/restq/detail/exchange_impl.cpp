@@ -16,7 +16,6 @@
 #include "corvusoft/restq/session.hpp"
 #include "corvusoft/restq/formatter.hpp"
 #include "corvusoft/restq/repository.hpp"
-#include "corvusoft/restq/status_code.hpp"
 #include "corvusoft/restq/detail/rule.hpp"
 #include "corvusoft/restq/detail/exchange_impl.hpp"
 #include "corvusoft/restq/detail/error_handler_impl.hpp"
@@ -27,6 +26,7 @@
 #include <corvusoft/restbed/request.hpp>
 #include <corvusoft/restbed/response.hpp>
 #include <corvusoft/restbed/resource.hpp>
+#include <corvusoft/restbed/status_code.hpp>
 
 //System Namespaces
 using std::set;
@@ -59,6 +59,10 @@ using restbed::Request;
 using restbed::Service;
 using restbed::Response;
 using restbed::Resource;
+using restbed::OK;
+using restbed::CREATED;
+using restbed::ACCEPTED;
+using restbed::NO_CONTENT;
 
 namespace restq
 {

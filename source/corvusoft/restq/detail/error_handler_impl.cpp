@@ -12,7 +12,6 @@
 #include "corvusoft/restq/string.hpp"
 #include "corvusoft/restq/session.hpp"
 #include "corvusoft/restq/formatter.hpp"
-#include "corvusoft/restq/status_code.hpp"
 #include "corvusoft/restq/detail/rule/date.hpp"
 #include "corvusoft/restq/detail/rule/content_md5.hpp"
 #include "corvusoft/restq/detail/rule/content_type.hpp"
@@ -21,6 +20,7 @@
 #include "corvusoft/restq/detail/rule/content_language.hpp"
 
 //External Includes
+#include <corvusoft/restbed/status_code.hpp>
 
 //System Namespaces
 using std::list;
@@ -34,6 +34,17 @@ using std::runtime_error;
 //Project Namespaces
 
 //External Namespaces
+using restbed::CONFLICT;
+using restbed::NOT_FOUND;
+using restbed::BAD_REQUEST;
+using restbed::NOT_ACCEPTABLE;
+using restbed::NOT_IMPLEMENTED;
+using restbed::LENGTH_REQUIRED;
+using restbed::EXPECTATION_FAILED;
+using restbed::METHOD_NOT_ALLOWED;
+using restbed::SERVICE_UNAVAILABLE;
+using restbed::UNSUPPORTED_MEDIA_TYPE;
+using restbed::REQUEST_ENTITY_TOO_LARGE;
 
 namespace restq
 {
