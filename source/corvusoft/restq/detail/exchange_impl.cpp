@@ -17,14 +17,12 @@
 #include "corvusoft/restq/formatter.hpp"
 #include "corvusoft/restq/repository.hpp"
 #include "corvusoft/restq/detail/rule.hpp"
+#include "corvusoft/restq/detail/dispatch_impl.hpp"
 #include "corvusoft/restq/detail/exchange_impl.hpp"
 #include "corvusoft/restq/detail/error_handler_impl.hpp"
 
 //External Includes
 #include <corvusoft/restbed/uri.hpp>
-#include <corvusoft/restbed/http.hpp>
-#include <corvusoft/restbed/request.hpp>
-#include <corvusoft/restbed/response.hpp>
 #include <corvusoft/restbed/resource.hpp>
 #include <corvusoft/restbed/status_code.hpp>
 
@@ -45,34 +43,24 @@ using std::regex_match;
 using std::out_of_range;
 using std::invalid_argument;
 using std::placeholders::_1;
-using std::placeholders::_2;
-using std::placeholders::_3;
 using std::chrono::system_clock;
 
 //Project Namespaces
 
 //External Namespaces
 using loadis::System;
-using restbed::Uri;
-using restbed::Http;
-using restbed::Request;
-using restbed::Service;
-using restbed::Response;
-using restbed::Resource;
 using restbed::OK;
 using restbed::CREATED;
 using restbed::ACCEPTED;
 using restbed::NO_CONTENT;
+using restbed::Uri;
+using restbed::Service;
+using restbed::Resource;
 
 namespace restq
 {
     namespace detail
     {
-        const auto PENDING = String::to_bytes( "pending" );
-        const auto REJECTED = String::to_bytes( "rejected" );
-        const auto INFLIGHT = String::to_bytes( "in-flight" );
-        const auto DISPATCHED = String::to_bytes( "dispatched" );
-        
         ExchangeImpl::ExchangeImpl( void ) : m_boot_time( 0 ),
             m_logger( nullptr ),
             m_system( make_shared< System >( ) ),
@@ -135,8 +123,12 @@ namespace restq
             setup_subscription_resource( );
             setup_subscriptions_resource( );
             
+            DispatchImpl::set_logger( m_logger );
+            DispatchImpl::set_service( m_service );
+            DispatchImpl::set_repository( m_repository );
+            
             m_boot_time = system_clock::to_time_t( system_clock::now( ) );
-            m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
+            m_service->schedule( DispatchImpl::route );
             m_service->start( settings );
         }
         
@@ -450,157 +442,6 @@ namespace restq
             resource->set_method_handler( "OPTIONS", bind( &ExchangeImpl::options_resource_handler, this, _1, SUBSCRIPTION, "GET,POST,HEAD,DELETE,OPTIONS" ) );
             
             m_service->publish( resource );
-        }
-        
-        void ExchangeImpl::dispatch( void )
-        {
-            auto query = make_shared< Query >( );
-            query->set_limit( 1 );
-            query->set_exclusive_filter( "type", STATE );
-            query->set_exclusive_filter( "status", PENDING );
-            
-            m_repository->read( query, [ this ]( const shared_ptr< Query > query )
-            {
-                if ( query->has_failed( ) )
-                {
-                    return log( Logger::ERROR, "Failed to read transaction states." );
-                }
-                
-                if ( not query->has_resultset( ) )
-                {
-                    return;
-                }
-                
-                const auto states = query->get_resultset( );
-                
-                auto state_key = states.back( ).lower_bound( "key" )->second;
-                query->set_key( state_key );
-                
-                m_repository->update( { { "status", INFLIGHT } }, query, [ this, state_key ]( const shared_ptr< Query > query )
-                {
-                    if ( query->has_failed( ) )
-                    {
-                        return log( Logger::ERROR, "Failed to update transaction status." );
-                    }
-                    
-                    if ( not query->has_resultset( ) )
-                    {
-                        return m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
-                    }
-                    
-                    const auto states = query->get_resultset( );
-                    
-                    query->clear( );
-                    query->set_limit( 1 );
-                    query->set_exclusive_filter( "type", MESSAGE );
-                    query->set_key( states.back( ).lower_bound( "message-key" )->second );
-                    
-                    m_repository->read( query, [ this, state_key, states ]( const shared_ptr< Query > query )
-                    {
-                        if ( query->has_failed( ) or not query->has_resultset( ) )
-                        {
-                            query->clear( );
-                            query->set_key( state_key );
-                            query->set_exclusive_filter( "type", STATE );
-                            
-                            log( Logger::WARNING, "Failed to read associated state message, purging." );
-                            
-                            return m_repository->destroy( query );
-                        }
-                        
-                        auto message = query->get_resultset( ).back( );
-                        
-                        query->clear( );
-                        query->set_key( state_key );
-                        query->set_exclusive_filter( "type", STATE );
-                        
-                        //status = Dispatch::direct( message );
-                        
-                        auto request = make_shared< Request >( Uri( String::to_string( states.back( ).lower_bound( "subscription-endpoint" )->second ) ) );
-                        request->set_method( "POST" );
-                        request->set_body( message.lower_bound( "data" )->second );
-                        request->set_headers( { {
-                                { "Expires", "0" },
-                                { "Pragma", "no-cache" },
-                                { "Connection", "close" },
-                                { "Date", Date::make( ) },
-                                { "Cache-Control", "private,max-age=0,no-cache,no-store" },
-                                { "From", String::to_string( message.lower_bound( "author" )->second ) },
-                                { "Referer", String::to_string( message.lower_bound( "origin" )->second ) },
-                                { "Content-MD5", String::to_string( message.lower_bound( "checksum" )->second ) },
-                                { "Content-Length", ContentLength::make( message.lower_bound( "data" )->second ) },
-                                { "Content-Type", String::to_string( message.lower_bound( "content-type" )->second ) },
-                                { "Last-Modified", String::to_string( message.lower_bound( "modified" )->second ) },
-                                { "Via", String::format( "%s/%s %s", String::to_string( message.lower_bound( "protocol" )->second ).data( ), String::to_string( message.lower_bound( "protocol-version" )->second ).data( ), String::to_string( message.lower_bound( "destination" )->second ).data( ) ) }
-                            }
-                        } );
-                        
-                        for ( const auto parameter : String::split( String::to_string( message.lower_bound( "query" )->second ), '&' ) )
-                        {
-                            const auto name_value = String::split( parameter, '=' );
-                            request->set_query_parameter( name_value[ 0 ], name_value[ 1 ] );
-                        }
-                        
-                        message.erase( "key" );
-                        message.erase( "type" );
-                        message.erase( "data" );
-                        message.erase( "size" );
-                        message.erase( "query" );
-                        message.erase( "origin" );
-                        message.erase( "checksum" );
-                        message.erase( "protocol" );
-                        message.erase( "destination" );
-                        message.erase( "last-modified" );
-                        message.erase( "protocol-version" );
-                        
-                        for ( const auto& property : message )
-                        {
-                            request->set_header( property.first, String::to_string( property.second ) );
-                        }
-                        
-                        
-                        auto response = Http::sync( request );
-                        int status_code = response->get_status_code( );
-                        Http::close( request );
-                        //status = Dispatch::direct( message ); end
-                        
-                        string log_message = "";
-                        Resource change;
-                        const auto subscription_key = String::to_string( states.back( ).lower_bound( "subscription-key" )->second );
-                        const auto message_key = String::to_string( states.back( ).lower_bound( "message-key" )->second );
-                        
-                        if ( status_code == ACCEPTED )
-                        {
-                            change.insert( make_pair( "status", DISPATCHED ) );
-                            log_message = "Failed to update transaction status to dispatched.";
-                            log( Logger::INFO, String::format( "Subscription '%s' accepted message '%s'.", subscription_key.data( ), message_key.data( ) ) );
-                        }
-                        else if ( status_code >= 200 and status_code <= 299 )
-                        {
-                            change.insert( make_pair( "status", REJECTED ) );
-                            log_message = "Failed to update transaction status to rejected.";
-                            log( Logger::INFO, String::format( "Subscription '%s' rejected message '%s'.", subscription_key.data( ), message_key.data( ) ) );
-                        }
-                        else
-                        {
-                            return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
-                        }
-                        
-                        m_repository->update( change, query, [ this ]( const shared_ptr< Query > query )
-                        {
-                            if ( query->has_failed( ) )
-                            {
-                                log( Logger::ERROR, "Failed to update transaction status to dispatched." );
-                            }
-                            
-                            m_repository->destroy( query, [ this ]( const shared_ptr< Query > )
-                            {
-                                m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
-                            } );
-                        } );
-                    } );
-                } );
-            } );
         }
         
         void ExchangeImpl::create_message_handler( const shared_ptr< Session > session )
@@ -1117,7 +958,7 @@ namespace restq
                 }
                 
                 session->close( ACCEPTED, headers );
-                m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
+                m_service->schedule( DispatchImpl::route );
             } );
         }
         
@@ -1230,7 +1071,7 @@ namespace restq
                             Resource state;
                             state.insert( make_pair( "type", STATE ) );
                             state.insert( make_pair( "key", Key::make( ) ) );
-                            state.insert( make_pair( "status", PENDING ) );
+                            state.insert( make_pair( "status", DispatchImpl::PENDING ) );
                             state.insert( make_pair( "queue-key", queue_key ) );
                             state.insert( message_key );
                             state.insert( subscription_key );

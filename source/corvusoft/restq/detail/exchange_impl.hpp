@@ -146,8 +146,6 @@ namespace restq
                 
                 void setup_subscriptions_resource( void );
                 
-                void dispatch( void );
-                
                 void create_message_handler( const std::shared_ptr< Session > session );
                 
                 void create_resource_handler( const std::shared_ptr< Session > session, const Bytes& type );
