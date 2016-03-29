@@ -8,7 +8,10 @@
 //Project Includes
 #include "corvusoft/restq/query.hpp"
 #include "corvusoft/restq/string.hpp"
+#include "corvusoft/restq/request.hpp"
+#include "corvusoft/restq/response.hpp"
 #include "corvusoft/restq/repository.hpp"
+#include "corvusoft/restq/status_code.hpp"
 #include "corvusoft/restq/detail/rule/date.hpp"
 #include "corvusoft/restq/detail/dispatch_impl.hpp"
 #include "corvusoft/restq/detail/rule/content_length.hpp"
@@ -16,9 +19,6 @@
 //External Includes
 #include <corvusoft/restbed/uri.hpp>
 #include <corvusoft/restbed/http.hpp>
-#include <corvusoft/restbed/request.hpp>
-#include <corvusoft/restbed/response.hpp>
-#include <corvusoft/restbed/status_code.hpp>
 
 //System Namespaces
 using std::string;
@@ -31,9 +31,6 @@ using std::make_shared;
 using restbed::Uri;
 using restbed::Http;
 using restbed::Service;
-using restbed::Request;
-using restbed::Response;
-using restbed::ACCEPTED;
 
 namespace restq
 {
