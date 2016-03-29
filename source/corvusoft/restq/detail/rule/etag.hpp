@@ -15,6 +15,7 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/resource.hpp>
 #include <corvusoft/restq/detail/rule/date.hpp>
 
 //External Includes
@@ -71,7 +72,7 @@ namespace restq
                     return String::to_bytes( String::format( "%s", etag.data( ) ) );
                 }
                 
-                static string make( const list< multimap< string, Bytes > >& values )
+                static string make( const Resources& values )
                 {
                     auto etag = string{ "00000000000000000000" };
                     

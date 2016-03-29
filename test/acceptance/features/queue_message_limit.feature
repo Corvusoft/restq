@@ -5,7 +5,6 @@ Feature: Queue Message Limit
     As a Queue owner
     I want support for limiting a queue's message capacity
 
-    @order_dependent
     Scenario Outline: Exceed message limit.
         Given I have started a message exchange
         And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":

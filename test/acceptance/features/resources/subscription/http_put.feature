@@ -173,7 +173,6 @@ Feature: HTTP PUT
         When I perform a HTTP "PUT" request to "/subscriptions/931fd4a1-4142-49f9-a245-dc20c068d847" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":
         """
         " { "data": {                                        "
-        "     "key": "931fd4a1-4142-49f9-a245-dc20c068d847", "
         "     "endpoint": "http://localhost:8080"            "
         "   }                                                "
         " }                                                  "

@@ -116,17 +116,7 @@ namespace restq
                 ExchangeImpl( const ExchangeImpl& original ) = delete;
                 
                 //Functionality
-                bool is_valid( const std::pair< const std::string, const std::string >& header ) const;
-                
-                bool is_invalid( Resource& values, const Bytes& type ) const; //is_invalid_create
-                
-                bool is_update_invalid( Resource& values, const Bytes& type ) const;
-                
-                void initialise_default_values( Resource& value, const Bytes& type ) const;
-                
-                void remove_reserved_words( Resource& value ) const;
-                
-                void remove_reserved_words( Resources& values ) const;
+                void initialise_default_resource( Resource& value, const Bytes& type, const std::shared_ptr< Session >& session ) const;
                 
                 Resource make_message( const std::shared_ptr< Session >& session ) const;
                 

@@ -4,34 +4,32 @@
 
 //System Includes
 #include <set>
-#include <regex>
 #include <chrono>
 #include <vector>
 #include <functional>
 
 //Project Includes
-
+#include "corvusoft/restq/uri.hpp"
 #include "corvusoft/restq/query.hpp"
 #include "corvusoft/restq/string.hpp"
 #include "corvusoft/restq/session.hpp"
 #include "corvusoft/restq/formatter.hpp"
 #include "corvusoft/restq/repository.hpp"
+#include "corvusoft/restq/status_code.hpp"
 #include "corvusoft/restq/detail/rule.hpp"
 #include "corvusoft/restq/detail/dispatch_impl.hpp"
 #include "corvusoft/restq/detail/exchange_impl.hpp"
+#include "corvusoft/restq/detail/validator_impl.hpp"
 #include "corvusoft/restq/detail/error_handler_impl.hpp"
 
 //External Includes
-#include <corvusoft/restbed/uri.hpp>
 #include <corvusoft/restbed/resource.hpp>
-#include <corvusoft/restbed/status_code.hpp>
 
 //System Namespaces
 using std::set;
 using std::pair;
 using std::bind;
 using std::list;
-using std::regex;
 using std::string;
 using std::vector;
 using std::multimap;
@@ -39,9 +37,6 @@ using std::to_string;
 using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
-using std::regex_match;
-using std::out_of_range;
-using std::invalid_argument;
 using std::placeholders::_1;
 using std::chrono::system_clock;
 
@@ -49,11 +44,6 @@ using std::chrono::system_clock;
 
 //External Namespaces
 using loadis::System;
-using restbed::OK;
-using restbed::CREATED;
-using restbed::ACCEPTED;
-using restbed::NO_CONTENT;
-using restbed::Uri;
 using restbed::Service;
 using restbed::Resource;
 
@@ -140,110 +130,21 @@ namespace restq
             }
         }
         
-        bool ExchangeImpl::is_valid( const pair< const string, const string >& header ) const
+        void ExchangeImpl::initialise_default_resource( Resource& value, const Bytes& type, const shared_ptr< Session >& session ) const
         {
-            static const set< string > invalid_headers
+            if ( value.count( "key" ) == 0 )
             {
-                "upgrade", "connection",
-                "te", "trailer", "transfer-encoding",
-                "expect", "range", "retry-after", "allow",
-                "content-length", "content-location", "content-md5",
-                "from", "host", "via", "server", "referer", "date", "location",
-                "pragma", "cache-control", "age", "etag", "vary", "expires",  "last-modified",
-                "authorization", "www-authenticate", "proxy-authorization", "proxy-authenticate",
-                "accept", "accept-charset", "accept-encoding", "accept-language", "accept-ranges",
-                "if-match", "if-modified-since", "if-none-match", "if-range", "if-unmodified-since"
-            };
-            
-            return invalid_headers.count( String::lowercase( header.first ) ) == 0;
-        }
-        
-        bool ExchangeImpl::is_invalid( Resource& value, const Bytes& type ) const
-        {
-            if ( type == SUBSCRIPTION )
-            {
-                if ( value.count( "endpoint" ) not_eq 1 )
-                {
-                    return true;
-                }
-                
-                const auto endpoint = String::to_string( value.lower_bound( "endpoint" )->second );
-                
-                if ( not Uri::is_valid( endpoint ) )
-                {
-                    return true;
-                }
-                
-                const Uri uri( endpoint );
-                
-                if ( uri.get_scheme( ) not_eq "http" )
-                {
-                    return true;
-                }
-            }
-            else if ( type == QUEUE )
-            {
-                try
-                {
-                    if ( value.count( "message-limit" ) )
-                    {
-                        stoul( String::to_string( value.lower_bound( "message-limit" )->second ) );
-                    }
-                    
-                    if ( value.count( "message-size-limit" ) )
-                    {
-                        stoul( String::to_string( value.lower_bound( "message-size-limit" )->second ) );
-                    }
-                    
-                    if ( value.count( "subscription-limit" ) )
-                    {
-                        stoul( String::to_string( value.lower_bound( "subscription-limit" )->second ) );
-                    }
-                }
-                catch ( const invalid_argument& ia )
-                {
-                    return false;
-                }
-                catch ( const out_of_range& ofr )
-                {
-                    return false;
-                }
+                value.insert( make_pair( "key", Key::make( ) ) );
             }
             
-            return false;
-        }
-        
-        bool ExchangeImpl::is_update_invalid( Resource& value, const Bytes& type ) const
-        {
-            if ( type == SUBSCRIPTION )
-            {
-                if ( value.count( "endpoint" ) )
-                {
-                    const auto endpoint = String::to_string( value.lower_bound( "endpoint" )->second );
-                    
-                    if ( not Uri::is_valid( endpoint ) )
-                    {
-                        return true;
-                    }
-                    
-                    const Uri uri( endpoint );
-                    
-                    if ( uri.get_scheme( ) not_eq "http" )
-                    {
-                        return true;
-                    }
-                }
-            }
-            else if ( type == QUEUE )
-            {
-                return is_invalid( value, type );
-            }
+            const auto datastamp = String::to_bytes( ::to_string( time( 0 ) ) );
             
-            return false;
-        }
-        
-        void ExchangeImpl::initialise_default_values( Resource& value, const Bytes& type ) const
-        {
+            value.insert( make_pair( "type", type ) );
+            value.insert( make_pair( "created", datastamp ) );
+            value.insert( make_pair( "modified", datastamp ) );
+            value.insert( make_pair( "revision", ETag::make( ) ) );
+            value.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
+            
             if ( type == QUEUE )
             {
                 const auto message_limit = String::to_bytes( ::to_string( m_settings->get_default_queue_message_limit( ) ) );
@@ -266,24 +167,6 @@ namespace restq
                 {
                     value.insert( make_pair( "subscription-limit", subscription_limit ) );
                 }
-            }
-        }
-        
-        void ExchangeImpl::remove_reserved_words( Resource& resource ) const
-        {
-            resource.erase( "key" );
-            resource.erase( "type" );
-            resource.erase( "origin" );
-            resource.erase( "created" );
-            resource.erase( "revision" );
-            resource.erase( "modified" );
-        }
-        
-        void ExchangeImpl::remove_reserved_words( Resources& resources ) const
-        {
-            for ( auto& resource : resources )
-            {
-                remove_reserved_words( resource );
             }
         }
         
@@ -311,7 +194,7 @@ namespace restq
             
             for ( const auto& header : request->get_headers( ) )
             {
-                if ( is_valid( header ) )
+                if ( ValidatorImpl::is_valid_forwarding_header( header ) )
                 {
                     message.insert( make_pair( header.first, String::to_bytes( header.second ) ) );
                 }
@@ -352,7 +235,7 @@ namespace restq
         void ExchangeImpl::setup_queue_resource( void )
         {
             auto resource = make_shared< restbed::Resource >( );
-            resource->set_path( "/queues/{key: " + Key::pattern + "}" );
+            resource->set_path( "/queues/{key: " + ValidatorImpl::key_pattern + "}" );
             resource->add_rule( m_key_rule );
             resource->add_rule( m_content_type_rule );
             resource->add_rule( m_content_encoding_rule );
@@ -384,7 +267,7 @@ namespace restq
         void ExchangeImpl::setup_message_resource( void )
         {
             auto resource = make_shared< restbed::Resource >( );
-            resource->set_path( "/messages/{key: " + Key::pattern + "}" );
+            resource->set_path( "/messages/{key: " + ValidatorImpl::key_pattern + "}" );
             resource->add_rule( m_key_rule );
             resource->set_method_handler( "OPTIONS", bind( &ExchangeImpl::options_resource_handler, this, _1, MESSAGE, "OPTIONS" ) );
             
@@ -394,7 +277,7 @@ namespace restq
         void ExchangeImpl::setup_messages_resource( void )
         {
             auto resource = make_shared< restbed::Resource >( );
-            resource->set_paths( { "/messages", "/queues/{key: " + Key::pattern + "}/messages" } );
+            resource->set_paths( { "/messages", "/queues/{key: " + ValidatorImpl::key_pattern + "}/messages" } );
             resource->add_rule( m_key_rule );
             resource->add_rule( m_keys_rule );
             resource->set_method_handler( "POST", bind( &ExchangeImpl::create_message_handler, this, _1 ) );
@@ -415,7 +298,7 @@ namespace restq
         void ExchangeImpl::setup_subscription_resource( void )
         {
             auto resource = make_shared< restbed::Resource >( );
-            resource->set_path( "/subscriptions/{key: " + Key::pattern + "}" );
+            resource->set_path( "/subscriptions/{key: " + ValidatorImpl::key_pattern + "}" );
             resource->add_rule( m_key_rule );
             resource->add_rule( m_content_type_rule );
             resource->add_rule( m_content_encoding_rule );
@@ -481,34 +364,22 @@ namespace restq
             
             for ( auto& resource : resources )
             {
-                if ( is_invalid( resource, type ) )
+                if ( ValidatorImpl::has_reserved_create_fields( resource ) )
+                {
+                    return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the body contains reserved properties.", session );
+                }
+                
+                if ( ValidatorImpl::has_invalid_create_fields( resource, type ) )
                 {
                     return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the body contains invalid property values.", session );
                 }
                 
-                auto key = Key::make( );
-                
-                if ( resource.count( "key" ) )
+                if ( ValidatorImpl::has_invalid_key( resource ) )
                 {
-                    key = resource.lower_bound( "key" )->second;
-                    
-                    if ( Key::is_invalid( key ) )
-                    {
-                        return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because of a malformed identifier.", session );
-                    }
+                    return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because of a malformed identifier.", session );
                 }
                 
-                remove_reserved_words( resource );
-                initialise_default_values( resource, type );
-                
-                const auto datastamp = String::to_bytes( ::to_string( time( 0 ) ) );
-                
-                resource.insert( make_pair( "key", key ) );
-                resource.insert( make_pair( "type", type ) );
-                resource.insert( make_pair( "created", datastamp ) );
-                resource.insert( make_pair( "modified", datastamp ) );
-                resource.insert( make_pair( "revision", ETag::make( ) ) );
-                resource.insert( make_pair( "origin", String::to_bytes( session->get_origin( ) ) ) );
+                initialise_default_resource( resource, type, session );
             }
             
             if ( type not_eq SUBSCRIPTION )
@@ -633,12 +504,15 @@ namespace restq
             
             auto& change = changeset.back( );
             
-            if ( is_update_invalid( change, type ) )
+            if ( ValidatorImpl::has_reserved_update_fields( change ) )
+            {
+                return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the body contains reserved properties.", session );
+            }
+            
+            if ( ValidatorImpl::has_invalid_update_fields( change, type ) )
             {
                 return ErrorHandlerImpl::bad_request( "The exchange is refusing to process the request because the body contains invalid property values.", session );
             }
-            
-            remove_reserved_words( change );
             
             change.insert( make_pair( "type", type ) );
             change.insert( make_pair( "revision", ETag::make( ) ) );

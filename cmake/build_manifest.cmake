@@ -7,5 +7,6 @@ set( BUILD_MANIFEST
    ${SOURCE_DIR}/exchange.cpp
    ${SOURCE_DIR}/detail/dispatch_impl.cpp
    ${SOURCE_DIR}/detail/exchange_impl.cpp
+   ${SOURCE_DIR}/detail/validator_impl.cpp
    ${SOURCE_DIR}/detail/error_handler_impl.cpp
 )
