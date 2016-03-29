@@ -162,17 +162,17 @@ namespace restq
                 
                 void options_resource_handler( const std::shared_ptr< Session > session, const Bytes& type, const std::string& options );
                 
-                void create_resource_callback( const int status, const Resources resources, const std::shared_ptr< Query > query );
+                void create_resource_callback( const std::shared_ptr< Query > query );
                 
-                void read_resource_callback( const int status, const Resources resources, const std::shared_ptr< Query > query );
+                void read_resource_callback( const std::shared_ptr< Query > query );
                 
-                void update_resource_callback( const int status, const Resources resources, const std::shared_ptr< Query > query );
+                void update_resource_callback( const std::shared_ptr< Query > query );
                 
-                void create_message_callback( const int status, const Resources messages, const std::shared_ptr< Query > query, const Resources states );
+                void create_message_callback( const std::shared_ptr< Query > query, const Resources states );
                 
-                void create_message_and_read_queues_callback( const int status, const Resources queues, const std::shared_ptr< Query > query );
+                void create_message_and_read_queues_callback( const std::shared_ptr< Query > query );
                 
-                void create_message_and_read_subscriptions_callback( const int status, const Resources subscriptions, const std::shared_ptr< Query > query, const Resources queues );
+                void create_message_and_read_subscriptions_callback( const std::shared_ptr< Query > query, const Resources queues );
                 
                 //Getters
                 

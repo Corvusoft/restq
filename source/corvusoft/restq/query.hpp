@@ -16,6 +16,7 @@
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/resource.hpp>
 
 //External Includes
 
@@ -51,16 +52,20 @@ namespace restq
             //Functionality
             void clear( void );
             
-            //Getters
-            //int get_error_code( void ) const;
-            //std::string get_error_message( void ) const;
-            //Resources get_results( void ) const;
+            bool has_failed( void ) const;
             
+            bool has_resultset( void ) const;
+            
+            //Getters
             Bytes get_include( void ) const;
+            
+            int get_error_code( void ) const;
             
             std::size_t get_index( void ) const;
             
             std::size_t get_limit( void ) const;
+            
+            Resources get_resultset( void ) const;
             
             std::vector< std::string > get_keys( void ) const;
             
@@ -71,9 +76,13 @@ namespace restq
             std::multimap< std::string, Bytes > get_exclusive_filters( void ) const;
             
             //Setters
+            void set_error_code( const int value );
+            
             void set_index( const std::size_t start );
             
             void set_limit( const std::size_t stop );
+            
+            void set_resultset( const Resources& values );
             
             void set_include( const Bytes& relationship );
             

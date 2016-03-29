@@ -12,6 +12,7 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/query.hpp>
 #include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/resource.hpp>
 
 //External Includes
 #include <catch.hpp>
@@ -26,6 +27,7 @@ using std::make_shared;
 using restq::Query;
 using restq::Bytes;
 using restq::Session;
+using restq::Resources;
 
 //External Namespaces
 
@@ -35,15 +37,21 @@ TEST_CASE( "validate default instance values", "[query]" )
     
     REQUIRE( query.get_include( ).empty( ) );
     REQUIRE( query.get_session( ) == nullptr );
+    REQUIRE( query.has_resultset( ) == false );
+    REQUIRE( query.get_resultset( ).empty( ) );
     REQUIRE( query.get_inclusive_filters( ).empty( ) );
     REQUIRE( query.get_exclusive_filters( ).empty( )  );
 }
 
 TEST_CASE( "validate setters modify default values", "[query]" )
 {
+    Resources resultset_expectation;
+    resultset_expectation.push_back( multimap< string, Bytes > { { "name", Bytes( { 't', 'e', 's', 't' } ) } } );
+    
     Query query;
     
     query.set_include( Bytes( { 't', 'y', 'p', 'e' } ) );
+    query.set_resultset( resultset_expectation );
     query.set_session( make_shared< Session >( "My Test Session" ) );
     query.set_inclusive_filters( { { "category", { 'c', 'a', 'r', 's' } } } );
     query.set_inclusive_filter( "reg", { 'S', 'B', '5', '3', 'Y', 'U', 'K' } );
@@ -58,13 +66,19 @@ TEST_CASE( "validate setters modify default values", "[query]" )
     
     auto exclusive_expectation = multimap< string, Bytes > { { "mileage", Bytes( { '1', '8', '0', 'k', 'm' } ) }, { "reg", Bytes( { 'S', 'B', '5', '3', 'Y', 'U', 'K' } ) } };
     REQUIRE( query.get_exclusive_filters( ) == exclusive_expectation );
+    
+    REQUIRE( query.get_resultset( ) == resultset_expectation );
 }
 
 TEST_CASE( "validate clear returns query to default values", "[query]" )
 {
+    Resources resultset_expectation;
+    resultset_expectation.push_back( multimap< string, Bytes > { { "name", Bytes( { 't', 'e', 's', 't' } ) } } );
+    
     Query query;
     
     query.set_include( Bytes( { 't', 'y', 'p', 'e' } ) );
+    query.set_resultset( resultset_expectation );
     query.set_session( make_shared< Session >( "My Test Session" ) );
     query.set_inclusive_filters( { { "category", { 'c', 'a', 'r', 's' } } } );
     query.set_exclusive_filters( { { "mileage", { '1', '8', '0', 'k', 'm' } } } );
@@ -72,7 +86,8 @@ TEST_CASE( "validate clear returns query to default values", "[query]" )
     
     REQUIRE( query.get_include( ).empty( ) );
     REQUIRE( query.get_session( ) == nullptr );
+    REQUIRE( query.has_resultset( ) == false );
+    REQUIRE( query.get_resultset( ).empty( ) );
     REQUIRE( query.get_inclusive_filters( ).empty( ) );
     REQUIRE( query.get_exclusive_filters( ).empty( )  );
 }
-

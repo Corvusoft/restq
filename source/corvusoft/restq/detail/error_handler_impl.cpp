@@ -114,11 +114,13 @@ namespace restq
         
         void ErrorHandlerImpl::conflict( const string& message, const shared_ptr< Session >& session )
         {
+            const auto msg = ( message.empty( ) ) ? "The exchange is refusing to process the request because of a conflict with an existing resource." : message;
+            
             const list< multimap< string, Bytes > > values { {
                     { "type", String::to_bytes( "error" ) },
                     { "code", String::to_bytes( "40009" ) },
                     { "status", String::to_bytes( "409" ) },
-                    { "message", String::to_bytes( message ) },
+                    { "message", String::to_bytes( msg ) },
                     { "title", String::to_bytes(  "Conflict" ) }
                 } };
                 
@@ -140,11 +142,13 @@ namespace restq
         
         void ErrorHandlerImpl::not_found( const string& message, const shared_ptr< Session >& session )
         {
+            const auto msg = ( message.empty( ) ) ? string( "The exchange is refusing to process the request because the requested URI could not be found within the exchange." ) : message;
+            
             const list< multimap< string, Bytes > > values { {
                     { "type", String::to_bytes( "error" ) },
                     { "code", String::to_bytes( "40004" ) },
                     { "status", String::to_bytes( "404" ) },
-                    { "message", String::to_bytes( message ) },
+                    { "message", String::to_bytes( msg ) },
                     { "title", String::to_bytes(  "Not Found" ) }
                 } };
                 
@@ -377,6 +381,7 @@ namespace restq
         {
             switch ( status )
             {
+                case 40004:
                 case NOT_FOUND:
                     not_found( message, session );
                     break;
@@ -385,6 +390,7 @@ namespace restq
                     method_not_allowed( session );
                     break;
                     
+                case 40009:
                 case CONFLICT:
                     conflict( message, session );
                     break;

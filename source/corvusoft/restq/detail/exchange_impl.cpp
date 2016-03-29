@@ -455,53 +455,60 @@ namespace restq
             query->set_exclusive_filter( "type", STATE );
             query->set_exclusive_filter( "status", PENDING );
             
-            m_repository->read( query, [ this ]( const int status, const Resources states, const shared_ptr< Query > query )
+            m_repository->read( query, [ this ]( const shared_ptr< Query > query )
             {
-                if ( status not_eq OK )
+                if ( query->has_failed( ) )
                 {
                     return log( Logger::ERROR, "Failed to read transaction states." );
                 }
-                else if ( states.empty( ) )
+                
+                if ( not query->has_resultset( ) )
                 {
                     return;
                 }
                 
+                const auto states = query->get_resultset( );
+                
                 auto state_key = states.back( ).lower_bound( "key" )->second;
                 query->set_key( state_key );
                 
-                m_repository->update( { { "status", INFLIGHT } }, query, [ this, state_key ]( const int status, const Resources states, const shared_ptr< Query > query )
+                m_repository->update( { { "status", INFLIGHT } }, query, [ this, state_key ]( const shared_ptr< Query > query )
                 {
-                    if ( status not_eq OK )
+                    if ( query->has_failed( ) )
                     {
                         return log( Logger::ERROR, "Failed to update transaction status." );
                     }
-                    else if ( status == NO_CONTENT )
+                    
+                    if ( not query->has_resultset( ) )
                     {
                         return m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
                     }
+                    
+                    const auto states = query->get_resultset( );
                     
                     query->clear( );
                     query->set_limit( 1 );
                     query->set_exclusive_filter( "type", MESSAGE );
                     query->set_key( states.back( ).lower_bound( "message-key" )->second );
                     
-                    m_repository->read( query, [ this, state_key, states ]( const int status, const Resources messages, const shared_ptr< Query > query )
+                    m_repository->read( query, [ this, state_key, states ]( const shared_ptr< Query > query )
                     {
+                        if ( query->has_failed( ) or not query->has_resultset( ) )
+                        {
+                            query->clear( );
+                            query->set_key( state_key );
+                            query->set_exclusive_filter( "type", STATE );
+                            
+                            log( Logger::WARNING, "Failed to read associated state message, purging." );
+                            
+                            return m_repository->destroy( query );
+                        }
+                        
+                        auto message = query->get_resultset( ).back( );
+                        
                         query->clear( );
                         query->set_key( state_key );
                         query->set_exclusive_filter( "type", STATE );
-                        
-                        if ( status not_eq OK or messages.empty( ) )
-                        {
-                            log( Logger::WARNING, "Failed to read associated state message, purging." );
-                            
-                            return m_repository->destroy( query, [ ]( const int, const shared_ptr< Query > ) //nullptr
-                            {
-                                return; //repo should cehck for nullptr before invoking
-                            } );
-                        }
-                        
-                        auto message = messages.back( );
                         
                         //status = Dispatch::direct( message );
                         
@@ -575,14 +582,14 @@ namespace restq
                             return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
                         }
                         
-                        m_repository->update( change, query, [ this ]( const int status, const Resources, const shared_ptr< Query > query )
+                        m_repository->update( change, query, [ this ]( const shared_ptr< Query > query )
                         {
-                            if ( status not_eq OK )
+                            if ( query->has_failed( ) )
                             {
                                 log( Logger::ERROR, "Failed to update transaction status to dispatched." );
                             }
                             
-                            m_repository->destroy( query, [ this ]( const int, const shared_ptr< Query > )
+                            m_repository->destroy( query, [ this ]( const shared_ptr< Query > )
                             {
                                 m_service->schedule( bind( &ExchangeImpl::dispatch, this ) );
                             } );
@@ -613,7 +620,7 @@ namespace restq
             query->set_include( STATE );
             query->set_exclusive_filter( "type", QUEUE );
             
-            m_repository->read( query, bind( &ExchangeImpl::create_message_and_read_queues_callback, this, _1, _2, _3 ) );
+            m_repository->read( query, bind( &ExchangeImpl::create_message_and_read_queues_callback, this, _1 ) );
         }
         
         void ExchangeImpl::create_resource_handler( const shared_ptr< Session > session, const Bytes& type )
@@ -663,7 +670,7 @@ namespace restq
             {
                 auto query = make_shared< Query >( session );
                 query->set_exclusive_filter( "type", type );
-                return m_repository->create( resources, query, bind( &ExchangeImpl::create_resource_callback, this, _1, _2, _3 ) );
+                return m_repository->create( resources, query, bind( &ExchangeImpl::create_resource_callback, this, _1 ) );
             }
             
             auto queue_keys = set< string > { };
@@ -684,33 +691,29 @@ namespace restq
             query->set_include( SUBSCRIPTION );
             query->set_exclusive_filter( "type", QUEUE );
             
-            m_repository->read( query, [ this, resources ]( const int status, const Resources items, const shared_ptr< Query > query )
+            m_repository->read( query, [ this, resources ]( const shared_ptr< Query > query )
             {
                 auto session = query->get_session( );
                 
-                if ( status == NOT_FOUND )
+                if ( query->has_failed( ) )
                 {
-                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because one or more subscription queues property values could not be found.", session );
-                }
-                else if ( status not_eq OK )
-                {
-                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to read the repository resource entries.", session );
+                    return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because one or more subscription queues property values could not be found.", session );
                 }
                 
                 Resources queues;
                 Resources subscriptions;
                 
-                for ( const auto& item : items )
+                for ( const auto& result : query->get_resultset( ) )
                 {
-                    const auto type = item.lower_bound( "type" )->second;
+                    const auto type = result.lower_bound( "type" )->second;
                     
                     if ( type == QUEUE )
                     {
-                        queues.push_back( item );
+                        queues.push_back( result );
                     }
                     else if ( type == SUBSCRIPTION )
                     {
-                        subscriptions.push_back( item );
+                        subscriptions.push_back( result );
                     }
                     else
                     {
@@ -755,7 +758,7 @@ namespace restq
                 query->set_exclusive_filters( session->get( "exclusive_filters" ) );
                 query->set_exclusive_filter( "type", SUBSCRIPTION );
                 
-                m_repository->create( resources, query, bind( &ExchangeImpl::create_resource_callback, this, _1, _2, _3 ) );
+                m_repository->create( resources, query, bind( &ExchangeImpl::create_resource_callback, this, _1 ) );
             } );
         }
         
@@ -764,7 +767,7 @@ namespace restq
             auto query = make_shared< Query >( session );
             query->set_exclusive_filter( "type", type );
             
-            m_repository->read( query, bind( &ExchangeImpl::read_resource_callback, this, _1, _2, _3 ) );
+            m_repository->read( query, bind( &ExchangeImpl::read_resource_callback, this, _1 ) );
         }
         
         void ExchangeImpl::update_resource_handler( const shared_ptr< Session > session, const Bytes& type )
@@ -800,7 +803,7 @@ namespace restq
             {
                 auto query = make_shared< Query >( session );
                 query->set_exclusive_filter( "type", type );
-                return m_repository->update( change, query, bind( &ExchangeImpl::update_resource_callback, this, _1, _2, _3 ) );
+                return m_repository->update( change, query, bind( &ExchangeImpl::update_resource_callback, this, _1 ) );
             }
             
             auto queue_keys = set< string > { };
@@ -821,33 +824,29 @@ namespace restq
             query->set_include( SUBSCRIPTION );
             query->set_exclusive_filter( "type", QUEUE );
             
-            m_repository->read( query, [ this, changeset, session ]( const int status, const Resources items, const shared_ptr< Query > query )
+            m_repository->read( query, [ this, changeset, session ]( const shared_ptr< Query > query )
             {
                 auto session = query->get_session( );
                 
-                if ( status == NOT_FOUND )
+                if ( query->has_failed( ) )
                 {
-                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because one or more subscription queues property values could not be found.", session );
-                }
-                else if ( status not_eq OK )
-                {
-                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to read the repository resource entries.", session );
+                    return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because one or more subscription queues property values could not be found.", session );
                 }
                 
                 Resources queues;
                 Resources subscriptions;
                 
-                for ( const auto& item : items )
+                for ( const auto& result : query->get_resultset( ) )
                 {
-                    const auto type = item.lower_bound( "type" )->second;
+                    const auto type = result.lower_bound( "type" )->second;
                     
                     if ( type == QUEUE )
                     {
-                        queues.push_back( item );
+                        queues.push_back( result );
                     }
                     else if ( type == SUBSCRIPTION )
                     {
-                        subscriptions.push_back( item );
+                        subscriptions.push_back( result );
                     }
                     else
                     {
@@ -892,7 +891,7 @@ namespace restq
                 query->set_exclusive_filters( session->get( "exclusive_filters" ) );
                 query->set_exclusive_filter( "type", SUBSCRIPTION );
                 
-                m_repository->update( changeset.back( ), query, bind( &ExchangeImpl::update_resource_callback, this, _1, _2, _3 ) );
+                m_repository->update( changeset.back( ), query, bind( &ExchangeImpl::update_resource_callback, this, _1 ) );
             } );
         }
         
@@ -901,17 +900,13 @@ namespace restq
             auto query = make_shared< Query >( session );
             query->set_exclusive_filter( "type", type );
             
-            m_repository->destroy( query, [ ]( const int status, const shared_ptr< Query > query )
+            m_repository->destroy( query, [ ]( const shared_ptr< Query > query )
             {
                 auto session = query->get_session( );
                 
-                if ( status == NOT_FOUND )
+                if ( query->has_failed( ) )
                 {
-                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
-                }
-                else if ( status not_eq OK )
-                {
-                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to update the repository resource entries.", session );
+                    return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
                 }
                 
                 session->close( NO_CONTENT, { { "Date", Date::make( ) } } );
@@ -945,13 +940,13 @@ namespace restq
             auto query = make_shared< Query >( session );
             query->set_exclusive_filter( "type", type );
             
-            m_repository->read( query, [ options ]( const int status, const Resources, const shared_ptr< Query > query )
+            m_repository->read( query, [ options ]( const shared_ptr< Query > query )
             {
                 auto session = query->get_session( );
                 
-                if ( status not_eq OK )
+                if ( query->has_failed( ) )
                 {
-                    return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
+                    return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "", session );
                 }
                 
                 multimap< string, string > headers
@@ -969,19 +964,16 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::create_resource_callback( const int status, const Resources resources, const shared_ptr< Query > query )
+        void ExchangeImpl::create_resource_callback( const shared_ptr< Query > query )
         {
             auto session = query->get_session( );
             
-            if ( status == CONFLICT )
+            if ( query->has_failed( ) )
             {
-                return ErrorHandlerImpl::conflict( "The exchange is refusing to process the request because of a conflict with an existing resource.", session );
-            }
-            else if ( status not_eq CREATED )
-            {
-                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository resource entry.", session );
+                return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because of a conflict with an existing resource.", session );
             }
             
+            const auto resources = query->get_resultset( );
             const shared_ptr< Formatter > composer = session->get( "accept-format" );
             const auto body = composer->compose( resources, session->get( "style" ) );
             
@@ -1006,19 +998,16 @@ namespace restq
             ( echo ) ? session->close( CREATED, body, headers ) : session->close( CREATED, headers );
         }
         
-        void ExchangeImpl::read_resource_callback( const int status, const Resources resources, const shared_ptr< Query > query )
+        void ExchangeImpl::read_resource_callback( const shared_ptr< Query > query )
         {
             auto session = query->get_session( );
             
-            if ( status == NOT_FOUND )
+            if ( query->has_failed( ) )
             {
-                return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
-            }
-            else if ( status not_eq OK )
-            {
-                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to read the repository resource entries.", session );
+                return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "", session );
             }
             
+            const auto resources = query->get_resultset( );
             const shared_ptr< Formatter > composer = session->get( "accept-format" );
             const auto body = composer->compose( resources, session->get( "style" ) );
             
@@ -1045,18 +1034,16 @@ namespace restq
             ( echo ) ? session->close( OK, body, headers ) : session->close( OK, headers );
         }
         
-        void ExchangeImpl::update_resource_callback( const int status, const Resources resources, const shared_ptr< Query > query )
+        void ExchangeImpl::update_resource_callback( const shared_ptr< Query > query )
         {
             auto session = query->get_session( );
             
-            if ( status == NOT_FOUND )
+            if ( query->has_failed( ) )
             {
-                return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
+                return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because the requested URI could not be found within the exchange.", session );
             }
-            else if ( status not_eq OK and status not_eq NO_CONTENT )
-            {
-                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to update the repository resource entries.", session );
-            }
+            
+            const auto resources = query->get_resultset( );
             
             multimap< string, string > headers
             {
@@ -1064,7 +1051,7 @@ namespace restq
                 { "Last-Modified", LastModified::make( resources ) }
             };
             
-            if ( status == NO_CONTENT )
+            if ( not query->has_resultset( ) )
             {
                 return session->close( NO_CONTENT, headers );
             }
@@ -1087,15 +1074,16 @@ namespace restq
             ( echo ) ? session->close( OK, body, headers ) : session->close( OK, headers );
         }
         
-        void ExchangeImpl::create_message_callback( const int status, const Resources resources, const shared_ptr< Query > query, const Resources states )
+        void ExchangeImpl::create_message_callback( const shared_ptr< Query > query, const Resources states )
         {
             auto session = query->get_session( );
             
-            if ( status not_eq CREATED )
+            if ( query->has_failed( ) )
             {
-                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message entry.", session );
+                return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because it has failed to create the repository message entry.", session );
             }
             
+            const auto resources = query->get_resultset( );
             const auto message_key = resources.back( ).lower_bound( "key" )->second;
             //session->set_header( "Location", String::format( "/messages/%.*s", message_key.size( ), message_key.data( ) ) );
             
@@ -1103,13 +1091,13 @@ namespace restq
             query->set_session( session );
             query->set_exclusive_filter( "type", STATE );
             
-            m_repository->create( states, query, [ this, message_key ]( const int status, const Resources, const shared_ptr< Query > query )
+            m_repository->create( states, query, [ this, message_key ]( const shared_ptr< Query > query )
             {
                 auto session = query->get_session( );
                 
-                if ( status not_eq CREATED )
+                if ( query->has_failed( ) )
                 {
-                    return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to create the repository message state entries.", session );
+                    return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because it has failed to create the repository message state entries.", session );
                 }
                 
                 multimap< string, string > headers
@@ -1129,19 +1117,16 @@ namespace restq
             } );
         }
         
-        void ExchangeImpl::create_message_and_read_queues_callback( const int status, const Resources resources, const shared_ptr< Query > query )
+        void ExchangeImpl::create_message_and_read_queues_callback( const shared_ptr< Query > query )
         {
             auto session = query->get_session( );
             
-            if ( status == NOT_FOUND )
+            if ( query->has_failed( ) )
             {
-                return ErrorHandlerImpl::not_found( "The exchange is refusing to process the request because the requested Queue(s) URI could not be found within the exchange.", session );
-            }
-            else if ( status not_eq OK )
-            {
-                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the desired Queue(s).", session );
+                return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because the requested Queue(s) URI could not be found within the exchange.", session );
             }
             
+            const auto resources = query->get_resultset( );
             Resources queues;
             Resources states;
             
@@ -1206,18 +1191,19 @@ namespace restq
                 }
             }
             
-            m_repository->read( query, bind( &ExchangeImpl::create_message_and_read_subscriptions_callback, this, _1, _2, _3, queues ) );
+            m_repository->read( query, bind( &ExchangeImpl::create_message_and_read_subscriptions_callback, this, _1, queues ) );
         }
         
-        void ExchangeImpl::create_message_and_read_subscriptions_callback( const int status, const Resources subscriptions, const shared_ptr< Query > query, const Resources queues )
+        void ExchangeImpl::create_message_and_read_subscriptions_callback( const shared_ptr< Query > query, const Resources queues )
         {
             auto session = query->get_session( );
             
-            if ( status not_eq OK )
+            if ( query->has_failed( ) )
             {
-                return ErrorHandlerImpl::find_and_invoke_for( status, "The exchange is refusing to process the request because it has failed to load the associated Queue(s) Subscriptions.", session );
+                return ErrorHandlerImpl::find_and_invoke_for( query->get_error_code( ), "The exchange is refusing to process the request because it has failed to load the associated Queue(s) Subscriptions.", session );
             }
             
+            const auto subscriptions = query->get_resultset( );
             const auto message = make_message( session );
             const auto message_key = make_pair( "message-key", message.lower_bound( "key" )->second );
             
@@ -1279,7 +1265,7 @@ namespace restq
             query->set_exclusive_filters( session->get( "exclusive_filters" ) );
             query->set_exclusive_filter( "type", MESSAGE );
             
-            m_repository->create( { message }, query, bind( &ExchangeImpl::create_message_callback, this, _1, _2, _3, states ) );
+            m_repository->create( { message }, query, bind( &ExchangeImpl::create_message_callback, this, _1, states ) );
         }
     }
 }

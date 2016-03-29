@@ -45,16 +45,15 @@ class STLRepository final : public restq::Repository
         
         void create( const restq::Resources values,
                      const std::shared_ptr< restq::Query > query,
-                     const std::function< void ( const int, const restq::Resources, const std::shared_ptr< restq::Query > ) >& callback );
+                     const std::function< void ( const std::shared_ptr< restq::Query > ) >& callback );
                      
-        void read( const std::shared_ptr< restq::Query > query,
-                   const std::function< void ( const int, const restq::Resources, const std::shared_ptr< restq::Query > ) >& callback );
-                   
+        void read( const std::shared_ptr< restq::Query > query, const std::function< void ( const std::shared_ptr< restq::Query > ) >& callback );
+        
         void update( const restq::Resource changeset,
                      const std::shared_ptr< restq::Query > query,
-                     const std::function< void (  const int, const restq::Resources, const std::shared_ptr< restq::Query > ) >& callback );
+                     const std::function< void ( const std::shared_ptr< restq::Query > ) >& callback );
                      
-        void destroy( const std::shared_ptr< restq::Query > query, const std::function< void ( const int, const std::shared_ptr< restq::Query > ) >& callback );
+        void destroy( const std::shared_ptr< restq::Query > query, const std::function< void ( const std::shared_ptr< restq::Query > ) >& callback = nullptr );
         
         //Getters
         

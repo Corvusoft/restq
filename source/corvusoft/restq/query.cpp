@@ -80,17 +80,34 @@ namespace restq
     void Query::clear( void )
     {
         m_pimpl->m_keys.clear( );
+        m_pimpl->m_error_code = 0;
         m_pimpl->m_include.clear( );
         m_pimpl->m_session = nullptr;
+        m_pimpl->m_resultset.clear( );
         m_pimpl->m_inclusive_filters.clear( );
         m_pimpl->m_exclusive_filters.clear( );
         m_pimpl->m_index = numeric_limits< size_t >::min( );
         m_pimpl->m_limit = numeric_limits< size_t >::max( );
     }
     
+    bool Query::has_failed( void ) const
+    {
+        return m_pimpl->m_error_code not_eq 0;
+    }
+    
+    bool Query::has_resultset( void ) const
+    {
+        return not m_pimpl->m_resultset.empty( );
+    }
+    
     Bytes Query::get_include( void ) const
     {
         return m_pimpl->m_include;
+    }
+    
+    int Query::get_error_code( void ) const
+    {
+        return m_pimpl->m_error_code;
     }
     
     size_t Query::get_index( void ) const
@@ -101,6 +118,11 @@ namespace restq
     size_t Query::get_limit( void ) const
     {
         return m_pimpl->m_limit;
+    }
+    
+    Resources Query::get_resultset( void ) const
+    {
+        return m_pimpl->m_resultset;
     }
     
     vector< string > Query::get_keys( void ) const
@@ -123,6 +145,11 @@ namespace restq
         return m_pimpl->m_exclusive_filters;
     }
     
+    void Query::set_error_code( const int value )
+    {
+        m_pimpl->m_error_code = value;
+    }
+    
     void Query::set_index( const size_t start )
     {
         m_pimpl->m_index = start;
@@ -131,6 +158,11 @@ namespace restq
     void Query::set_limit( const size_t stop )
     {
         m_pimpl->m_limit = stop;
+    }
+    
+    void Query::set_resultset( const Resources& values )
+    {
+        m_pimpl->m_resultset = values;
     }
     
     void Query::set_include( const Bytes& relationship )

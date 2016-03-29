@@ -16,6 +16,7 @@
 //Project Includes
 #include "corvusoft/restq/byte.hpp"
 #include "corvusoft/restq/session.hpp"
+#include "corvusoft/restq/resource.hpp"
 
 //External Includes
 
@@ -35,7 +36,11 @@ namespace restq
         
         struct QueryImpl
         {
+            int m_error_code = 0;
+            
             Bytes m_include = { };
+            
+            Resources m_resultset = { };
             
             std::vector< std::string > m_keys = { };
             

@@ -62,7 +62,7 @@ def i_should_see_a_header_value_with_a_datestamp_of_now( step, header ):
     if header.lower( ) not in world.response.headers:
         assert False, "Failed to detect '%s' header." % header
 
-    actual = datetime.strptime(  world.response.headers[ header.lower( ) ], '%a, %d %b %Y %H:%M:%S GMT' )
+    actual = datetime.strptime( world.response.headers[ header.lower( ) ], '%a, %d %b %Y %H:%M:%S GMT' )
 
     now = datetime.utcnow( )
     maximum = now + timedelta( seconds = 2 )
@@ -76,7 +76,7 @@ def i_should_see_a_header_value_with_a_datestamp_of_now( step, header, delay ):
     if header.lower( ) not in world.response.headers:
         assert False, "Failed to detect '%s' header." % header
 
-    actual = datetime.strptime(  world.response.headers[ header.lower( ) ], '%a, %d %b %Y %H:%M:%S GMT' )
+    actual = datetime.strptime( world.response.headers[ header.lower( ) ], '%a, %d %b %Y %H:%M:%S GMT' )
 
     timeout = int( delay )
     maximum = datetime.utcnow( ) - timedelta( seconds = timeout )
@@ -90,11 +90,11 @@ def i_should_see_a_header_value_with_a_datestamp_of_now( step, header, delay ):
     if header.lower( ) not in world.response.headers:
         assert False, "Failed to detect '%s' header." % header
 
-    actual = datetime.strptime(  world.response.headers[ header.lower( ) ], '%a, %d %b %Y %H:%M:%S GMT' )
+    actual = datetime.strptime( world.response.headers[ header.lower( ) ], '%a, %d %b %Y %H:%M:%S GMT' )
 
     timeout = int( delay )
-    maximum = datetime.utcnow( ) - timedelta( seconds = timeout )
-    minimum = maximum - timedelta( seconds = timeout / 2 )
+    minimum = datetime.utcnow( ) - timedelta( seconds = timeout )
+    maximum = minimum + timedelta( seconds = timeout )
     expectation = maximum.strftime( '%a, %d %b %Y %H:%M:%S GMT' )
 
     assert  actual >= minimum and actual <= maximum, "Failed to find matching '%s' header value, '%s' is not equal to '%s'." % ( header, expectation, actual.strftime( '%a, %d %b %Y %H:%M:%S GMT' ) )

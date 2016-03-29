@@ -13,7 +13,6 @@
 
 //External Includes
 #include <corvusoft/restq/string.hpp>
-#include <corvusoft/restq/status_code.hpp>
 
 //System Namespaces
 using std::set;
@@ -32,11 +31,6 @@ using std::unique_lock;
 //Project Namespaces
 
 //External Namespaces
-using restq::OK;
-using restq::CREATED;
-using restq::CONFLICT;
-using restq::NOT_FOUND;
-using restq::NO_CONTENT;
 using restq::Bytes;
 using restq::Query;
 using restq::String;
@@ -68,7 +62,7 @@ void STLRepository::start( const shared_ptr< const Settings >& )
     return;
 }
 
-void STLRepository::create( const Resources values, const shared_ptr< Query > query, const function< void ( const int, const Resources, const shared_ptr< Query > ) >& callback )
+void STLRepository::create( const Resources values, const shared_ptr< Query > query, const function< void ( const shared_ptr< Query > ) >& callback )
 {
     unique_lock< mutex> lock( m_resources_lock );
     
@@ -84,7 +78,8 @@ void STLRepository::create( const Resources values, const shared_ptr< Query > qu
         
         if ( conflict )
         {
-            return callback( CONFLICT, values, query );
+            query->set_error_code( 40009 );
+            return callback( query );
         }
     }
     
@@ -92,10 +87,11 @@ void STLRepository::create( const Resources values, const shared_ptr< Query > qu
     
     lock.unlock( );
     
-    callback( CREATED, values, query );
+    query->set_resultset( values );
+    callback( query );
 }
 
-void STLRepository::read( const shared_ptr< Query > query, const function< void ( const int, const Resources, const shared_ptr< Query > ) >& callback )
+void STLRepository::read( const shared_ptr< Query > query, const function< void ( const shared_ptr< Query > ) >& callback )
 {
     Resources values;
     Resources resources;
@@ -119,7 +115,8 @@ void STLRepository::read( const shared_ptr< Query > query, const function< void 
             
             if ( resource == m_resources.end( ) )
             {
-                return callback( NOT_FOUND, values, query );
+                query->set_error_code( 40004 );
+                return callback( query );
             }
             
             resources.push_back( *resource );
@@ -151,25 +148,26 @@ void STLRepository::read( const shared_ptr< Query > query, const function< void 
     
     include( query->get_include( ), values ); //just pass query
     
-    callback( OK, values, query );
+    query->set_resultset( values );
+    callback( query );
 }
 
-void STLRepository::update( const Resource changeset, const shared_ptr< Query > query, const function< void (  const int, const Resources, const shared_ptr< Query > ) >& callback  )
+void STLRepository::update( const Resource changeset, const shared_ptr< Query > query, const function< void ( const shared_ptr< Query > ) >& callback  )
 {
-    read( query, [ changeset, callback, this ]( const int status_code, const Resources values, const shared_ptr< Query > query )
+    read( query, [ changeset, callback, this ]( const shared_ptr< Query > query )
     {
-        if ( status_code not_eq OK )
+        if ( query->has_failed( ) )
         {
-            return callback( status_code, values, query );
+            return callback( query );
         }
-        
-        int status = NO_CONTENT;
-        
-        auto resources = values;
         
         unique_lock< mutex> lock( m_resources_lock );
         
-        for ( auto& value : resources )
+        bool update_applied = false;
+        
+        auto results = query->get_resultset( );
+        
+        for ( auto& result : results )
         {
             for ( const auto& change : changeset )
             {
@@ -178,54 +176,69 @@ void STLRepository::update( const Resource changeset, const shared_ptr< Query > 
                     continue;
                 }
                 
-                auto property = value.find( change.first );
+                auto property = result.find( change.first );
                 
-                if ( property == value.end( ) )
+                if ( property == result.end( ) )
                 {
-                    value.insert( change );
-                    status = OK;
+                    update_applied = true;
+                    result.insert( change );
                 }
                 else if ( property->second not_eq change.second )
                 {
+                    update_applied = true;
                     property->second = change.second;
-                    status = OK;
                 }
             }
             
-            auto resource = find_if( m_resources.begin( ), m_resources.end( ), [ &value ]( const Resource & resource )
+            auto resource = find_if( m_resources.begin( ), m_resources.end( ), [ &result ]( const Resource & resource )
             {
-                const auto lhs = String::to_string( value.lower_bound( "key" )->second );
+                const auto lhs = String::to_string( result.lower_bound( "key" )->second );
                 const auto rhs = String::to_string( resource.lower_bound( "key" )->second );
                 
                 return String::lowercase( lhs ) == String::lowercase( rhs );
             } );
             
-            *resource = value;
+            *resource = result;
         }
         
         lock.unlock( );
         
-        callback( status, resources, query );
+        if ( update_applied )
+        {
+            query->set_resultset( results );
+        }
+        else
+        {
+            query->set_resultset( { } );
+        }
+        
+        callback( query );
     } );
 }
 
-void STLRepository::destroy( const shared_ptr< Query > query, const function< void ( const int, const shared_ptr< Query > ) >& callback )
+void STLRepository::destroy( const shared_ptr< Query > query, const function< void ( const shared_ptr< Query > ) >& callback )
 {
-    read( query, [ callback, this ]( const int status, const Resources resources, const shared_ptr< Query > query )
+    read( query, [ callback, this ]( const shared_ptr< Query > query )
     {
-        if ( status not_eq OK )
+        if ( query->has_failed( ) )
         {
-            return callback( status, query );
+            if ( callback not_eq nullptr )
+            {
+                query->set_error_code( 40004 );
+                return callback( query );
+            }
+            
+            return;
         }
         
         unique_lock< mutex> lock( m_resources_lock );
         
-        for ( const auto resource : resources )
+        for ( const auto result : query->get_resultset( ) )
         {
-            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), [ &resource ]( const Resource & value )
+            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), [ &result ]( const Resource & value )
             {
                 const auto lhs = String::to_string( value.lower_bound( "key" )->second );
-                const auto rhs = String::to_string( resource.lower_bound( "key" )->second );
+                const auto rhs = String::to_string( result.lower_bound( "key" )->second );
                 
                 return String::lowercase( lhs ) == String::lowercase( rhs );
             } );
@@ -235,7 +248,10 @@ void STLRepository::destroy( const shared_ptr< Query > query, const function< vo
         
         lock.unlock( );
         
-        callback( OK, query );
+        if ( callback not_eq nullptr )
+        {
+            callback( query );
+        }
     } );
 }
 
