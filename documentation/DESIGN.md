@@ -1,6 +1,49 @@
 ##Design Overview
 
-### start with data types then progress to more complicated areas. LogLevel, Byte, Bytes, Resource, Resources, Callback.
+### start with data types then progress to more complicated areas. LogLevel, , Resource, Resources, Callback.
+
+### Byte/Bytes
+
+Byte represents an unsigned 16 bit data-type, with Bytes providing container functionality with STL std::vector semantics. 
+
+```
++----------------+
+|   <<typedef>>  |
+|      Bytes     |
++----------------+
+| vector< Byte > |
++--------@-------+
+         |
+         |
+         |
++--------+-------+
+|   <<typedef>>  |
+|      Byte      |
++----------------+
+|    uint16_t    |
++----------------+
+```
+
+### Resource/Resources
+
+Resource represents an associative array allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources.  Container functionality is provided via the Resources container having STL std::list semantics. 
+```
++------- ---------------+
+|      <<typedef>>      |
+|       Resources       |
++-----------------------+
+|      list<Resource>   |
++-----------@-----------+
+            |
+            |
+            |
++-----------+-----------+
+|      <<typedef>>      |
+|       Resource        |
++-----------------------+
+| multimap<string,Byte> |
++-----------------------+
+```
 
 ### Exchange
 
@@ -21,14 +64,14 @@ This my exchange description.
                                            | + set_repository(Repository) void       |
                                            | + set_ready_handler(Callback) void      |
                                            | + set_signal_handler(int,Callback) void |
-                                           +-----------------------------------------+
-                                                                 O
+                                           +---------------------O-------------------+
+                                                                 |
                                                                  |
                     +--------------------------------------------+---------------------------------------------
                     |                                            |                                            |
                     |                                            |                                            |
                     |                                            |                                            |
- +-----------------------------------+     +-----------------------------------------+  +---------------------------------------+
+ +------------------+----------------+     +---------------------+-------------------+  +---------------------+-----------------+
  |            <<interface>>          |     |               <<interface>>             |  |               <<interface>>           |
  |              Formatter            |     |                 Repository              |  |                 Logger                |
  |                                   |     |                                         |  |                                       |
@@ -51,10 +94,10 @@ This is my session description.
 ```
              +---------------+
              |   <<class>>   | 1
-     1 +----@+    Session    +@-----+
+     1 +-----@    Session    @------+
        |     +---------------+      |
        |                            |
-     1 @                            @ 1
+     1 |                            | 1
 +------+-------+             +------+-------+
 |   <<class>>  |             |   <<class>>  |
 |    Request   |             |   Response   |
