@@ -4,13 +4,16 @@
 
 //System Includes
 #include <map>
+#include <vector>
 #include <memory>
 #include <string>
 #include <cstddef>
+#include <utility>
 
 //Project Includes
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/query.hpp>
+#include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
 #include <corvusoft/restq/resource.hpp>
 
@@ -18,6 +21,8 @@
 #include <catch.hpp>
 
 //System Namespaces
+using std::pair;
+using std::vector;
 using std::string;
 using std::multimap;
 using std::shared_ptr;
@@ -26,6 +31,7 @@ using std::make_shared;
 //Project Namespaces
 using restq::Query;
 using restq::Bytes;
+using restq::String;
 using restq::Session;
 using restq::Resources;
 
@@ -41,6 +47,36 @@ TEST_CASE( "validate default instance values", "[query]" )
     REQUIRE( query.get_resultset( ).empty( ) );
     REQUIRE( query.get_inclusive_filters( ).empty( ) );
     REQUIRE( query.get_exclusive_filters( ).empty( )  );
+}
+
+TEST_CASE( "validate session constructed instance values", "[query]" )
+{
+    auto session = make_shared< Session >( "test" );
+    session->set( "include", String::to_bytes( "homeless" ) );
+    
+    const auto paging = pair< size_t, size_t > { 222, 989 };
+    session->set( "paging", paging );
+    
+    const auto keys = vector< string > { "1234", "5678" };
+    session->set( "keys", keys );
+    
+    const auto inclusive_filters = multimap< string, Bytes > { { "name", Bytes( { '5', '6', '7', '8' } ) } };
+    session->set( "inclusive_filters", inclusive_filters );
+    
+    const auto exclusive_filters = multimap< string, Bytes > { { "name", Bytes( { '4', '3', '2', '1' } ) } };
+    session->set( "exclusive_filters", exclusive_filters );
+    
+    const Query query( session );
+    
+    REQUIRE( query.get_keys( ) == keys );
+    REQUIRE( query.has_resultset( ) == false );
+    REQUIRE( query.get_resultset( ).empty( ) );
+    REQUIRE( query.get_session( ) not_eq nullptr );
+    REQUIRE( query.get_index( ) == paging.first );
+    REQUIRE( query.get_limit( ) == paging.second );
+    REQUIRE( query.get_inclusive_filters( ) == inclusive_filters );
+    REQUIRE( query.get_exclusive_filters( ) == exclusive_filters  );
+    REQUIRE( query.get_include( ) == String::to_bytes( "homeless" ) );
 }
 
 TEST_CASE( "validate setters modify default values", "[query]" )
