@@ -58,7 +58,7 @@ The following diagram shows that a Session class is composed and in a one-to-one
      1 +----@+    Session    +@-----+
        |     +---------------+      |
        |                            |
-     1 @                            @ 1
+     1 |                            | 1
 +------+-------+             +------+-------+
 |   <<class>>  |             |   <<class>>  |
 |    Request   |             |   Response   |
