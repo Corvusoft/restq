@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <set>
 #include <memory>
 #include <limits>
 #include <string>
@@ -41,6 +42,8 @@ namespace restq
             Bytes m_include = { };
             
             Resources m_resultset = { };
+            
+            std::set< std::string > m_fields = { };
             
             std::vector< std::string > m_keys = { };
             

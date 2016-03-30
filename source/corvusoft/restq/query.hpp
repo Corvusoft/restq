@@ -54,6 +54,8 @@ namespace restq
             
             bool has_failed( void ) const;
             
+            bool has_fields( void ) const;
+            
             bool has_resultset( void ) const;
             
             //Getters
@@ -66,6 +68,8 @@ namespace restq
             std::size_t get_limit( void ) const;
             
             Resources get_resultset( void ) const;
+            
+            std::set< std::string > get_fields( void ) const;
             
             std::vector< std::string > get_keys( void ) const;
             
@@ -91,6 +95,8 @@ namespace restq
             void set_key( const std::string& value );
             
             void set_keys( const std::vector< std::string >& values );
+            
+            void set_fields( const std::set< std::string >& values );
             
             void set_session( const std::shared_ptr< Session >& value );
             

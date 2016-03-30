@@ -69,6 +69,12 @@ namespace restq
             m_pimpl->m_exclusive_filters = temp;
         }
         
+        if ( value->has( "fields" ) )
+        {
+            set< string > temp = value->get( "fields" );
+            m_pimpl->m_fields = temp;
+        }
+        
         m_pimpl->m_session = value;
     }
     
@@ -81,6 +87,7 @@ namespace restq
     {
         m_pimpl->m_keys.clear( );
         m_pimpl->m_error_code = 0;
+        m_pimpl->m_fields.clear( );
         m_pimpl->m_include.clear( );
         m_pimpl->m_session = nullptr;
         m_pimpl->m_resultset.clear( );
@@ -93,6 +100,11 @@ namespace restq
     bool Query::has_failed( void ) const
     {
         return m_pimpl->m_error_code not_eq 0;
+    }
+    
+    bool Query::has_fields( void ) const
+    {
+        return not m_pimpl->m_fields.empty( );
     }
     
     bool Query::has_resultset( void ) const
@@ -123,6 +135,11 @@ namespace restq
     Resources Query::get_resultset( void ) const
     {
         return m_pimpl->m_resultset;
+    }
+    
+    set< string > Query::get_fields( void ) const
+    {
+        return m_pimpl->m_fields;
     }
     
     vector< string > Query::get_keys( void ) const
@@ -183,6 +200,11 @@ namespace restq
     void Query::set_keys( const vector< string >& values )
     {
         m_pimpl->m_keys = values;
+    }
+    
+    void Query::set_fields( const set< string >& values )
+    {
+        m_pimpl->m_fields = values;
     }
     
     void Query::set_session( const shared_ptr< Session >& value )

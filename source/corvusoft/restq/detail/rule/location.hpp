@@ -62,6 +62,12 @@ namespace restq
                 static string make( const shared_ptr< Session >& session, const list< multimap< string, Bytes > >& resources )
                 {
                     const string host = session->get( "host" );
+                    
+                    if ( resources.empty( ) or resources.back( ).count( "type" ) == 0 or resources.back( ).count( "key" ) == 0 )
+                    {
+                        return String::format( "http://%s", host.data( ) );
+                    }
+                    
                     const auto type = resources.back( ).lower_bound( "type" )->second;
                     
                     auto location = String::format( "http://%s/%.*ss", host.data( ), type.size( ), type.data( ) );

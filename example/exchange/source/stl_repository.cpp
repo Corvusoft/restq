@@ -87,7 +87,9 @@ void STLRepository::create( const Resources values, const shared_ptr< Query > qu
     
     lock.unlock( );
     
-    query->set_resultset( values );
+    auto results = fields( values, query );
+    
+    query->set_resultset( results );
     callback( query );
 }
 
@@ -146,16 +148,23 @@ void STLRepository::read( const shared_ptr< Query > query, const function< void 
         }
     }
     
-    include( query->get_include( ), values ); //just pass query
+    include( query->get_include( ), values );
     
-    query->set_resultset( values );
+    auto results = fields( values, query );
+    
+    query->set_resultset( results );
     callback( query );
 }
 
 void STLRepository::update( const Resource changeset, const shared_ptr< Query > query, const function< void ( const shared_ptr< Query > ) >& callback  )
 {
-    read( query, [ changeset, callback, this ]( const shared_ptr< Query > query )
+    auto previous_fields = query->get_fields( );
+    query->set_fields( { } );
+    
+    read( query, [ changeset, callback, this, previous_fields ]( const shared_ptr< Query > query )
     {
+        query->set_fields( previous_fields );
+        
         if ( query->has_failed( ) )
         {
             return callback( query );
@@ -202,6 +211,8 @@ void STLRepository::update( const Resource changeset, const shared_ptr< Query > 
         }
         
         lock.unlock( );
+        
+        results = fields( results, query );
         
         if ( update_applied )
         {
@@ -319,6 +330,43 @@ void STLRepository::include( const Bytes& relationship, Resources& values )
     lock.unlock( );
     
     values.insert( values.end( ), relationships.begin( ), relationships.end( ) );
+}
+
+Resources STLRepository::fields( const Resources& values, const shared_ptr< Query >& query )
+{
+    if ( not query->has_fields( ) )
+    {
+        return values;
+    }
+    
+    Resources results = values;
+    set< string > fields = query->get_fields( );
+    
+    for ( auto result = results.begin( ); result not_eq results.end( ); )
+    {
+        for ( auto property = result->begin( ); property not_eq result->end( ); )
+        {
+            if ( fields.count( property->first ) == 0 )
+            {
+                result->erase( property++ );
+            }
+            else
+            {
+                ++property;
+            }
+        }
+        
+        if ( result->empty( ) )
+        {
+            result = results.erase( result );
+        }
+        else
+        {
+            result++;
+        }
+    }
+    
+    return results;
 }
 
 void STLRepository::filter( Resources& resources, const multimap< string, Bytes >& inclusive_filters, const multimap< string, Bytes >& exclusive_filters ) const

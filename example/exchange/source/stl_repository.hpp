@@ -92,6 +92,8 @@ class STLRepository final : public restq::Repository
         //Functionality
         void include( const restq::Bytes& relationship, restq::Resources& values );
         
+        restq::Resources fields( const restq::Resources& values, const std::shared_ptr< restq::Query >& query );
+        
         void filter( restq::Resources& resources, const std::multimap< std::string, restq::Bytes >& inclusive_filters, const std::multimap< std::string, restq::Bytes >& exclusive_filters ) const;
         
         //Getters

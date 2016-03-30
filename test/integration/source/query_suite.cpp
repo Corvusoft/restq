@@ -4,6 +4,7 @@
 
 //System Includes
 #include <map>
+#include <set>
 #include <vector>
 #include <memory>
 #include <string>
@@ -21,6 +22,7 @@
 #include <catch.hpp>
 
 //System Namespaces
+using std::set;
 using std::pair;
 using std::vector;
 using std::string;
@@ -66,9 +68,13 @@ TEST_CASE( "validate session constructed instance values", "[query]" )
     const auto exclusive_filters = multimap< string, Bytes > { { "name", Bytes( { '4', '3', '2', '1' } ) } };
     session->set( "exclusive_filters", exclusive_filters );
     
+    const auto fields = set< string > { "asdf", "949449" };
+    session->set( "fields", fields );
+    
     const Query query( session );
     
     REQUIRE( query.get_keys( ) == keys );
+    REQUIRE( query.get_fields( ) == fields );
     REQUIRE( query.has_resultset( ) == false );
     REQUIRE( query.get_resultset( ).empty( ) );
     REQUIRE( query.get_session( ) not_eq nullptr );

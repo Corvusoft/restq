@@ -470,6 +470,7 @@ namespace restq
                 query->set_limit( paging.second );
                 
                 query->set_keys( session->get( "keys" ) );
+                query->set_fields( session->get( "fields" ) );
                 
                 query->set_inclusive_filters( session->get( "inclusive_filters" ) );
                 query->set_exclusive_filters( session->get( "exclusive_filters" ) );
@@ -606,6 +607,7 @@ namespace restq
                 query->set_limit( paging.second );
                 
                 query->set_keys( session->get( "keys" ) );
+                query->set_fields( session->get( "fields" ) );
                 
                 query->set_inclusive_filters( session->get( "inclusive_filters" ) );
                 query->set_exclusive_filters( session->get( "exclusive_filters" ) );
@@ -980,6 +982,7 @@ namespace restq
             query->set_limit( paging.second );
             
             query->set_keys( session->get( "keys" ) );
+            query->set_fields( session->get( "fields" ) );
             
             query->set_inclusive_filters( session->get( "inclusive_filters" ) );
             query->set_exclusive_filters( session->get( "exclusive_filters" ) );
