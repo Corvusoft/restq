@@ -58,6 +58,8 @@ namespace restq
                 
                 static void request_entity_too_large( const std::string& message, const std::shared_ptr< Session >& session );
                 
+                static void http_version_not_supported( const std::string& message, const std::shared_ptr< Session >& session );
+                
                 static void internal_server_error( const int status, const std::exception& error, const std::shared_ptr< Session > session );
                 
                 static void find_and_invoke_for( const int status, const std::string& message, const std::shared_ptr< Session >& session );

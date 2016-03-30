@@ -12,6 +12,7 @@
 #include "corvusoft/restq/string.hpp"
 #include "corvusoft/restq/session.hpp"
 #include "corvusoft/restq/formatter.hpp"
+#include "corvusoft/restq/status_code.hpp"
 #include "corvusoft/restq/detail/rule/date.hpp"
 #include "corvusoft/restq/detail/rule/content_md5.hpp"
 #include "corvusoft/restq/detail/rule/content_type.hpp"
@@ -20,7 +21,6 @@
 #include "corvusoft/restq/detail/rule/content_language.hpp"
 
 //External Includes
-#include <corvusoft/restbed/status_code.hpp>
 
 //System Namespaces
 using std::list;
@@ -34,17 +34,6 @@ using std::runtime_error;
 //Project Namespaces
 
 //External Namespaces
-using restbed::CONFLICT;
-using restbed::NOT_FOUND;
-using restbed::BAD_REQUEST;
-using restbed::NOT_ACCEPTABLE;
-using restbed::NOT_IMPLEMENTED;
-using restbed::LENGTH_REQUIRED;
-using restbed::EXPECTATION_FAILED;
-using restbed::METHOD_NOT_ALLOWED;
-using restbed::SERVICE_UNAVAILABLE;
-using restbed::UNSUPPORTED_MEDIA_TYPE;
-using restbed::REQUEST_ENTITY_TOO_LARGE;
 
 namespace restq
 {
@@ -370,6 +359,32 @@ namespace restq
             
             const bool echo = session->get( "echo" );
             ( echo ) ? session->close( REQUEST_ENTITY_TOO_LARGE, body, headers ) : session->close( REQUEST_ENTITY_TOO_LARGE, headers );
+        }
+        
+        void ErrorHandlerImpl::http_version_not_supported( const string& message, const shared_ptr< Session >& session )
+        {
+            const list< multimap< string, Bytes > > values { {
+                    { "type", String::to_bytes( "error" ) },
+                    { "code", String::to_bytes( "50005" ) },
+                    { "status", String::to_bytes( "505" ) },
+                    { "message", String::to_bytes( message ) },
+                    { "title", String::to_bytes(  "HTTP Version Not Supported" ) }
+                } };
+                
+            const shared_ptr< Formatter > composer = session->get( "accept-format" );
+            const auto body = composer->compose( values, session->get( "style" ) );
+            
+            const multimap< string, string > headers
+            {
+                { "Date", Date::make( ) },
+                { "Content-MD5", ContentMD5::make( body ) },
+                { "Content-Language", ContentLanguage::make( ) },
+                { "Content-Type", ContentType::make( session ) },
+                { "Content-Length", ContentLength::make( body ) }
+            };
+            
+            const bool echo = session->get( "echo" );
+            ( echo ) ? session->close( HTTP_VERSION_NOT_SUPPORTED, body, headers ) : session->close( HTTP_VERSION_NOT_SUPPORTED, headers );
         }
         
         void ErrorHandlerImpl::internal_server_error( const int status, const exception& error, const shared_ptr< Session > session )

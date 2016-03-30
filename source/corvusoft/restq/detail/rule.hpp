@@ -14,6 +14,7 @@
 #include "corvusoft/restq/detail/rule/expect.hpp"
 #include "corvusoft/restq/detail/rule/accept.hpp"
 #include "corvusoft/restq/detail/rule/fields.hpp"
+#include "corvusoft/restq/detail/rule/version.hpp"
 #include "corvusoft/restq/detail/rule/filters.hpp"
 #include "corvusoft/restq/detail/rule/location.hpp"
 #include "corvusoft/restq/detail/rule/content_md5.hpp"

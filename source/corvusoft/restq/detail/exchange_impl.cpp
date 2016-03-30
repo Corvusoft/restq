@@ -222,6 +222,7 @@ namespace restq
             m_service->add_rule( make_shared< AcceptCharset >( )    ,  2 );
             m_service->add_rule( make_shared< AcceptEncoding >( )   ,  3 );
             m_service->add_rule( make_shared< AcceptLanguage >( )   ,  3 );
+            m_service->add_rule( make_shared< Version >( )           , 4 );
             m_service->add_rule( make_shared< Host >( )             ,  4 );
             m_service->add_rule( make_shared< Expect >( )           ,  4 );
             m_service->add_rule( make_shared< ContentLength >( )    ,  5 );
