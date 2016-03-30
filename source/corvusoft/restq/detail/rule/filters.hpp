@@ -16,10 +16,10 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/request.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
 using std::set;
@@ -32,7 +32,6 @@ using std::shared_ptr;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Request;
 
 namespace restq
 {

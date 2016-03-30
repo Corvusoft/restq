@@ -16,13 +16,13 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/request.hpp>
 #include <corvusoft/restq/detail/error_handler_impl.hpp>
 
 //External Includes
 #include <kashmir/uuid_gen.h>
 #include <kashmir/system/devrand.h>
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
 using std::map;
@@ -38,7 +38,6 @@ using std::stringstream;
 
 //External Namespaces
 using restbed::Rule;
-using restbed::Request;
 
 namespace restq
 {

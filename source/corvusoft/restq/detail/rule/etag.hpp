@@ -15,12 +15,12 @@
 #include <corvusoft/restq/byte.hpp>
 #include <corvusoft/restq/string.hpp>
 #include <corvusoft/restq/session.hpp>
+#include <corvusoft/restq/request.hpp>
 #include <corvusoft/restq/resource.hpp>
 #include <corvusoft/restq/detail/rule/date.hpp>
 
 //External Includes
 #include <corvusoft/restbed/rule.hpp>
-#include <corvusoft/restbed/request.hpp>
 
 //System Namespaces
 using std::hash;
