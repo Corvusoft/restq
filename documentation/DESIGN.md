@@ -1,5 +1,9 @@
 ##Design Overview
 
+Unless otherwise specified all primary data-types originate within the Standard Template Library (STL). Including but not limited to string, map, list, multimap, set, any, and friends.
+
+This document does not concern itself with API specifics and primarly focuses on architectrual desicions made during development, see API.md for contract detail.
+
 ### Byte/Bytes
 
 Byte represents an unsigned 16 bit data-type, with Bytes providing container functionality with STL std::vector semantics. 
@@ -70,6 +74,23 @@ Enumeration hinting at the level of priority to a particular log entry.
 | WARNING      |
 | SECURITY     |
 +--------------+
+```
+
+### String
+
+Utiltiy class of static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here convenience and clarity.
+```
++--------------------------------------+
+|              <<static>>              |
+|                String                |
++--------------------------------------+
+| + is_integer(string)          bool   |
+| + is_boolean(string)          bool   |
+| + is_fraction(string)         bool   |
+| + trim( string,string)        string |
+| + trim_leading(string,string) string |
+| + trim_lagging(string,string) string |
++--------------------------------------+
 ```
 
 
