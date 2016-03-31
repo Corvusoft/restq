@@ -2,7 +2,17 @@
 
 Unless otherwise specified all primary data-types originate within the Standard Template Library (STL). Including but not limited to string, map, list, multimap, set, any, and friends.
 
-This document does not concern itself with API specifics and primarly focuses on architectrual desicions made during development, see API.md for contract detail.
+This document is primarily to aid communicating core architectural decisions and for this reason alone accuracy has suffered. It does not concern itself with API specifics and primarly focuses on architectrual desicions made during development, see API.md for contract detail.
+
+pointers, references, etc.. are ommited.
+
+Mention exchange State composition, private class pattern, etc...
+
+Explain difference between RESTful resources and the resource data-type.
+
+## RESTful Resources
+
+## Class Diagrams
 
 ### Byte/Bytes
 
@@ -92,6 +102,71 @@ Utiltiy class of static scope offering a common suite of string manipulation rou
 | + trim_lagging(string,string) string |
 +--------------------------------------+
 ```
+
+### Session
+
+This is my session description.
+
+```
+             +---------------+
+             |   <<class>>   | 1
+     1 +-----@    Session    @------+
+       |     +---------------+      |
+       |                            |
+     1 |                            | 1
++------+-------+             +------+-------+
+|   <<class>>  |             |   <<class>>  |
+|    Request   |             |   Response   |
++--------------+             +--------------+
+```
+
+### Request
+
+
+
+### Response
+
+
+### Query
+
+Represents a data store enquire for creating, reading, updating, and deleting resources.  This class is an implement of the Parameter Object pattern to increase code readability and extensiablilty during Repository interaction.
+
+```
+ +------------------------------------------------------------------------+
+ |                                <<class>>                               |
+ |                                  Query                                 |
+ +------------------------------------------------------------------------+
+ | + clear(void)                                   void                   |
+ | + has_failed(void)                              boolean                |
+ | + has_fields(void)                              boolean                |
+ | + has_resultset(void)                           boolean                |
+ | + get_include(void)                             Bytes                  |
+ | + get_error_code(void)                          integer                |
+ | + get_index(void)                               unsigned integer       |
+ | + get_limit(void)                               unsigned integer       |
+ | + get_resultset(void)                           Resources              |
+ | + get_fields(void)                              set<string>            |
+ | + get_keys(void)                                vector<string>         |
+ | + get_session(void)                             Session                |
+ | + get_inclusive_filters(void)                   multimap<string,Bytes> |
+ | + get_exclusive_filters(void)                   multimap<string,Bytes> |
+ | + set_error_code(integer)                       void                   |
+ | + set_index(unsigned integer)                   void                   |
+ | + set_limit(unsigned integer)                   void                   |
+ | + set_resultset(Resources)                      void                   |
+ | + set_include(Bytes)                            void                   |
+ | + set_key(Bytes)                                void                   |
+ | + set_key(string)                               void                   |
+ | + set_keys(vector<string>)                      void                   |
+ | + set_fields(set<string>)                       void                   |
+ | + set_session(Session)                          void                   |
+ | + set_inclusive_filter(string,Bytes)            void                   |
+ | + set_inclusive_filters(multimap<string,Bytes>) void                   |
+ | + set_exclusive_filter(string,Bytes)            void                   |
+ | + set_exclusive_filters(multimap<string,Bytes>) void                   |
+ +------------------------------------------------------------------------+
+```
+
 ### Formatter
 
 Interface detailing the required contract for formatter extensions. The concept of a format within RestQ covers JSON, XML, YAML, etc...
@@ -182,28 +257,7 @@ This my exchange description.
  +----------------------------------------+  +-----------------------------------------+  +------------------------------------------+
 ```
 
-### Session
 
-This is my session description.
-
-```
-             +---------------+
-             |   <<class>>   | 1
-     1 +-----@    Session    @------+
-       |     +---------------+      |
-       |                            |
-     1 |                            | 1
-+------+-------+             +------+-------+
-|   <<class>>  |             |   <<class>>  |
-|    Request   |             |   Response   |
-+--------------+             +--------------+
-```
-
-### Request
-
-
-
-### Response
 
 
 ## Sequence Overview
