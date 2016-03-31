@@ -399,12 +399,12 @@ This my exchange description.
 
 ## Sequence Diagrams
 
-### Producer/Consumer Interaction
+### Exchange Setup, Message Dispatch and Successful Reciept.
 
-The following diagram details the sequence of actions for configuring an exchange, message dispatch and reciept.
+The following diagram details the sequence of events for configuring an exchange, message dispatch and successful reciept.
 
 ```
-[producer]            [consumer]                [exchange]              [repository]
+[producer]            [consumer]                [exchange]               [repository]
     |                     '                          |                         |
     |                     '                          |                         |          
     |  create (POST /queues) queue.                  |                         |
@@ -443,6 +443,7 @@ The following diagram details the sequence of actions for configuring an exchang
     |                     |                          |<------------------------|
     |                     |                          |                         |
 ```
+
 ## Further Reading
 
 RFC listings
