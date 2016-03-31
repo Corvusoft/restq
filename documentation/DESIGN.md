@@ -92,7 +92,57 @@ Utiltiy class of static scope offering a common suite of string manipulation rou
 | + trim_lagging(string,string) string |
 +--------------------------------------+
 ```
+### Formatter
 
+Interface detailing the required contract for formatter extensions. The concept of a format within RestQ covers JSON, XML, YAML, etc...
+
+```
+ +------------------+---------------------+  
+ |            <<interface>>               |
+ |              Formatter                 | 
+ +----------------------------------------+ 
+ | + parse(Bytes)               Resources |
+ | + try_parse(Bytes,Resources) bool      |
+ | + compose(Resources,bool)    Bytes     |
+ | + get_mime_type(void)        string    |
+ | + set_logger(Logger)         void      |
+ +----------------------------------------+
+```
+
+### Repository
+
+Interface detailing the required contract for repository extensions.
+
+```
+ +-----------------------------------------+
+ |             <<interface>>               |
+ |               Repository                | 
+ +-----------------------------------------+
+ | + stop(void)                       void |
+ | + start(Settings)                  void |
+ | + create(Resources,Query,Callback) void |
+ | + read(Query,Callback)             void |
+ | + update(Resources,Query,Callback) void |
+ | + destroy(Query,Callback)          void |
+ | + set_logger(Logger)               void |
+ +-----------------------------------------+
+```
+
+### Logger
+
+Interface detailing the required contract for logger extensions.
+
+```
+ +------------------------------------------+
+ |             <<interface>>                |
+ |                Logger                    |
+ +------------------------------------------+
+ | + stop(void)                        void |
+ | + start(Settings)                   void |
+ | + log(LogLevel,string)              void |
+ | + log_if(condition,LogLevel,string) void |
+ +------------------------------------------+
+```
 
 ### Exchange
 
