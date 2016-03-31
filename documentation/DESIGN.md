@@ -242,8 +242,9 @@ Interface detailing the required contract for Formatter extensions. The concept 
 
 ### Repository
 
-Interface detailing the required contract for repository extensions.
+Interface detailing the required contract for repository extensions.  A repository represents a data-store for the long term persistence of dynamically created resources via the public network API (see above).
 
+It is encouraged that any implementation of this interface be of an asynchronous nature to reduce thread locking within the exchange run-loop.  This can be achieved with both MySQL and PostgreSQL products.
 ```
  +-----------------------------------------+
  |             <<interface>>               |
