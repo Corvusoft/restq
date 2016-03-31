@@ -1,7 +1,5 @@
 ##Design Overview
 
-### start with data types then progress to more complicated areas. LogLevel, , Resource, Resources, Callback.
-
 ### Byte/Bytes
 
 Byte represents an unsigned 16 bit data-type, with Bytes providing container functionality with STL std::vector semantics. 
@@ -28,7 +26,7 @@ Byte represents an unsigned 16 bit data-type, with Bytes providing container fun
 
 Resource represents an associative array allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources.  Container functionality is provided via the Resources container having STL std::list semantics. 
 ```
-+------- ---------------+
++-----------------------+
 |      <<typedef>>      |
 |       Resources       |
 +-----------------------+
@@ -44,6 +42,36 @@ Resource represents an associative array allowing multiple duplicate key-value p
 | multimap<string,Byte> |
 +-----------------------+
 ```
+
+### Callback
+
+Represents a functor with variable parameters and return; this is used to help illustrate the design without introducing unnecassary complexity.
+```
++-----------------+
+|    <<typedef>>  |
+|     Callback    |
++-----------------+
+|  std::function  |
++-----------------+
+```
+
+### LogLevel
+
+Enumeration hinting at the level of priority to a particular log entry.
+```
++--------------+
+|   <<enum>>   |
+|   LogLevel   |
++--------------+
+| INFO         |
+| DEBUG        |
+| FATAL        |
+| ERROR        |
+| WARNING      |
+| SECURITY     |
++--------------+
+```
+
 
 ### Exchange
 
