@@ -399,6 +399,30 @@ This my exchange description.
 
 ## Sequence Diagrams
 
+### Request Entity Processing.
+
+```
+[producer]                        [exchange]            [formatter]         [repository]
+    |                                  |                     '                    | 
+    | Create (POST) resource.          |                     '                    |
+    |--------------------------------->|                     '                    |
+    |                               +--|                     '                    |
+    | Find formatter (Content-Type).|  |                     '                    |
+    |                               +->|     Parse bytes.    |                    |
+    |                                  |-------------------->|                    |
+    |                                  |     Resources.      |                    | 
+    |                                  |<--------------------|                    |
+    |                               +--|                     |                    |
+    |    Validate & setup resource. |  |                     '                    |
+    |                               +->|                     '                    |
+    |                                  |----------------------------------------->|
+    |                                  |          Persist resource.               |
+    |     201 create status.           |<-----------------------------------------|
+    |<---------------------------------|                     '                    | 
+    |                                  |                     '                    | 
+    |                                  |                     '                    | 
+```
+
 ### Exchange Setup, Message Dispatch and Successful Reciept.
 
 The following diagram details the sequence of events for configuring an exchange, message dispatch and successful reciept.
