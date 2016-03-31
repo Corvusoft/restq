@@ -399,31 +399,52 @@ This my exchange description.
 
 ## Sequence Diagrams
 
-### Request Entity Processing.
+### Resource Creation
 
 ```
-[producer]                        [exchange]            [formatter]         [repository]
-    |                                  |                     '                    | 
-    | Create (POST) resource.          |                     '                    |
-    |--------------------------------->|                     '                    |
-    |                               +--|                     '                    |
-    | Find formatter (Content-Type).|  |                     '                    |
-    |                               +->|     Parse bytes.    |                    |
-    |                                  |-------------------->|                    |
-    |                                  |     Resources.      |                    | 
-    |                                  |<--------------------|                    |
-    |                               +--|                     |                    |
-    |    Validate & setup resource. |  |                     '                    |
-    |                               +->|                     '                    |
-    |                                  |----------------------------------------->|
-    |                                  |          Persist resource.               |
-    |     201 create status.           |<-----------------------------------------|
-    |<---------------------------------|                     '                    | 
-    |                                  |                     '                    | 
-    |                                  |                     '                    | 
+ [client]                                [exchange]            [formatter]         [repository]
+    |                                         |                     '                    | 
+    | Create (POST) resource.                 |                     '                    |
+    |---------------------------------------->|                     '                    |
+    |                                      +--|                     '                    |
+    | Find formatter (Content-Type header).|  |                     '                    |
+    |                                      +->|     Parse bytes.    |                    |
+    |                                         |-------------------->|                    |
+    |                                         |     Resources.      |                    | 
+    |                                         |<--------------------|                    |
+    |                                      +--|                     |                    |
+    |           Validate & setup resource. |  |                     '                    |
+    |                                      +->|                     '                    |
+    |                                         |----------------------------------------->|
+    |                                         |          Persist resource.               |
+    |     201 create status.                  |<-----------------------------------------|
+    |<----------------------------------------|                     '                    | 
+    |                                         |                     '                    | 
+    |                                         |                     '                    | 
 ```
 
-### Exchange Setup, Message Dispatch and Successful Reciept.
+### Resource Retrieval
+
+```
+ [client]                             [exchange]            [formatter]         [repository]
+    |                                      |                     '                    | 
+    | Read (GET) resource.                 |                     '                    |
+    |------------------------------------->|                     '                    |
+    |                                      |----------------------------------------->|
+    |                                      |          Select resource(s).             |
+    |                                      |<-----------------------------------------|
+    |                                   +--|                     '                    |
+    | Find formatter (Accept header).   |  |                     '                    |
+    |                                   +->|     Parse bytes.    |                    |
+    |                                      |-------------------->|                    |
+    |                                      |     Resources.      |                    | 
+    |                                      |<--------------------|                    |
+    |     200 OK status.                   |                     '                    |
+    |<-------------------------------------|                     '                    | 
+    |                                      |                     '                    | 
+```
+
+### Exchange Setup, Message Dispatch and Successful Reciept
 
 The following diagram details the sequence of events for configuring an exchange, message dispatch and successful reciept.
 
