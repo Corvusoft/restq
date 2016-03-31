@@ -18,10 +18,18 @@ Relies heavily on Restbed for alot of data structures and will not redocument th
 | --------------- | ------------- |
 | Consumer        |   |
 | Producer        |     |
+| Exchange        |  |
 | Subscription    |   |
 | Queue           |     |
 | Message         |             |
 | Resource        |             |
+| Formatter       |             |
+| Repository      |             |
+| Logger          |             |
+| Encoder         |             |
+| URI         |             |
+| UUID         |             |
+| Key         |             |
 
 ## Network API
 
@@ -391,8 +399,48 @@ This my exchange description.
 
 ## Sequence Diagrams
 
-Highlevel sequence diagram.
+### Producer/Consumer Interaction
 
+The following diagram details the sequence of actions for configuring an exchange, message dispatch and reciept.
+
+[producer]            [consumer]                [exchange]              [repository]
+    |                     '                          |                         |
+    |                     '                          |                         |          
+    |  create (POST /queues) queue.                  |                         |
+    |----------------------------------------------->|                         |
+    |                     '                          |------------------------>|
+    |                     '                          | Persist queue.          |    
+    |  201 created status and key (uuid).            |<------------------------|
+    |<-----------------------------------------------|                         |
+    |                     '                          |                         |
+    |                     |                          |                         |
+    |  create (POST /subscriptions) subscription.    |                         |
+    |                     |------------------------->|                         |
+    |                     |                          |------------------------>|
+    |                     |                          | Persist subscription.   |    
+    |             201 created status and key (uuid). |<------------------------|
+    |                     |<-------------------------|                         |
+    |                     |                          |                         |
+    |  create (POST /queue/key/messages) message.    |                         |
+    |----------------------------------------------->|                         |
+    |                     |                          |------------------------>|
+    |                     |                          | Read queue(s).          |  
+    |                     |                          |<------------------------|
+    |                     |                      +---|                         |
+    |          Test queue limits not breached    |   |                         |
+    |                     |                      +-->|                         |
+    |  202 accepted status and key (uuid).           |                         |
+    |<-----------------------------------------------|                         |
+    |                     |                          |------------------------>|
+    |                     |                          | Read subscription(s).   |    
+    |                     | Dispatch message (POST). |<------------------------|    
+    |                     |<-------------------------|                         |
+    |                     | 202 accepted status.     |                         |
+    |                     |------------------------->|                         |
+    |                     |                          |------------------------>|
+    |                     |                          | Delete message.         |  
+    |                     |                          |<------------------------|
+    |                     |                          |                         |
 ## Further Reading
 
 RFC listings
