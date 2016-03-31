@@ -10,7 +10,17 @@ Mention exchange State composition, private class pattern, etc...
 
 Explain difference between RESTful resources and the resource data-type.
 
-## RESTful Resources
+## Network API
+
+| Path                  |  Character  | Methods                          |
+| --------------------- | ----------- | -------------------------------- |
+| /queues               | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
+| /queues/{uuid}        | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
+| /subscriptions        | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
+| /subscriptions/{uuid} | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
+| /messages             | Collection  | POST, OPTIONS                    |
+| /messages/{uuid}      | Resource    | OPTIONS                          |
+| /*                    | Resource    | OPTIONS                          |
 
 ## Class Diagrams
 
@@ -260,6 +270,6 @@ This my exchange description.
 
 
 
-## Sequence Overview
+## Sequence Diagrams
 
 Highlevel sequence diagram.
