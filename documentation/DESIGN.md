@@ -403,6 +403,7 @@ This my exchange description.
 
 The following diagram details the sequence of actions for configuring an exchange, message dispatch and reciept.
 
+```
 [producer]            [consumer]                [exchange]              [repository]
     |                     '                          |                         |
     |                     '                          |                         |          
@@ -441,6 +442,7 @@ The following diagram details the sequence of actions for configuring an exchang
     |                     |                          | Delete message.         |  
     |                     |                          |<------------------------|
     |                     |                          |                         |
+```
 ## Further Reading
 
 RFC listings
