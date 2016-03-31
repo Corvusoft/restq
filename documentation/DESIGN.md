@@ -12,6 +12,17 @@ Explain difference between RESTful resources and the resource data-type.
 
 Relies heavily on Restbed for alot of data structures and will not redocument those cases here for convenience.
 
+## Terminology
+
+| Term            |  Definition   |
+| --------------- | ------------- |
+| Consumer        |   |
+| Producer        |     |
+| Subscription    |   |
+| Queue           |     |
+| Message         |             |
+| Resource        |             |
+
 ## Network API
 
 | Path                  |  Character  | Methods                          |
@@ -98,9 +109,21 @@ Enumeration hinting at the level of priority to a particular log entry.
 +--------------+
 ```
 
+### StatusCode
+
+Enumeration of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1). 
+```
++---------------------------+
+|         <<enum>>          |
+|        StatusCode         |
++---------------------------+
+| See RFC 7231 for details. |
++---------------------------+
+```
+
 ### String
 
-Utiltiy class of static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here convenience and clarity.
+Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here convenience and clarity.
 ```
 +---------------------------------------+
 |              <<static>>               |
@@ -223,6 +246,58 @@ Represents a data store enquire for creating, reading, updating, and/or deleting
  +------------------------------------------------------------------------+
 ```
 
+### SSLSettings
+
+Represents Secure Socket Layer configuration for a exchange instance.
+
+```
+ +---------------------------------------+ 
+ |               <<class>>               | 
+ |              SSLSettings              |
+ +---------------------------------------+
+ | See restbed::SSLSettings for details. |
+ +---------------------------------------+
+```
+
+### Settings
+
+Represents the primary point of exchange, repository, and logger configuration.  The mass majority of its implementation is inherited from restbed::Settings with a few RestQ specific methods included and alterations of scope as detailed below.
+```
+ +----------------------------------------------------------------------------------+
+ |                                     <<class>>                                    |
+ |                                      Settings                                    |
+ +----------------------------------------------------------------------------------+
+ | + get_default_queue_message_limit(void)                  unsigned integer        |
+ | + get_default_queue_message_size_limit(void)             unsigned integer        |
+ | + get_default_queue_subscription_limit(void)             unsigned integer        |
+ | + set_default_queue_message_limit(unsigned integer)      void                    |
+ | + set_default_queue_message_size_limit(unsigned integer) void                    |
+ | + set_default_queue_subscription_limit(unsigned integer) void                    | 
+ | - get_case_insensitive_uris(void)                        boolean                 |
+ | - get_property(string)                                   string                  |
+ | - get_properties(void)                                   map<string,string>      |
+ | - get_status_message(integer)                            string                  |
+ | - get_status_messages(void)                              map<int,string>         |
+ | - get_default_headers(void)                              multimap<string,string> |
+ | - set_case_insensitive_uris(boolean)                     void                    |
+ | - set_property(string,string)                            void                    |
+ | - set_properties(map<string,string>)                     void                    |
+ | - set_status_message(integer,string)                     void                    |
+ | - set_status_messages(map<integer,string>)               void                    |
+ | - set_default_header(string,string)                      void                    |
+ | - set_default_headers(multimap<string,string>)           void                    |
+ +-----------------------------------------@----------------------------------------+
+                                           |
+                                           |
+                                           |
+                       +-------------------+-------------------+ 
+                       |               <<class>>               | 
+                       |              SSLSettings              |
+                       +---------------------------------------+
+                       | See restbed::SSLSettings for details. |
+                       +---------------------------------------+                        
+```
+
 ### Formatter
 
 Interface detailing the required contract for Formatter extensions. The concept of a format within RestQ is that of a document structure i.e JSON, XML, YAML, HTML.
@@ -233,8 +308,8 @@ Interface detailing the required contract for Formatter extensions. The concept 
  |              Formatter                 | 
  +----------------------------------------+ 
  | + parse(Bytes)               Resources |
- | + try_parse(Bytes,Resources) bool      |
- | + compose(Resources,bool)    Bytes     |
+ | + try_parse(Bytes,Resources) boolean   |
+ | + compose(Resources,boolean) Bytes     |
  | + get_mime_type(void)        string    |
  | + set_logger(Logger)         void      |
  +----------------------------------------+
