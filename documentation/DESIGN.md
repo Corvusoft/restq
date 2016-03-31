@@ -10,6 +10,8 @@ Mention exchange State composition, private class pattern, etc...
 
 Explain difference between RESTful resources and the resource data-type.
 
+Relies heavily on Restbed for alot of data structures and will not redocument those cases here for convenience.
+
 ## Network API
 
 | Path                  |  Character  | Methods                          |
@@ -100,46 +102,90 @@ Enumeration hinting at the level of priority to a particular log entry.
 
 Utiltiy class of static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here convenience and clarity.
 ```
-+--------------------------------------+
-|              <<static>>              |
-|                String                |
-+--------------------------------------+
-| + is_integer(string)          bool   |
-| + is_boolean(string)          bool   |
-| + is_fraction(string)         bool   |
-| + trim( string,string)        string |
-| + trim_leading(string,string) string |
-| + trim_lagging(string,string) string |
-+--------------------------------------+
++---------------------------------------+
+|              <<static>>               |
+|                String                 |
++---------------------------------------+
+| + is_integer(string)          boolean |
+| + is_boolean(string)          boolean |
+| + is_fraction(string)         boolean |
+| + trim( string,string)        string  |
+| + trim_leading(string,string) string  |
+| + trim_lagging(string,string) string  |
++---------------------------------------+
 ```
 
-### Session
+### URI
 
-This is my session description.
+Represents a Uniform Resource Identifier as specificed in RFC 3986.
+
+> A generic URI is of the form:
+>
+> scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
 
 ```
-             +---------------+
-             |   <<class>>   | 1
-     1 +-----@    Session    @------+
-       |     +---------------+      |
-       |                            |
-     1 |                            | 1
-+------+-------+             +------+-------+
-|   <<class>>  |             |   <<class>>  |
-|    Request   |             |   Response   |
-+--------------+             +--------------+
+ +------------------------------------+ 
+ |             <<class>>              | 
+ |                Uri                 |
+ +------------------------------------+
+ | See restbed::Uri for details.      |
+ +------------------------------------+
 ```
 
 ### Request
 
+Represents a HTTP request with additional helper methods for minipulating data, and code readability.
 
+```
+ +------------------------------------+ 
+ |             <<class>>              | 
+ |              Response              |
+ +------------------------------------+
+ | See restbed::Response for details. |
+ +------------------------------------+
+```
 
 ### Response
 
+Represents a HTTP response with additional helper methods for minipulating data, and code readability.
+
+```
+ +------------------------------------+ 
+ |             <<class>>              | 
+ |              Response              |
+ +------------------------------------+
+ | See restbed::Response for details. |
+ +------------------------------------+
+```
+
+### Session
+
+Represents a conversation between a producer and the exchange. Internally this class holds the network state and exposes public funcitionaly to interact with said state and the exchanges runloop for asynchronous data acquisation and/or sleep states, Only Authenticators and Repository developers require access to this functionality.
+
+```
+                     +-----------------------------------+
+                     |             <<class>>             |
+                     |              Session              |
+                     +-----------------------------------+
+                     | See restbed::Session for details. |
+                     +-----------------@-----------------+
+                                     1 | 1
+                                       |
+                    +------------------+-------------------+
+                    |                                      |
+                    |                                      | 
+                  1 |                                      | 1
+ +------------------+----------------+  +------------------+-----------------+ 
+ |             <<class>>             |  |             <<class>>              | 
+ |              Request              |  |              Response              |
+ +-----------------------------------+  +------------------------------------+
+ | See restbed::Request for details. |  | See restbed::Response for details. |
+ +-----------------------------------+  +------------------------------------+
+```
 
 ### Query
 
-Represents a data store enquire for creating, reading, updating, and deleting resources.  This class is an implement of the Parameter Object pattern to increase code readability and extensiablilty during Repository interaction.
+Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the Parameter Object pattern, to increase code readability and extensiablilty during Repository interaction.
 
 ```
  +------------------------------------------------------------------------+
@@ -179,7 +225,7 @@ Represents a data store enquire for creating, reading, updating, and deleting re
 
 ### Formatter
 
-Interface detailing the required contract for formatter extensions. The concept of a format within RestQ covers JSON, XML, YAML, etc...
+Interface detailing the required contract for Formatter extensions. The concept of a format within RestQ is that of a document structure i.e JSON, XML, YAML, HTML.
 
 ```
  +------------------+---------------------+  
@@ -215,7 +261,7 @@ Interface detailing the required contract for repository extensions.
 
 ### Logger
 
-Interface detailing the required contract for logger extensions.
+Interface detailing the required contract for logger extensions.  No default logger is supplied with the code base and it is the responsibility of third-party developers to implement the desired characterics.
 
 ```
  +------------------------------------------+
@@ -267,9 +313,10 @@ This my exchange description.
  +----------------------------------------+  +-----------------------------------------+  +------------------------------------------+
 ```
 
-
-
-
 ## Sequence Diagrams
 
 Highlevel sequence diagram.
+
+## Further Reading
+
+RFC listings
