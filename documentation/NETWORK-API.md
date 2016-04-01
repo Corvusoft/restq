@@ -56,7 +56,7 @@ The HTTP Request body of a Message is not interpreted by the exchange and is for
 
 ### Asterisk Resource
 
-This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, and number of workers (threads).
+This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, and Threads via HTTP headers CPU, Memory, and Workers respectively.
 
 ```
 > OPTIONS /* HTTP/1.1
