@@ -554,6 +554,8 @@ Message state structures can hold one of the following conditions.
 | dispatched |  Message has been accepted by the consumer.                |
 | rejected   |  Message was rejected by the consumer.                     |
 
+A message and its associated states are not purged from the exchange until all state entites have recorded a dispatched or rejected condition.
+
 ```
 [producer]            [consumer]                [exchange]               [repository]
     |                     '                          |                         |
