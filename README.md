@@ -2,7 +2,7 @@
 
 ----------
 
-HTTP message broker enabling software solutions to decouple, connect and scale. Designed to accommodate guaranteed delivery, asynchronous processing, non-blocking operations, push notifications, worker queues, and many more enterprise patterns.
+HTTP message broker enabling software solutions to decouple, connect and scale. Designed to accommodate guaranteed delivery, asynchronous processing, non-blocking operations, push notifications, data discovery, worker queues, and many more enterprise patterns.
 
 ## Features
 
