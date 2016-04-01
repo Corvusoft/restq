@@ -531,6 +531,30 @@ The following diagram details the sequence of events for configuring an exchange
     |                     |                          |                         |
 ```
 
+### Message State
+
+When a new message is delivered to the exchange it must be persisted with a range of information regarding the current setup of the system. This approach avoids the situation of Queue/Subscription modifications before the exchange has the oppurtunity to dispatch a message; which if left unattend would produce erratic behaviour on behalf of the dispatch routine.
+
+To achieve this the exchange creates a single message record within the repository and then a collection of internal data-structures known as message states.  Each state records the message-key, queue, and subscription configuration.
+
+For example: A queue with 2x subscriptions will force the exchange to instantiate 2x state objects snap-shooting a subscription and associated queue configuration.
+
+While this approach duplicates data with respect to Queue and Subscription properties it has been deemed farless complicated and therefore prone to error than tracking changes between message creation and dispatch; disk is cheap.
+
+Message state structures can hold one of the following conditions.
+
+| Condition  |  Description                                               |
+| ---------- | ---------------------------------------------------------- |
+| pending    |  Message is awaiting delivery, that is exchange attention. |
+| inflight   |  Message is currently being processed by the exchange.     |    
+| dispatched |  Message has been accepted by the consumer.                |
+| rejected   |  Message was rejected by the consumer.                     |
+
+```
+[producer]            [consumer]                [exchange]               [repository]
+    |                     '                          |                         |
+```
+
 ## Further Reading
 
 RFC listings
