@@ -14,6 +14,10 @@ This document describes the available network endpoints for queue, subscription,
 | /messages/{uuid}      | Resource    | OPTIONS                          |
 | /*                    | Resource    | OPTIONS                          |
 
+## RESTful Resources
+
+All resources with the exception of Message may hold any number of generic properties presented in a supported resource document format (JSON, YAML, XML). These properties are persisted in the repository and then made available to the query parameter search functionality. 
+
 ### Queue Collection
 
 ### Queue Resource
@@ -49,3 +53,8 @@ This document describes the available network endpoints for queue, subscription,
 ### Message Resource
 
 ### Asterisk Resource
+
+## Query Parameter Support
+
+## HTTP Header Support
+
