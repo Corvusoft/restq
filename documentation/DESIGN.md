@@ -399,26 +399,26 @@ This my exchange description.
 ```
  [client]                                [exchange]            [formatter]         [repository]
     |                                         |                     '                    | 
-    | Create (POST) resource.                 |                     '                    |
+    | Create (POST) resource                  |                     '                    |
     |---------------------------------------->|                     '                    |
     |                                      +--|                     '                    |
-    | Find formatter (Content-Type header).|  |                     '                    |
-    |                                      +->|     Parse bytes.    |                    |
+    | Find formatter (Content-Type header) |  |                     '                    |
+    |                                      +->|     Parse bytes     |                    |
     |                                         |-------------------->|                    |
-    |                                         |     Resources.      |                    | 
+    |                                         |      Resources      |                    | 
     |                                         |<--------------------|                    |
     |                                      +--|                     |                    |
-    |           Validate & setup resource. |  |                     '                    |
+    |           Validate & setup resource  |  |                     '                    |
     |                                      +->|                     '                    |
     |                                         |----------------------------------------->|
-    |                                         |          Persist resource.               |
+    |                                         |          Create resource records         |
     |                                         |<-----------------------------------------|
     |                                      +--|                     '                    |
-    |      Find formatter (Accept header). |  |                     '                    |
-    |                                      +->|  Compose Resources. |                    |
+    |      Find formatter (Accept header)  |  |                     '                    |
+    |                                      +->|  Compose Document   |                    |
     |                                         |-------------------->|                    |
     |                                         |        Bytes        |                    | 
-    |           201 create status.            |<--------------------|                    | 
+    |           201 Created status            |<--------------------|                    | 
     |<----------------------------------------|                     '                    | 
     |                                         |                     '                    | 
 ```
@@ -428,16 +428,16 @@ This my exchange description.
 ```
  [client]                             [exchange]            [formatter]         [repository]
     |                                      |                     '                    | 
-    | Read (GET) resource.                 |                     '                    |
+    | Read (GET) resource                  |                     '                    |
     |------------------------------------->|                     '                    |
     |                                      |----------------------------------------->|
-    |                                      |          Select resource(s).             |
+    |                                      |          Read resource records           |
     |                                      |<-----------------------------------------|
     |                                   +--|                     '                    |
-    |   Find formatter (Accept header). |  |                     '                    |
-    |                                   +->|  Compose Resources. |                    |
+    |   Find formatter (Accept header)  |  |                     '                    |
+    |                                   +->|   Compose Document  |                    |
     |                                      |-------------------->|                    |
-    |                                      |        Bytes.       |                    | 
+    |                                      |        Bytes        |                    | 
     |           200 OK status.             |<--------------------|                    |
     |<-------------------------------------|                     '                    | 
     |                                      |                     '                    | 
@@ -448,26 +448,26 @@ This my exchange description.
 ```
  [client]                                [exchange]            [formatter]         [repository]
     |                                         |                     '                    | 
-    |        Update (PUT) resource.           |                     '                    |
+    |        Update (PUT) resource            |                     '                    |
     |---------------------------------------->|                     '                    |
     |                                      +--|                     '                    |
-    | Find formatter (Content-Type header).|  |                     '                    |
-    |                                      +->|     Parse bytes.    |                    |
+    | Find formatter (Content-Type header) |  |                     '                    |
+    |                                      +->|     Parse bytes     |                    |
     |                                         |-------------------->|                    |
-    |                                         |      Resources.     |                    | 
+    |                                         |      Resources      |                    | 
     |                                         |<--------------------|                    |
     |                                      +--|                     |                    |
-    |           Validate & setup resource. |  |                     '                    |
+    |           Validate & setup resource  |  |                     '                    |
     |                                      +->|                     '                    |
     |                                         |----------------------------------------->|
-    |                                         |              Persist resource.           |
+    |                                         |           Update resource records        |
     |                                         |<-----------------------------------------|
     |                                      +--|                     '                    |
-    |      Find formatter (Accept header). |  |                     '                    |
-    |                                      +->|  Compose Resources. |                    |
+    |      Find formatter (Accept header)  |  |                     '                    |
+    |                                      +->|   Compose Document  |                    |
     |                                         |-------------------->|                    |
     |                                         |        Bytes        |                    | 
-    |           201 create status.            |<--------------------|                    |
+    |           201 Created status.           |<--------------------|                    |
     |<----------------------------------------|                     '                    | 
     |                                         |                     '                    | 
 ```
@@ -481,48 +481,48 @@ This my exchange description.
 The following diagram details the sequence of events for configuring an exchange, message dispatch and successful reciept.
 
 ```
-[producer]            [consumer]                [exchange]               [repository]
-    |                     '                          |                         |
-    |                     '                          |                         |          
-    |          Create (POST /queues) queue.          |                         |
-    |----------------------------------------------->|                         |
-    |                     '                          |------------------------>|
-    |                     '                          |      Persist queue.     |    
-    |       201 created status and key (uuid).       |<------------------------|
-    |<-----------------------------------------------|                         |
-    |                     '                          |                         |
-    |                     |                          |                         |
-    |     Create (POST /subscriptions) subscription. |                         |
-    |                     |------------------------->|                         |
-    |                     |                          |------------------------>|
-    |                     |                          |  Persist subscription.  |    
-    |             201 created status and key (uuid). |<------------------------|
-    |                     |<-------------------------|                         |
-    |                     |                          |                         |
-    |  Create (POST /queue/key/messages) message.    |                         |
-    |----------------------------------------------->|                         |
-    |                     |                          |------------------------>|
-    |                     |                          |      Read queue(s).     |  
-    |                     |                          |<------------------------|
-    |                     |                      +---|                         |
-    |            Test queue limits not breached. |   |                         |
-    |                     |                      +-->|                         |
-    |                     |                          |                         |
-    |                     |                      +---|                         |
-    |                  Schedule message dispatch.|   |                         |
-    |                     |                      +-->|                         |
-    |      202 accepted status and key (uuid).       |                         |
-    |<-----------------------------------------------|                         |
-    |                     |                          |------------------------>|
-    |                     |                          |  Read subscription(s).  |    
-    |                     | Dispatch message (POST). |<------------------------|    
-    |                     |<-------------------------|                         |
-    |                     |   202 accepted status.   |                         |
-    |                     |------------------------->|                         |
-    |                     |                          |------------------------>|
-    |                     |                          |     Delete message.     |  
-    |                     |                          |<------------------------|
-    |                     |                          |                         |
+[producer]            [consumer]                [exchange]                  [repository]
+    |                     '                          |                            |
+    |                     '                          |                            |          
+    |          Create (POST /queues) queue           |                            |
+    |----------------------------------------------->|                            |
+    |                     '                          |--------------------------->|
+    |                     '                          |    Create queue record     |    
+    |       201 Created status and key               |<---------------------------|
+    |<-----------------------------------------------|                            |
+    |                     '                          |                            |
+    |                     |                          |                            |
+    |     Create (POST /subscriptions) subscription  |                            |
+    |                     |------------------------->|                            |
+    |                     |                          |--------------------------->|
+    |                     |                          | Create subscription record |    
+    |             201 Created status and key         |<---------------------------|
+    |                     |<-------------------------|                            |
+    |                     |                          |                            |
+    |  Create (POST /queue/key/messages) message     |                            |
+    |----------------------------------------------->|                            |
+    |                     |                          |--------------------------->|
+    |                     |                          |     Read queue records     |  
+    |                     |                          |<---------------------------|
+    |                     |                      +---|                            |
+    |             Test queue limits not breached |   |                            |
+    |                     |                      +-->|                            |
+    |                     |                          |                            |
+    |                     |                      +---|                            |
+    |                  Schedule message dispatch |   |                            |
+    |                     |                      +-->|                            |
+    |           202 Accepted status and key          |                            |
+    |<-----------------------------------------------|                            |
+    |                     |                          |--------------------------->|
+    |                     |                          |  Read subscription records |    
+    |                     | Dispatch message (POST)  |<---------------------------|    
+    |                     |<-------------------------|                            |
+    |                     |   202 Accepted status    |                            |
+    |                     |------------------------->|                            |
+    |                     |                          |--------------------------->|
+    |                     |                          |   Delete message record    |  
+    |                     |                          |<---------------------------|
+    |                     |                          |                            |
 ```
 
 ### Exchange Setup, Message Dispatch and Consumer Rejection
@@ -530,48 +530,48 @@ The following diagram details the sequence of events for configuring an exchange
 The following diagram details the sequence of events for configuring an exchange, message dispatch and consumer rejection.
 
 ```
-[producer]            [consumer]                [exchange]               [repository]
-    |                     '                          |                         |
-    |                     '                          |                         |          
-    |          Create (POST /queues) queue.          |                         |
-    |----------------------------------------------->|                         |
-    |                     '                          |------------------------>|
-    |                     '                          |      Persist queue.     |    
-    |       201 created status and key (uuid).       |<------------------------|
-    |<-----------------------------------------------|                         |
-    |                     '                          |                         |
-    |                     |                          |                         |
-    |     Create (POST /subscriptions) subscription. |                         |
-    |                     |------------------------->|                         |
-    |                     |                          |------------------------>|
-    |                     |                          |  Persist subscription.  |    
-    |             201 created status and key (uuid). |<------------------------|
-    |                     |<-------------------------|                         |
-    |                     |                          |                         |
-    |  Create (POST /queue/key/messages) message.    |                         |
-    |----------------------------------------------->|                         |
-    |                     |                          |------------------------>|
-    |                     |                          |      Read queue(s).     |  
-    |                     |                          |<------------------------|
-    |                     |                      +---|                         |
-    |            Test queue limits not breached. |   |                         |
-    |                     |                      +-->|                         |
-    |                     |                          |                         |
-    |                     |                      +---|                         |
-    |                  Schedule message dispatch.|   |                         |
-    |                     |                      +-->|                         |
-    |      202 accepted status and key (uuid).       |                         |
-    |<-----------------------------------------------|                         |
-    |                     |                          |------------------------>|
-    |                     |                          |  Read subscription(s).  |    
-    |                     | Dispatch message (POST). |<------------------------|    
-    |                     |<-------------------------|                         |
-    |                     |      200 OK status.      |                         |
-    |                     |------------------------->|                         |
-    |                     |                          |------------------------>|
-    |                     |                          |     Delete message.     |  
-    |                     |                          |<------------------------|
-    |                     |                          |                         |
+[producer]            [consumer]                [exchange]                  [repository]
+    |                     '                          |                            |
+    |                     '                          |                            |          
+    |          Create (POST /queues) queue           |                            |
+    |----------------------------------------------->|                            |
+    |                     '                          |--------------------------->|
+    |                     '                          |    Create queue record     |    
+    |       201 Created status and key               |<---------------------------|
+    |<-----------------------------------------------|                            |
+    |                     '                          |                            |
+    |                     |                          |                            |
+    |     Create (POST /subscriptions) subscription  |                            |
+    |                     |------------------------->|                            |
+    |                     |                          |--------------------------->|
+    |                     |                          | Create subscription record |    
+    |             201 Created status and key         |<---------------------------|
+    |                     |<-------------------------|                            |
+    |                     |                          |                            |
+    |  Create (POST /queue/key/messages) message     |                            |
+    |----------------------------------------------->|                            |
+    |                     |                          |--------------------------->|
+    |                     |                          |     Read queue records     |  
+    |                     |                          |<---------------------------|
+    |                     |                      +---|                            |
+    |             Test queue limits not breached |   |                            |
+    |                     |                      +-->|                            |
+    |                     |                          |                            |
+    |                     |                      +---|                            |
+    |                  Schedule message dispatch |   |                            |
+    |                     |                      +-->|                            |
+    |           202 Accepted status and key          |                            |
+    |<-----------------------------------------------|                            |
+    |                     |                          |--------------------------->|
+    |                     |                          |  Read subscription records |    
+    |                     | Dispatch message (POST)  |<---------------------------|    
+    |                     |<-------------------------|                            |
+    |                     |   200 OK status          |                            |
+    |                     |------------------------->|                            |
+    |                     |                          |--------------------------->|
+    |                     |                          |   Delete message record    |  
+    |                     |                          |<---------------------------|
+    |                     |                          |                            |
 ```
 
 ### Message State
