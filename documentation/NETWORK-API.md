@@ -1,10 +1,10 @@
 ## Network API Overview
 
-This document describes the available network endpoints for queue, subscription, and message management.  For detailed descriptions on interacting with the Network Interface please see [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
+This document describes the available network endpoints for queue, subscription, and message management.  For detailed descriptions on interacting with the Network Interface please see the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
 
 ## URI Map
 
-Below is a table of available network endpoints. Requesting any other path will result in 404 (Not Found) response status code. If you perform a Method on an endpoint that does not support that method, yet is available else where in the exchange you, will recieve a 405 (Method Not Allowed) status code, otherwise a 501 (Method Not Implemented) status code will be returned.
+Below is a table of available network endpoints. Requesting any other path will result in 404 (Not Found) response status code. If you perform a Method on an endpoint that lacks support, yet is available elsewhere in the exchange, you will recieve a 405 (Method Not Allowed) status, otherwise a 501 (Method Not Implemented) status code is returned.
 
 | Path                  |  Type       | Methods                          |
 | --------------------- | ----------- | -------------------------------- |
