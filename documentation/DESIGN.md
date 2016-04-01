@@ -36,18 +36,6 @@ Relies heavily on Restbed for alot of data structures and will not redocument th
 | Key         |             |
 | Dispatch         |             |
 
-## Network API
-
-| Path                  |  Character  | Methods                          |
-| --------------------- | ----------- | -------------------------------- |
-| /queues               | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
-| /queues/{uuid}        | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
-| /subscriptions        | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
-| /subscriptions/{uuid} | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
-| /messages             | Collection  | POST, OPTIONS                    |
-| /messages/{uuid}      | Resource    | OPTIONS                          |
-| /*                    | Resource    | OPTIONS                          |
-
 ## Class Diagrams
 
 All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the follow suite of class diagrams is ommited for clarity.
