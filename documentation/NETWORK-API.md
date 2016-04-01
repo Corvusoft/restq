@@ -16,7 +16,7 @@ This document describes the available network endpoints for queue, subscription,
 
 ## RESTful Resources
 
-All resources with the exception of Message may hold any number of generic properties presented in a supported resource document format (JSON, YAML, XML). These properties are persisted in the repository and then made available to the query parameter search functionality. 
+All resources with the exception of Message and Collection entities may hold any number of generic properties presented to the exchange in a supported document format (JSON, YAML, XML). These properties are persisted in the repository and then made available to the query parameter discovery functionality. 
 
 ### Queue Collection
 
@@ -52,7 +52,34 @@ All resources with the exception of Message may hold any number of generic prope
 
 ### Message Resource
 
+The HTTP Request body of a Message is not interpreted by the exchange and is forwarded without modification to subscribed consumers.  This allows any form for data to be sent across the wire e.g Text, Image, Binary.
+
 ### Asterisk Resource
+
+This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, and number of workers (threads).
+
+```
+> OPTIONS /* HTTP/1.1
+> User-Agent: curl/7.35.0
+> Host: localhost:1984
+> Accept: */*
+> 
+< HTTP/1.1 204 No Content
+< CPU: 3.0%
+< Memory: 68.1%
+< Workers: 1
+< Accept-Ranges: none
+< Allow: OPTIONS
+< Cache-Control: private,max-age=0,no-cache,no-store
+< Connection: close
+< Date: Fri, 01 Apr 2016 05:43:15 GMT
+< Expires: 0
+< Pragma: no-cache
+* Server corvusoft/restq is not blacklisted
+< Server: corvusoft/restq
+< Uptime: 16991
+< Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
+``` 
 
 ## Query Parameter Support
 
