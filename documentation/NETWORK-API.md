@@ -60,7 +60,7 @@ The HTTP Request body of a Message is not interpreted by the exchange and is for
 
 ### Asterisk Resource
 
-The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, and Threads via HTTP headers CPU, Memory, and Workers respectively.
+The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, Threads and Runtime via HTTP headers CPU, Memory, and Workers, Uptime respectively.
 
 ```
 > OPTIONS /* HTTP/1.1
@@ -72,15 +72,15 @@ The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resourc
 < CPU: 3.0%
 < Memory: 68.1%
 < Workers: 1
+< Uptime: 16991
+< Date: Fri, 01 Apr 2016 05:43:15 GMT
 < Accept-Ranges: none
 < Allow: OPTIONS
 < Cache-Control: private,max-age=0,no-cache,no-store
 < Connection: close
-< Date: Fri, 01 Apr 2016 05:43:15 GMT
 < Expires: 0
 < Pragma: no-cache
 < Server: corvusoft/restq
-< Uptime: 16991
 < Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
 ``` 
 
