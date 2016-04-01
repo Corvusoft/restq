@@ -561,10 +561,12 @@ Message state structures can hold one of the following conditions.
 
 ## Further Reading
 
-RFC listings
-
 [Message Queue](https://en.wikipedia.org/wiki/Message_queue)
+
 [Publish–subscribe pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern)
+
 [Uniform Resource Identifier (URI): Generic Syntax](https://tools.ietf.org/html/rfc3986).
+
 [Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231). 
+
 [A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
