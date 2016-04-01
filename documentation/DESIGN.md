@@ -50,7 +50,7 @@ Relies heavily on Restbed for alot of data structures and will not redocument th
 
 ## Class Diagrams
 
-All class definitions with the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idioms.
+All class definitions with the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idioms. However this level of detail in the follow suite of class diagrams is ommited for clarity.
 
 ### Byte/Bytes
 
