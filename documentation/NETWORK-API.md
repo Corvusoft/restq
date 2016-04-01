@@ -62,7 +62,7 @@ The HTTP Request body of a Message is not interpreted by the exchange and is for
 
 ### Asterisk Resource
 
-The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, Threads and Runtime via HTTP headers CPU, Memory, and Workers, Uptime respectively.
+The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, Threads, and Runtime via HTTP headers CPU, Memory, Workers, and Uptime respectively.
 
 ```
 > OPTIONS /* HTTP/1.1
@@ -87,6 +87,32 @@ The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resourc
 ``` 
 
 ## Query Parameter Support
+
+| parameter |   Type     | Range                        | Default Value         |
+| --------- | :--------: | :--------------------------: | :-------------------: |
+| filter    | pair(s)    | one or more name=value pairs.|  null                 |
+| fields    | string(s)  | one or more strings.         |  all available fields |
+| index     | numeric    | 0 - max(unsigned integer)    |  0                    |
+| limit     | numeric    | 0 - max(unsigned integer)    |  max(unsigned integer)|
+| echo      | boolean    | yes/no, true/false, 1/0      |  true                 |
+| style     | boolean    | yes/no, true/false, 1/0      |  false                |
+| keys      | string(s)  | one or more UUID strings.    |  null                 |
+
+### Filter
+
+### Fields
+
+### Index
+
+### Limit
+
+### Echo
+
+### Style
+
+### Keys
+
+
 
 ## HTTP Header Support
 
