@@ -34,6 +34,7 @@ Relies heavily on Restbed for alot of data structures and will not redocument th
 | URI         |             |
 | UUID         |             |
 | Key         |             |
+| Dispatch         |             |
 
 ## Network API
 
