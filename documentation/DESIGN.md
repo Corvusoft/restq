@@ -1,5 +1,7 @@
 ##Design Overview
 
+### Scope
+
 Unless otherwise specified all primary data-types originate within the Standard Template Library (STL). Including but not limited to string, map, list, multimap, set, any, and friends.
 
 This document is primarily to aid communicating core architectural decisions and for this reason alone accuracy has suffered. It does not concern itself with API specifics and primarly focuses on architectrual desicions made during development, see API.md for contract detail.
@@ -11,6 +13,8 @@ Mention exchange State composition, private class pattern, etc...
 Explain difference between RESTful resources and the resource data-type.
 
 Relies heavily on Restbed for alot of data structures and will not redocument those cases here for convenience.
+
+###
 
 ## Terminology
 
@@ -417,9 +421,15 @@ This my exchange description.
     |                                      +->|                     '                    |
     |                                         |----------------------------------------->|
     |                                         |          Persist resource.               |
-    |     201 create status.                  |<-----------------------------------------|
+    |                                         |<-----------------------------------------|
+    |                                      +--|                     '                    |
+    |      Find formatter (Accept header). |  |                     '                    |
+    |                                      +->|  Compose Resources. |                    |
+    |                                         |-------------------->|                    |
+    |                                         |        Bytes        |                    | 
+    |                                         |<--------------------|                    |
+    |           201 create status.            |                     '                    | 
     |<----------------------------------------|                     '                    | 
-    |                                         |                     '                    | 
     |                                         |                     '                    | 
 ```
 
@@ -434,14 +444,42 @@ This my exchange description.
     |                                      |          Select resource(s).             |
     |                                      |<-----------------------------------------|
     |                                   +--|                     '                    |
-    | Find formatter (Accept header).   |  |                     '                    |
-    |                                   +->|     Parse bytes.    |                    |
+    |   Find formatter (Accept header). |  |                     '                    |
+    |                                   +->|  Compose Resources. |                    |
     |                                      |-------------------->|                    |
-    |                                      |     Resources.      |                    | 
-    |                                      |<--------------------|                    |
-    |     200 OK status.                   |                     '                    |
+    |                                      |        Bytes.       |                    | 
+    |           200 OK status.             |<--------------------|                    |
     |<-------------------------------------|                     '                    | 
     |                                      |                     '                    | 
+```
+
+### Resource Modification
+
+```
+ [client]                                [exchange]            [formatter]         [repository]
+    |                                         |                     '                    | 
+    |        Update (PUT) resource.           |                     '                    |
+    |---------------------------------------->|                     '                    |
+    |                                      +--|                     '                    |
+    | Find formatter (Content-Type header).|  |                     '                    |
+    |                                      +->|     Parse bytes.    |                    |
+    |                                         |-------------------->|                    |
+    |                                         |      Resources.     |                    | 
+    |                                         |<--------------------|                    |
+    |                                      +--|                     |                    |
+    |           Validate & setup resource. |  |                     '                    |
+    |                                      +->|                     '                    |
+    |                                         |----------------------------------------->|
+    |                                         |              Persist resource.           |
+    |                                         |<-----------------------------------------|
+    |                                      +--|                     '                    |
+    |      Find formatter (Accept header). |  |                     '                    |
+    |                                      +->|  Compose Resources. |                    |
+    |                                         |-------------------->|                    |
+    |                                         |        Bytes        |                    | 
+    |           201 create status.            |<--------------------|                    |
+    |<----------------------------------------|                     '                    | 
+    |                                         |                     '                    | 
 ```
 
 ### Exchange Setup, Message Dispatch and Successful Reciept
@@ -452,39 +490,43 @@ The following diagram details the sequence of events for configuring an exchange
 [producer]            [consumer]                [exchange]               [repository]
     |                     '                          |                         |
     |                     '                          |                         |          
-    |  create (POST /queues) queue.                  |                         |
+    |          Create (POST /queues) queue.          |                         |
     |----------------------------------------------->|                         |
     |                     '                          |------------------------>|
-    |                     '                          | Persist queue.          |    
-    |  201 created status and key (uuid).            |<------------------------|
+    |                     '                          |      Persist queue.     |    
+    |       201 created status and key (uuid).       |<------------------------|
     |<-----------------------------------------------|                         |
     |                     '                          |                         |
     |                     |                          |                         |
-    |  create (POST /subscriptions) subscription.    |                         |
+    |     Create (POST /subscriptions) subscription. |                         |
     |                     |------------------------->|                         |
     |                     |                          |------------------------>|
-    |                     |                          | Persist subscription.   |    
+    |                     |                          |  Persist subscription.  |    
     |             201 created status and key (uuid). |<------------------------|
     |                     |<-------------------------|                         |
     |                     |                          |                         |
-    |  create (POST /queue/key/messages) message.    |                         |
+    |  Create (POST /queue/key/messages) message.    |                         |
     |----------------------------------------------->|                         |
     |                     |                          |------------------------>|
-    |                     |                          | Read queue(s).          |  
+    |                     |                          |      Read queue(s).     |  
     |                     |                          |<------------------------|
     |                     |                      +---|                         |
-    |          Test queue limits not breached    |   |                         |
+    |            Test queue limits not breached. |   |                         |
     |                     |                      +-->|                         |
-    |  202 accepted status and key (uuid).           |                         |
+    |                     |                          |                         |
+    |                     |                      +---|                         |
+    |                  Schedule message dispatch.|   |                         |
+    |                     |                      +-->|                         |
+    |      202 accepted status and key (uuid).       |                         |
     |<-----------------------------------------------|                         |
     |                     |                          |------------------------>|
-    |                     |                          | Read subscription(s).   |    
+    |                     |                          |  Read subscription(s).  |    
     |                     | Dispatch message (POST). |<------------------------|    
     |                     |<-------------------------|                         |
-    |                     | 202 accepted status.     |                         |
+    |                     |   202 accepted status.   |                         |
     |                     |------------------------->|                         |
     |                     |                          |------------------------>|
-    |                     |                          | Delete message.         |  
+    |                     |                          |     Delete message.     |  
     |                     |                          |<------------------------|
     |                     |                          |                         |
 ```
