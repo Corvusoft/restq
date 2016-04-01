@@ -525,6 +525,55 @@ The following diagram details the sequence of events for configuring an exchange
     |                     |                          |                         |
 ```
 
+### Exchange Setup, Message Dispatch and Consumer Rejection
+
+The following diagram details the sequence of events for configuring an exchange, message dispatch and consumer rejection.
+
+```
+[producer]            [consumer]                [exchange]               [repository]
+    |                     '                          |                         |
+    |                     '                          |                         |          
+    |          Create (POST /queues) queue.          |                         |
+    |----------------------------------------------->|                         |
+    |                     '                          |------------------------>|
+    |                     '                          |      Persist queue.     |    
+    |       201 created status and key (uuid).       |<------------------------|
+    |<-----------------------------------------------|                         |
+    |                     '                          |                         |
+    |                     |                          |                         |
+    |     Create (POST /subscriptions) subscription. |                         |
+    |                     |------------------------->|                         |
+    |                     |                          |------------------------>|
+    |                     |                          |  Persist subscription.  |    
+    |             201 created status and key (uuid). |<------------------------|
+    |                     |<-------------------------|                         |
+    |                     |                          |                         |
+    |  Create (POST /queue/key/messages) message.    |                         |
+    |----------------------------------------------->|                         |
+    |                     |                          |------------------------>|
+    |                     |                          |      Read queue(s).     |  
+    |                     |                          |<------------------------|
+    |                     |                      +---|                         |
+    |            Test queue limits not breached. |   |                         |
+    |                     |                      +-->|                         |
+    |                     |                          |                         |
+    |                     |                      +---|                         |
+    |                  Schedule message dispatch.|   |                         |
+    |                     |                      +-->|                         |
+    |      202 accepted status and key (uuid).       |                         |
+    |<-----------------------------------------------|                         |
+    |                     |                          |------------------------>|
+    |                     |                          |  Read subscription(s).  |    
+    |                     | Dispatch message (POST). |<------------------------|    
+    |                     |<-------------------------|                         |
+    |                     |      200 OK status.      |                         |
+    |                     |------------------------->|                         |
+    |                     |                          |------------------------>|
+    |                     |                          |     Delete message.     |  
+    |                     |                          |<------------------------|
+    |                     |                          |                         |
+```
+
 ### Message State
 
 When a new message is delivered to the exchange it must be persisted with a range of information regarding the current setup of the system. This approach avoids the situation of Queue/Subscription modifications before the exchange has the oppurtunity to dispatch a message; which if left unattend would produce erratic behaviour on behalf of the dispatch routine.
