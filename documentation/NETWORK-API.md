@@ -56,7 +56,7 @@ The HTTP Request body of a Message is not interpreted by the exchange and is for
 
 ### Asterisk Resource
 
-This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, and Threads via HTTP headers CPU, Memory, and Workers respectively.
+The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, and Threads via HTTP headers CPU, Memory, and Workers respectively.
 
 ```
 > OPTIONS /* HTTP/1.1
