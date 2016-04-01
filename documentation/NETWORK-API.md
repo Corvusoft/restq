@@ -79,7 +79,6 @@ The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resourc
 < Date: Fri, 01 Apr 2016 05:43:15 GMT
 < Expires: 0
 < Pragma: no-cache
-* Server corvusoft/restq is not blacklisted
 < Server: corvusoft/restq
 < Uptime: 16991
 < Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
