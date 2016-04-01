@@ -50,6 +50,8 @@ Relies heavily on Restbed for alot of data structures and will not redocument th
 
 ## Class Diagrams
 
+All class definitions with the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idioms.
+
 ### Byte/Bytes
 
 Byte represents an unsigned 16 bit data-type, with Bytes providing container functionality with STL std::vector semantics. 
@@ -562,6 +564,8 @@ A message and its associated states are not purged from the exchange until all s
 ```
 
 ## Further Reading
+
+[Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer)
 
 [Message Queue](https://en.wikipedia.org/wiki/Message_queue)
 
