@@ -1,6 +1,6 @@
 ## Network API Overview
 
-RestQ provides an open Hyper Text Transfer Protol (HTTP) API for technology agnostic and language netrual message broking. It is the intention to maintain a standards compliant interface as outlined in RFC 7230.
+RestQ provides an open Hyper Text Transfer Protocol (HTTP) API for technology agnostic and language netrual message broking services. It is the intention to maintain a standards compliant interface as outlined in RFC 7230.
 
 This document will describe the available network endpoints for queue, subscription, and message management.  For detailed examples of interacting with the Network Interface please see the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
 
