@@ -438,7 +438,7 @@ This my exchange description.
     |                                   +->|   Compose Document  |                    |
     |                                      |-------------------->|                    |
     |                                      |        Bytes        |                    | 
-    |           200 OK status.             |<--------------------|                    |
+    |           200 OK status              |<--------------------|                    |
     |<-------------------------------------|                     '                    | 
     |                                      |                     '                    | 
 ```
@@ -467,14 +467,24 @@ This my exchange description.
     |                                      +->|   Compose Document  |                    |
     |                                         |-------------------->|                    |
     |                                         |        Bytes        |                    | 
-    |           201 Created status.           |<--------------------|                    |
+    |           201 Created status            |<--------------------|                    |
     |<----------------------------------------|                     '                    | 
     |                                         |                     '                    | 
 ```
 
 ### Resource Destruction
 
-
+```
+ [client]                                [exchange]            [formatter]         [repository]
+    |                                         |                     '                    | 
+    |        Destroy (DELETE) resource        |                     '                    |
+    |---------------------------------------->|                     '                    |
+    |                                         |----------------------------------------->|
+    |                                         |           Destroy resource records       |
+    |           204 No Cotent status          |<-----------------------------------------|
+    |<----------------------------------------|                     '                    |
+    |                                         |                     '                    | 
+```
 
 ### Exchange Setup, Message Dispatch and Successful Reciept
 
@@ -574,7 +584,7 @@ The following diagram details the sequence of events for configuring an exchange
     |                     |                          |                            |
 ```
 
-### Message State
+### Message Delivery
 
 When a new message is delivered to the exchange it must be persisted with a range of information regarding the current setup of the system. This approach avoids the situation of Queue/Subscription modifications before the exchange has the oppurtunity to dispatch a message; which if left unattend would produce erratic behaviour on behalf of the dispatch routine.
 
