@@ -178,7 +178,8 @@ namespace restq
                         }
                         else
                         {
-                            return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
+                            change.insert( make_pair( "status", PENDING ) );
+                            log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
                         }
                         
                         m_repository->update( change, query, [ ]( const shared_ptr< Query > query )
