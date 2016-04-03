@@ -70,3 +70,26 @@ class Logger
     };
 }
 ```
+
+### StatusCode
+
+#### Description
+
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1).
+
+#### Definition
+
+``` C++
+enum : int
+{
+    CONTINUE = 100,
+    SWITCHING_PROTOCOLS = 101,
+    PROCESSING = 102,
+    OK = 200,
+    CREATED = 201,
+    ACCEPTED = 202,
+    NON_AUTHORITATIVE_INFORMATION  = 203,
+    
+    ...
+}
+```
