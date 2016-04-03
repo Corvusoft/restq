@@ -52,7 +52,7 @@ Byte represents an unsigned 8-bit wide data-type, with Bytes providing container
 |   <<typedef>>  |
 |      Byte      |
 +----------------+
-|    uint16_t    |
+|     uint8_t    |
 +----------------+
 ```
 
