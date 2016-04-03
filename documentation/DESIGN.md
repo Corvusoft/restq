@@ -36,7 +36,7 @@ RestQ relies heavily on the [Restbed](https://github.com/corvusoft/restbed) fram
 
 ### Byte/Bytes
 
-Byte represents an unsigned 16 bit data-type, with Bytes providing container functionality with STL std::vector semantics. 
+Byte represents an unsigned 8-bit wide data-type, with Bytes providing container functionality with Standard Template Library (STL) vector semantics. 
 
 ```
 +----------------+
