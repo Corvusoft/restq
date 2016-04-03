@@ -22,14 +22,28 @@
 
 ### Byte/Bytes
 
-Description
+#### Description
 
 Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with Standard Template Library (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics. 
 
-Definition
+#### Definition
 
 ``` C++
-typedef uint8_t Byte;
+using Byte = restbed::Byte;
+    
+using Bytes = restbed::Bytes;
+```
 
-typedef std::vector< Byte > Bytes;
+### Resource/Resources
+
+#### Description
+
+Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
+
+#### Definition
+
+``` C++
+typedef std::multimap< std::string, Bytes > Resource;
+    
+typedef std::list< Resource > Resources;
 ```
