@@ -47,3 +47,26 @@ typedef std::multimap< std::string, Bytes > Resource;
     
 typedef std::list< Resource > Resources;
 ```
+
+### LogLevel
+
+#### Description
+
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
+
+#### Definition
+
+``` C++
+class Logger
+{
+    enum Level : int
+    {
+        INFO = 0000,
+        DEBUG = 1000,
+        FATAL = 2000,
+        ERROR = 3000,
+        WARNING = 4000,
+        SECURITY = 5000
+    };
+}
+```
