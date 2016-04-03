@@ -58,7 +58,7 @@ Byte represents an unsigned 8-bit wide data-type, Bytes provides container funct
 
 ### Resource/Resources
 
-Resource represents an associative array allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources.  Container functionality is provided via the Resources container having STL std::list semantics. 
+Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
 ```
 +-----------------------+
 |      <<typedef>>      |
