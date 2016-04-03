@@ -1,6 +1,6 @@
 ##Design Overview
 
-### Scope
+### Document Scope
 
 This document is intented to communicate core architectural decisions within the system. For this reason alone accuracy has suffered. It does not concern itself with interface specifics and primarly focuses on architectrual decisions made during the design/development phase, see [Network API](NETWORK-API.md) and [API](API.md) for entity contract details.
 
