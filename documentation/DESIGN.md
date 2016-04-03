@@ -32,7 +32,7 @@ RestQ relies heavily on the [Restbed](https://github.com/corvusoft/restbed) fram
 | Key         |             |
 | Dispatch         |             |
 
-## Structural Diagrams
+## System Entities
 
 ### Byte/Bytes
 
@@ -386,7 +386,7 @@ This my exchange description.
  +----------------------------------------+  +-----------------------------------------+  +------------------------------------------+
 ```
 
-## Behavioural Diagrams
+## Entity Interactions
 
 ### Resource Creation
 
