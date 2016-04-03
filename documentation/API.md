@@ -4,8 +4,8 @@
 
 ## Table of Contents  
 1. [Document Scope](#example)
-2. [Byte/Bytes](#bytes)
-3. [Resource/Resources](#resources)
+2. [Byte/Bytes](#bytebytes)
+3. [Resource/Resources](#resourceresources)
 4. [LogLevel](#loglevel)
 5. [StatusCode](#statuscode)
 6. [String](#string)
@@ -34,7 +34,7 @@ using Byte = restbed::Byte;
 using Bytes = restbed::Bytes;
 ```
 
-### Resource/Resources
+### Resource/Resources
 
 #### Description
 
