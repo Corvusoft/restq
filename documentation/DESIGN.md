@@ -2,17 +2,13 @@
 
 ### Scope
 
+This document is intented to communicate core architectural decisions within the system. For this reason alone accuracy has suffered. It does not concern itself with interface specifics and primarly focuses on architectrual decisions made during the design/development phase, see [Network API](NETWORK-API.md) and [API](API.md) for entity contract details.
+
+All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the follow suite of class diagrams is ommited for clarity; along with pointers, references and other background noise.
+
 Unless otherwise specified all primary data-types originate within the Standard Template Library (STL). Including but not limited to string, map, list, multimap, set, any, and friends.
 
-This document is primarily to aid communicating core architectural decisions and for this reason alone accuracy has suffered. It does not concern itself with API specifics and primarly focuses on architectrual desicions made during development, see API.md for contract detail.
-
-pointers, references, etc.. are ommited.
-
-Mention exchange State composition, private class pattern, etc...
-
-Explain difference between RESTful resources and the resource data-type.
-
-Relies heavily on Restbed for alot of data structures and will not redocument those cases here for convenience.
+RestQ relies heavily on the [Restbed](https://github.com/corvusoft/restbed) framework for it's data structures and they will not be redocumented here for convenience.
 
 ###
 
@@ -36,9 +32,7 @@ Relies heavily on Restbed for alot of data structures and will not redocument th
 | Key         |             |
 | Dispatch         |             |
 
-## Class Diagrams
-
-All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the follow suite of class diagrams is ommited for clarity.
+## Structural Diagrams
 
 ### Byte/Bytes
 
@@ -392,14 +386,14 @@ This my exchange description.
  +----------------------------------------+  +-----------------------------------------+  +------------------------------------------+
 ```
 
-## Sequence Diagrams
+## Behavioural Diagrams
 
 ### Resource Creation
 
 ```
  [client]                                [exchange]            [formatter]         [repository]
     |                                         |                     '                    | 
-    | Create (POST) resource                  |                     '                    |
+    |         Create (POST) resource          |                     '                    |
     |---------------------------------------->|                     '                    |
     |                                      +--|                     '                    |
     | Find formatter (Content-Type header) |  |                     '                    |
@@ -428,7 +422,7 @@ This my exchange description.
 ```
  [client]                             [exchange]            [formatter]         [repository]
     |                                      |                     '                    | 
-    | Read (GET) resource                  |                     '                    |
+    |          Read (GET) resource         |                     '                    |
     |------------------------------------->|                     '                    |
     |                                      |----------------------------------------->|
     |                                      |          Read resource records           |
@@ -448,7 +442,7 @@ This my exchange description.
 ```
  [client]                                [exchange]            [formatter]         [repository]
     |                                         |                     '                    | 
-    |        Update (PUT) resource            |                     '                    |
+    |         Update (PUT) resource           |                     '                    |
     |---------------------------------------->|                     '                    |
     |                                      +--|                     '                    |
     | Find formatter (Content-Type header) |  |                     '                    |
@@ -488,7 +482,7 @@ This my exchange description.
 
 ### Exchange Setup, Message Dispatch and Successful Reciept
 
-The following diagram details the sequence of events for configuring an exchange, message dispatch and successful reciept.
+The following diagram details the sequence of events for configuring an exchange (pub-sub), message dispatch and successful reciept.
 
 ```
 [producer]            [consumer]                [exchange]                  [repository]
@@ -537,7 +531,7 @@ The following diagram details the sequence of events for configuring an exchange
 
 ### Exchange Setup, Message Dispatch and Consumer Rejection
 
-The following diagram details the sequence of events for configuring an exchange, message dispatch and consumer rejection.
+The following diagram details the sequence of events for configuring an exchange (pub-sub), message dispatch and consumer rejection.
 
 ```
 [producer]            [consumer]                [exchange]                  [repository]
@@ -584,13 +578,13 @@ The following diagram details the sequence of events for configuring an exchange
     |                     |                          |                            |
 ```
 
-### Message Delivery
+## Message Delivery
 
-When a new message is delivered to the exchange it must be persisted with a range of information regarding the current setup of the system. This approach avoids the situation of Queue/Subscription modifications before the exchange has the oppurtunity to dispatch a message; which if left unattend would produce erratic behaviour on behalf of the dispatch routine.
+When a new message is delivered to the exchange it must be persisted with a range of information regarding the current state of the system. This approach avoids situations where one or more Queue/Subscription configurations are modified before the system has the oppurtunity to forward the message; which if left unchecked would produce erratic behaviour on behalf of the dispatch logic.
 
-To achieve this the exchange creates a single message record within the repository and then a collection of internal data-structures known as message states.  Each state records the message-key, queue, and subscription configuration.
+To achieve this the exchange persists a single copy of the message record within the repository and a collection of internal data-structures known as message-states. Each state record holds a reference to the message and duplicates the queue, and subscription configuration at time of message creation.
 
-For example: A queue with 2x subscriptions will force the exchange to instantiate 2x state objects snap-shooting a subscription and associated queue configuration.
+For example: A message delivered to a queue with 2x subscriptions will force the exchange to instantiate 2x state objects snapshotting each subscription and associated queue configuration.
 
 While this approach duplicates data with respect to Queue and Subscription properties it has been deemed farless complicated and therefore prone to error than tracking changes between message creation and dispatch; disk is cheap.
 
@@ -609,6 +603,13 @@ A message and its associated states are not purged from the exchange until all s
 [producer]            [consumer]                [exchange]               [repository]
     |                     '                          |                         |
 ```
+
+## Ruleset
+
+
+## Dependencies
+
+
 
 ## Further Reading
 
