@@ -167,7 +167,7 @@ Represents a HTTP request with additional helper methods for minipulating data, 
 
 ### Response
 
-Represents a HTTP response with additional helper methods for minipulating data, and code readability.
+Represents a HTTP response with additional helper methods for minipulating data, and improving code readability.
 
 ```
  +------------------------------------+ 
@@ -180,7 +180,7 @@ Represents a HTTP response with additional helper methods for minipulating data,
 
 ### Session
 
-Represents a conversation between a producer and the exchange. Internally this class holds the network state and exposes public funcitionaly to interact with said state and the exchanges runloop for asynchronous data acquisation and/or sleep states, Only Authenticators and Repository developers require access to this functionality.
+Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only Authenticators and Repository developers require access to this functionality.
 
 ```
                      +-----------------------------------+
@@ -205,7 +205,7 @@ Represents a conversation between a producer and the exchange. Internally this c
 
 ### Query
 
-Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the Parameter Object pattern, to increase code readability and extensiablilty during Repository interaction.
+Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensiablilty during Repository interaction.
 
 ```
  +------------------------------------------------------------------------+
