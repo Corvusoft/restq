@@ -98,7 +98,7 @@ enum : int
 
 Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here for convenience.
 
-#### Methods
+#### is_integer
 
 ``` C++
 static bool is_integer( const std::string& value );
