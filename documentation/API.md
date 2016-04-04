@@ -99,7 +99,7 @@ enum : int
 Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here for convenience.
 
 #### Methods  
-* [is_integer](#is_integer]
+* [is_integer](#is_integer)
 * [is_fraction](#is_fraction)
 * [is_boolean](#is_boolean)
 * [trim](#trim)
@@ -168,6 +168,75 @@ Parses a string ignoring case and attemtps to validate if it holds the represent
  
 boolean true if the argument is a string or either 'true' or 'false', otherwise false.
  
+##### Exceptions
+
+n/a
+
+#### trim
+
+``` C++
+static std::string trim( const std::string& value, const std::string& delimiter = " \t\r\n" );
+```
+
+Removes matching range parameter characters from the front and rear of the supplied string value.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline           |
+
+##### Return Value
+ 
+String matching the input value with the exception of removing leading and lagging characters that match those specified in the range parameter.
+
+##### Exceptions
+
+n/a
+
+#### trim_leading
+
+``` C++
+static std::string trim_leading( const std::string& value, const std::string& delimiter = " \t\r\n" );
+```
+
+Removes matching range parameter characters from the front of the supplied string value.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline           |
+
+##### Return Value
+ 
+String matching the input value with the exception of removing leading characters that match those specified in the range parameter.
+
+##### Exceptions
+
+n/a
+
+#### trim_lagging
+
+``` C++
+static std::string trim_lagging( const std::string& value, const std::string& delimiter = " \t\r\n" );
+```
+
+Removes matching range parameter characters from the rear of the supplied string value.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline           |
+
+##### Return Value
+ 
+String matching the input value with the exception of removing lagging characters that match those specified in the range parameter.
+
 ##### Exceptions
 
 n/a
