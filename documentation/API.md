@@ -175,10 +175,10 @@ n/a
 #### trim
 
 ``` C++
-static std::string trim( const std::string& value, const std::string& delimiter = " \t\r\n" );
+static std::string trim( const std::string& value, const std::string& range = " \t\r\n" );
 ```
 
-Removes matching range parameter characters from the front and rear of the supplied string value.
+Removes matching characters from the front and rear of the supplied string value.
 
 ##### Parameters
 
@@ -198,10 +198,10 @@ n/a
 #### trim_leading
 
 ``` C++
-static std::string trim_leading( const std::string& value, const std::string& delimiter = " \t\r\n" );
+static std::string trim_leading( const std::string& value, const std::string& range = " \t\r\n" );
 ```
 
-Removes matching range parameter characters from the front of the supplied string value.
+Removes matching characters from the front of the supplied string value.
 
 ##### Parameters
 
@@ -221,10 +221,10 @@ n/a
 #### trim_lagging
 
 ``` C++
-static std::string trim_lagging( const std::string& value, const std::string& delimiter = " \t\r\n" );
+static std::string trim_lagging( const std::string& value, const std::string& range = " \t\r\n" );
 ```
 
-Removes matching range parameter characters from the rear of the supplied string value.
+Removes matching characters from the rear of the supplied string value.
 
 ##### Parameters
 
