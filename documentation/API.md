@@ -110,7 +110,7 @@ Parses a string and attemts to validate if it holds a representation of an integ
 
 | parameter |    type     | default value |
 |:---------:|:-----------:|:-------------:|
-|   value   | std::string | n/a           |
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
 
 ##### Return Value
  
