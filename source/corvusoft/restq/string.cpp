@@ -41,15 +41,15 @@ namespace restq
         return regex_match( value, pattern );
     }
     
-    string String::trim( const string& value, const string& delimiter )
+    string String::trim( const string& value, const string& range )
     {
-        const auto result = trim_leading( value, delimiter );
-        return trim_lagging( result, delimiter );
+        const auto result = trim_leading( value, range );
+        return trim_lagging( result, range );
     }
     
-    string String::trim_leading( const string& value, const string& delimiter )
+    string String::trim_leading( const string& value, const string& range )
     {
-        size_t position = value.find_first_not_of( delimiter );
+        size_t position = value.find_first_not_of( range );
         
         if ( string::npos not_eq position )
         {
@@ -59,9 +59,9 @@ namespace restq
         return empty;
     }
     
-    string String::trim_lagging( const string& value, const string& delimiter )
+    string String::trim_lagging( const string& value, const string& range )
     {
-        size_t position = value.find_last_not_of( delimiter );
+        size_t position = value.find_last_not_of( range );
         
         if ( string::npos not_eq position )
         {
