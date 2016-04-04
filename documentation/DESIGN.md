@@ -245,7 +245,7 @@ Represents a data store enquire for creating, reading, updating, and/or deleting
 
 ### SSLSettings
 
-Represents Secure Socket Layer configuration for a exchange instance.
+Represents Secure Socket Layer service configuration.
 
 ```
  +---------------------------------------+ 
@@ -258,7 +258,7 @@ Represents Secure Socket Layer configuration for a exchange instance.
 
 ### Settings
 
-Represents the primary point of exchange, repository, and logger configuration.  The mass majority of its implementation is inherited from restbed::Settings with a few RestQ specific methods included and alterations of scope as detailed below.
+Represents the primary point of service, repository, and logger configuration. The mass majority of its implementation is inherited from restbed::Settings with a additional RestQ specific methods included and alterations of scope as detailed below.
 ```
  +----------------------------------------------------------------------------------+
  |                                     <<class>>                                    |
