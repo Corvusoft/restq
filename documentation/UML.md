@@ -1,9 +1,11 @@
 
 ## UML Overview
 
-Corvusoft's development team frequently employee the use of Unified Modelling Language (UML) diagrams to assist in communicating key concept and design ideas of a system or sub-system to techincal and non-technical parties alike.
+Corvusoft's development teams frequently employee the use of the Unified Modelling Language (UML) to assist in communicating core concepts and design decisions of a system or sub-system to techincal and non-technical parties alike.
 
-This document outlines our understanding of relevant UML structure helping all participants to start on common ground and better communicate software design.
+Of the many tools available within UML we primarly employ Class diagrams for detailing static structure that describes the system by showing the classes, their attributes, operations, and the relationships among objects.  With behavioral characteristics shown via Sequence diagrams detailing interaction between entities that operate with one another and in what order. 
+
+This document outlines our interpretation of relevant UML concepts and aims in creating a level playing field for all  participants during software design discussions.
 
 ### Class Diagrams
 
@@ -47,6 +49,31 @@ denotes the implementation of the functionality defined in one class by another 
 | enum | enumeration sterotype shows a set of named values called elements, members, enumeral, or enumerators of the type. The enumerator names are usually identifiers that behave as constants in the program. |
 | interface | Shows a common means for unrelated objects to communicate with each other. These are definitions of methods and values which the objects agree upon in order to co-operate. |
 | abstract | Describes an entity in a nominative type system that cannot be instantiated directly. Abstract types are also known as existential types. An abstract type may provide no implementation, or an incomplete implementation. |
+
+### Multiplicity
+
+Optional notation indicating the range of entities within a relationship.
+
+|  Notation  |          Description          |
+|:----------:|-------------------------------|
+| 0..1	      | No instances, or one instance.|
+| 1	         | Exactly one instance.         |
+| 0..*	      | Zero or more instances.       |
+| *	         | Zero or more instances.       |
+| 1..*	      | One or more instances.        |
+
+### Visibility
+
+It is encouraged to only show public methods, reducing rework of the documentation during each software development cycle. The use of Private, Protected, Derived, and Package visibility should only be present when highlighting important core design decision.  For example inheriting from a base class and altering parent method/property visibility.
+
+| Symbol | Description |
+|:------:|-------------| 
+| +	     | Public      |
+| -	     | Private     |
+| #	     | Protected   |
+| ~	     | Package     |
+
+To specify the visibility of a class member (i.e. any attribute or method), these notations must be placed before the member's name.
 
 #### Example
 
