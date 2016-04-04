@@ -93,3 +93,29 @@ enum : int
     ...
 }
 ```
+
+### String
+
+Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here convenience.
+
+#### Methods
+
+``` C++
+static bool is_integer( const std::string& value );
+```
+
+Parses a string and attemts to validate if it holds a representation of an integer value.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | std::string | n/a           |
+
+##### Return Value
+ 
+boolean true if the argument is a string representation of an integer, otherwise false.
+ 
+##### Exceptions
+
+n/a
