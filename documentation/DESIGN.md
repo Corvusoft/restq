@@ -91,7 +91,7 @@ Represents a functor with variable parameters and return; this is used to help i
 
 ### LogLevel
 
-Enumeration hinting at the level of priority to a particular log entry.
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
 ```
 +--------------+
 |   <<enum>>   |
@@ -108,7 +108,7 @@ Enumeration hinting at the level of priority to a particular log entry.
 
 ### StatusCode
 
-Enumeration of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1). 
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1).
 ```
 +---------------------------+
 |         <<enum>>          |
@@ -120,7 +120,7 @@ Enumeration of HTTP response status codes as outlined in [RFC 7231 sub-section 6
 
 ### String
 
-Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here convenience and clarity.
+Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here convenience.
 ```
 +---------------------------------------+
 |              <<static>>               |
@@ -129,7 +129,7 @@ Utiltiy class with static scope offering a common suite of string manipulation r
 | + is_integer(string)          boolean |
 | + is_boolean(string)          boolean |
 | + is_fraction(string)         boolean |
-| + trim( string,string)        string  |
+| + trim(string,string)         string  |
 | + trim_leading(string,string) string  |
 | + trim_lagging(string,string) string  |
 +---------------------------------------+
