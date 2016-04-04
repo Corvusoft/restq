@@ -104,7 +104,7 @@ Utiltiy class with static scope offering a common suite of string manipulation r
 static bool is_integer( const std::string& value );
 ```
 
-Parses a string and attemts to validate if it holds a representation of an integer value.
+Parses a string and attemtps to validate if it holds a representation of an integer value.
 
 ##### Parameters
 
@@ -115,6 +115,50 @@ Parses a string and attemts to validate if it holds a representation of an integ
 ##### Return Value
  
 boolean true if the argument is a string representation of an integer, otherwise false.
+ 
+##### Exceptions
+
+n/a
+
+#### is_fraction
+
+``` C++
+static bool is_fraction( const std::string& value );
+```
+
+Parses a string and attemtps to validate if it holds a representation of a numeric value containing a decimal point.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+
+##### Return Value
+ 
+boolean true if the argument is a string representation of a fraction, otherwise false.
+ 
+##### Exceptions
+
+n/a
+
+#### is_boolean
+
+``` C++
+static bool is_boolean( const std::string& value );
+```
+
+Parses a string ignoring case and attemtps to validate if it holds the representation of a boolean value 'true' or 'false'.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+
+##### Return Value
+ 
+boolean true if the argument is a string or either 'true' or 'false', otherwise false.
  
 ##### Exceptions
 
