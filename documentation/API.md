@@ -420,7 +420,7 @@ n/a
 
 ##### Return Value
  
-[Bytes](#bytebytes) representing a result relationship to be returned, empty by default. i.e Weather a query for a queue should also return linked subscriptions.
+[Bytes](#bytebytes) representing an entity relationship between two or more records, i.e Weather a query for a queue should also return linked subscriptions.
 
 ##### Exceptions
 
@@ -608,53 +608,286 @@ n/a
 
 n/a
             
+#### set_error_code
 
-            void set_error_code( const int value );
-            
-            void set_index( const std::size_t start );
-            
-            void set_limit( const std::size_t stop );
-            
-            void set_resultset( const Resources& values );
-            
-            void set_include( const Bytes& relationship );
-            
-            void set_key( const Bytes& value );
-            
-            void set_key( const std::string& value );
-            
-            void set_keys( const std::vector< std::string >& values );
-            
-            void set_fields( const std::set< std::string >& values );
-            
-            void set_session( const std::shared_ptr< Session >& value );
-            
-            void set_inclusive_filter( const std::string& name, const Bytes& value );
-            
-            void set_inclusive_filters( const std::multimap< std::string, Bytes >& values );
-            
-            void set_exclusive_filter( const std::string& name, const Bytes& value );
-            
-            void set_exclusive_filters( const std::multimap< std::string, Bytes >& values );
+``` C++
+void set_error_code( const int value );
+```
 
+Replaces the contents of the query error status; see also [get_error_code](#get_error_code).
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   |     int     |      n/a      |
+
+##### Return Value
+ 
+n/a
+
+##### Exceptions
+
+n/a
+
+#### set_index
+
+``` C++
+void set_index( const std::size_t start );
+```
+
+Replaces the contents of the index criteria; see also [get_index](#get_index).
+
+The index criteria specifies an offset into the recordset to begin the query, i.e row number to start query at. In combination with [set_limit](#set_limit) paging is through records is possible.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   start   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |
+
+##### Return Value
+ 
+n/a
+
+##### Exceptions
+
+n/a
+
+#### set_limit
+
+``` C++
+void set_limit( const std::size_t stop );
+```
+
+Replaces the contents of the limit criteria; see also [set_limit](#set_limit).
+
+The limit criteria specifies the number of records to be returned. In combination with [set_index](#set_index) paging is through records is possible.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   stop    | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |
+
+##### Return Value
+ 
+n/a
+
+##### Exceptions
+
+n/a
+ 
+#### set_resultset
+
+``` C++
+void set_resultset( const restq::Resources& values );
+```
+
+Replaces the contents of the query's resultset; see also [get_resultset](#get_resultset).
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   values   | [restq::Resources](#resourceresources) |      n/a      |
+
+##### Return Value
+ 
+n/a
+
+##### Exceptions
+
+n/a
+ 
 #### set_include
 
 ``` C++
-void set_include( const Bytes& relationship );
+void set_include( const restq::Bytes& relationship );
 ```
 
 Replaces the contents of the include critiera; see also [get_include](#get_include).
+
+The include criteria represents a entity relationship between two or more records, i.e Weather a query for a queue should also return linked subscriptions.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   relationship   | [restq::Bytes](#bytebytes) | n/a           |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a  
+            
+#### set_keys
+
+``` C++
+1. void set_key( const restq::Bytes& value );
+2. void set_key( const std::string& value );
+3. void set_keys( const std::vector< std::string >& values );
+```
+
+Replaces the contents of the query's key criteria; see also [get_keys](#get_keys).
+
+1) Adds a key represented as a sequence of [restq::Byte](#bytebytes), internally converts to [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+2) Adds a key to the query's search criteria.
+
+3) Replaces the query's key search critiera with those specified in values.
+
+The key search criteria indicates that only records with these keys may be returned.
 
 ##### Parameters
 
 | parameter |    type     | default value |
 |:---------:|:-----------:|:-------------:|
 |   value   | [restq::Bytes](#bytebytes) | n/a           |
+|   -   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+|   values   | [std::vector](http://en.cppreference.com/w/cpp/container/vector) | n/a           |
 
 ##### Return Value
- 
-true if the query contains results, false otherwise.
+
+n/a
 
 ##### Exceptions
 
+n/a 
+
+#### set_fields
+
+``` C++
+void set_fields( const std::set< std::string >& values );
+```
+
+Replaces the contents of the query's fields criteria; see also [get_fields](#get_fields).
+
+The fields search criteria indicates what fields (columns) from each record should be returned.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) | n/a           |
+
+##### Return Value
+
 n/a
+
+##### Exceptions
+
+n/a 
+            
+#### set_session
+
+``` C++
+void set_session( const std::set< std::string >& values );
+```
+
+Replaces the contents of the client session attached to this query; see also [set_session](#set_session).
+
+Altering the client session property outside of the exchange will lead to undefined behaviour. It's made available to the repository so as to call Session::sleep_for while waiting for query results. 
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) | n/a           |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a 
+
+#### set_inclusive_filters
+
+``` C++
+1. void set_inclusive_filter( const std::string& name, const restq::Bytes& value );
+2. void set_inclusive_filters( const std::multimap< std::string, restq::Bytes >& values );
+```
+
+Replaces the contents of the query's inclusive filters criteria; see also [get_inclusive_filters](#get_inclusive_filters).
+
+1) Add an inclusive filter to the query's search critiera.
+
+2) Replace the contents of the query's inclusive filters criteria with that specifed by values.
+
+Inclusive filters represent a 'must have at least one-of' OR condition. i.e The following will return all records that have a type of 'queue' or 'subscription':
+
+``` C++
+auto filters = multimap< string, Bytes > {
+  { "type", String::to_bytes( "queue" ) },
+  { "type", String::to_bytes( "subscription" ) }
+};
+
+auto query = make_shared< Query >( );
+query->set_inclusive_filters( filters );
+
+m_repository->read( query, ... );
+```
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   name   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+|   value   | [restq::Bytes](#bytebytes) | n/a           |
+|   values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) | n/a           |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a 
+
+#### set_exclusive_filters
+
+``` C++
+1. void set_exclusive_filter( const std::string& name, const restq::Bytes& value );
+2. void set_exclusive_filters( const std::multimap< std::string, restq::Bytes >& values );
+```
+
+Replaces the contents of the query's inclusive filters criteria; see also [get_exclusive_filters](#get_exclusive_filters).
+
+1) Add an exclusive filter to the query's search critiera.
+
+2) Replace the contents of the query's exclusive filters criteria with that specifed by values.
+
+Exclusive filters represent a 'must have' AND condition. i.e The following will return all records that have a type of 'queue' and a name property of 'events':
+
+``` C++
+auto filters = multimap< string, Bytes > {
+  { "type", String::to_bytes( "queue" ) },
+  { "name", String::to_bytes( "events" ) }
+};
+
+auto query = make_shared< Query >( );
+query->set_exclusive_filters( filters );
+
+m_repository->read( query, ... );
+```
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   name   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+|   value   | [restq::Bytes](#bytebytes) | n/a           |
+|   values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) | n/a           |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a 
