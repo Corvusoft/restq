@@ -99,12 +99,12 @@ enum : int
 Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here for convenience.
 
 #### Methods  
-a) [is_integer](#is_integer)
-b) [is_fraction](#is_fraction)
-c) [is_boolean](#is_boolean)
-d) [trim](#trim)
-e) [trim_leading](#trim_leading)
-f) [trim_lagging](#trim_lagging)
+* [is_integer](#is_integer]
+* [is_fraction](#is_fraction)
+* [is_boolean](#is_boolean)
+* [trim](#trim)
+* [trim_leading](#trim_leading)
+* [trim_lagging](#trim_lagging)
 
 #### is_integer
 
