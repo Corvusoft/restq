@@ -98,6 +98,14 @@ enum : int
 
 Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here for convenience.
 
+#### Methods  
+1. [is_integer](#isinteger)
+2. [is_fraction](#isfraction)
+3. [is_boolean](#isboolean)
+4. [trim](#trim)
+5. [trim_leading](#trimleading)
+6. [trim_lagging](#trimlagging)
+
 #### is_integer
 
 ``` C++
