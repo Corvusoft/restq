@@ -240,3 +240,421 @@ String matching the input value with the exception of removing lagging character
 ##### Exceptions
 
 n/a
+
+### Uri
+
+Represents a Uniform Resource Identifier as specificed in RFC 3986.
+
+> A generic URI is of the form:
+>
+> scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
+
+#### Definition
+
+``` C++
+using Uri = restbed::Uri;
+```
+
+See [restbed::Uri](https://github.com/corvusoft/restbed/documentation/API.md#uri) for details.
+
+### Request
+
+Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
+
+#### Definition
+
+``` C++
+using Request = restbed::Request;
+```
+
+See [restbed::Request](https://github.com/corvusoft/restbed/documentation/API.md#request) for details.
+
+### Response
+
+Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
+
+#### Definition
+
+``` C++
+using Response = restbed::Response;
+```
+
+See [restbed::Response](https://github.com/corvusoft/restbed/documentation/API.md#response) for details.
+
+### Session
+
+Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only Authenticators and Repository developers require access to this functionality.
+
+#### Definition
+
+``` C++
+using Session = restbed::Session;
+```
+
+See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md#session) for details.
+
+### Query
+
+Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensiablilty during Repository interaction.
+
+#### Methods  
+* [clear](#clear)
+* [has_failed](#has_failed)
+* [has_fields](#has_fields)
+* [has_resultset](#has_resultset)
+* [get_include](#get_include)
+* [get_error_code](#get_error_code)
+* [get_index](#get_index)
+* [get_limit](#get_limit)
+* [get_resultset](#get_resultset)
+* [get_fields](#get_fields)
+* [get_keys](#get_keys)
+* [get_session](#get_session)
+* [get_inclusive_filters](#get_inclusive_filters)
+* [get_exclusive_filters](#get_exclusive_filters)
+* [set_error_code](#set_error_code)
+* [set_index](#set_index)
+* [set_limit](#set_limit)
+* [set_resultset](#set_resultset)
+* [set_include](#set_include)
+* [set_key](#set_key)
+* [set_keys](#set_keys)
+* [set_fields](#set_fields)
+* [set_session](#set_session)
+* [set_inclusive_filters](#set_inclusive_filters)
+* [set_exclusive_filters](#set_exclusive_filters)
+
+#### clear
+
+``` C++
+void clear( void );
+```
+
+Removes all elements from the container.
+
+Invalidates any references, pointers, or iterators referring to contained elements. Leaves the capacity of the internal collection unchanged.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### has_failed
+
+``` C++
+bool has_failed( void ) const;
+```
+
+Checks if the query has failed, i.e. whether the database returned an error status; see also [get_error_code](#get_error_code).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+true if the query has failed, false otherwise.
+
+##### Exceptions
+
+n/a
+
+#### has_fields
+
+``` C++
+bool has_fields( void ) const;
+```
+
+Check if the query has a fields criteria specified; see also [set_fields](#set_fields).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+true if the query contains a fields criteria, false otherwise.
+
+##### Exceptions
+
+n/a
+
+#### has_resultset
+
+``` C++
+bool has_resultset( void ) const;
+```
+
+Check if the query has returned any results; see also [set_resultset](#set_resultset).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+true if the query contains results, false otherwise.
+
+##### Exceptions
+
+n/a
+
+#### get_include
+
+``` C++
+restq::Bytes get_include( void ) const;
+```
+
+Retrieves the contents of the include criteria; see also [set_include](#set_include).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+[Bytes](#bytebytes) representing a result relationship to be returned, empty by default. i.e Weather a query for a queue should also return linked subscriptions.
+
+##### Exceptions
+
+n/a
+            
+#### get_error_code
+
+``` C++
+int get_error_code( void ) const;
+```
+
+Retrieves the error status of a query, if the query has not been processed 0 is returned; see also [set_error_code](#set_error_code).
+
+The result of this method is used within the service and mapped to a HTTP error response.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+Signed integer representing an error condition.
+
+##### Exceptions
+
+n/a
+            
+#### get_index
+
+``` C++
+std::size_t get_index( void ) const;
+```
+
+Retrieves the contents of the index criteria; see also [set_index](#set_index).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+Unsigned integer representing the an offset position into the available results, 0 by default.
+
+##### Exceptions
+
+n/a
+
+#### get_limit
+
+``` C++
+std::size_t get_limit( void ) const;
+```
+
+Retrieves the contents of the limit criteria; see also [set_limit](#set_limit).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+Unsigned integer representing the number of results to be returned, max( std::size_t ) by default.
+
+##### Exceptions
+
+n/a
+
+#### get_resultset
+
+``` C++
+restq::Resources get_resultset( void ) const;
+```
+
+Retrieves the query results; see also [set_resultset](#set_resultset).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+Collection of [restq::Resource](#resourceresources) representing the results of a query, empty by default.
+
+##### Exceptions
+
+n/a
+        
+#### get_fields
+
+``` C++
+std::set< std::string > get_fields( void ) const;
+```
+
+Retrieves the contents of the fields criteria; see also [set_fields](#set_fields).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+[std::set](http://en.cppreference.com/w/cpp/container/set) of strings representing the required fields (columns) to return, empty by default indicating to return all fields.
+
+##### Exceptions
+
+n/a        
+           
+#### get_keys
+
+``` C++
+std::vector< std::string > get_keys( void ) const;
+```
+
+Retrieves the contents of the keys criteria; see also [set_keys](#set_keys).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+[std::vector](http://en.cppreference.com/w/cpp/container/vector) of strings representing the keys criteria for this query, empty by default indicating to return all records.
+
+##### Exceptions
+
+n/a 
+
+#### get_session
+
+``` C++
+std::shared_ptr< restq::Session > get_session( void ) const;
+```
+
+Retrieves a smart-pointer of the client's [session](#session) attached to this query; see also [set_session](#set_session).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+[std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) reference to the client's network [session](#session), nullptr by default.
+
+##### Exceptions
+
+n/a 
+            
+#### get_inclusive_filters
+
+``` C++
+std::multimap< std::string, restq::Bytes > get_inclusive_filters( void ) const;
+```
+
+Retrieves the contents of the inclusive filters criteria; see also [set_inclusive_filters](#set_inclusive_filters).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing inclusive filters; empty by default.
+
+##### Exceptions
+
+n/a             
+     
+#### get_exclusive_filters
+
+``` C++
+std::multimap< std::string, restq::Bytes > get_exclusive_filters( void ) const;
+```
+
+Retrieves the contents of the exclusive filters criteria; see also [set_exclusive_filters](#set_exclusive_filters).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+ 
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing exclusive filters; empty by default.
+
+##### Exceptions
+
+n/a
+            
+
+            void set_error_code( const int value );
+            
+            void set_index( const std::size_t start );
+            
+            void set_limit( const std::size_t stop );
+            
+            void set_resultset( const Resources& values );
+            
+            void set_include( const Bytes& relationship );
+            
+            void set_key( const Bytes& value );
+            
+            void set_key( const std::string& value );
+            
+            void set_keys( const std::vector< std::string >& values );
+            
+            void set_fields( const std::set< std::string >& values );
+            
+            void set_session( const std::shared_ptr< Session >& value );
+            
+            void set_inclusive_filter( const std::string& name, const Bytes& value );
+            
+            void set_inclusive_filters( const std::multimap< std::string, Bytes >& values );
+            
+            void set_exclusive_filter( const std::string& name, const Bytes& value );
+            
+            void set_exclusive_filters( const std::multimap< std::string, Bytes >& values );
+
+#### set_include
+
+``` C++
+void set_include( const Bytes& relationship );
+```
+
+Replaces the contents of the include critiera; see also [get_include](#get_include).
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [restq::Bytes](#bytebytes) | n/a           |
+
+##### Return Value
+ 
+true if the query contains results, false otherwise.
+
+##### Exceptions
+
+n/a
