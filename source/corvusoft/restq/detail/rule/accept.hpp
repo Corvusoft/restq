@@ -65,7 +65,7 @@ namespace restq
                         if ( regex_match( header, regex( format.first, icase ) ) )
                         {
                             session->set( "accept-format", format.second );
-                            session->set( "accept", format.second->get_mime_type( ) );
+                            session->set( "accept", format.second->get_media_type( ) );
                             return callback( session );
                         }
                     }

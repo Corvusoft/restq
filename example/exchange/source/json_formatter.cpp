@@ -115,7 +115,7 @@ Bytes JSONFormatter::compose( const Resources& values, const bool styled )
     return to_bytes( json, styled );
 }
 
-const string JSONFormatter::get_mime_type( void ) const
+const string JSONFormatter::get_media_type( void ) const
 {
     return "application/json";
 }

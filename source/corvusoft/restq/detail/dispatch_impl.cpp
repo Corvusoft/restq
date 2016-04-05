@@ -159,40 +159,48 @@ namespace restq
                         Http::close( request );
                         //status = Dispatch::direct( message ); end
                         
-                        string log_message = "";
                         Resource change;
                         const auto subscription_key = String::to_string( states.back( ).lower_bound( "subscription-key" )->second );
                         const auto message_key = String::to_string( states.back( ).lower_bound( "message-key" )->second );
                         
+                        auto status = Bytes{ };
+                        
                         if ( status_code == ACCEPTED )
                         {
-                            change.insert( make_pair( "status", DISPATCHED ) );
-                            log_message = "Failed to update transaction status to dispatched.";
+                            status = DISPATCHED;
                             log( Logger::INFO, String::format( "Subscription '%s' accepted message '%s'.", subscription_key.data( ), message_key.data( ) ) );
                         }
                         else if ( status_code >= 200 and status_code <= 299 )
                         {
-                            change.insert( make_pair( "status", REJECTED ) );
-                            log_message = "Failed to update transaction status to rejected.";
+                            status = REJECTED;
                             log( Logger::INFO, String::format( "Subscription '%s' rejected message '%s'.", subscription_key.data( ), message_key.data( ) ) );
                         }
                         else
                         {
-                            change.insert( make_pair( "status", PENDING ) );
-                            log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
+                            //status = PENDING; //need to implement circuit-breaker first. //status == FAILED, delay?
+                            return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
                         }
                         
-                        m_repository->update( change, query, [ ]( const shared_ptr< Query > query )
+                        change.insert( make_pair( "status", status ) );
+                        
+                        m_repository->update( change, query, [ status ]( const shared_ptr< Query > query )
                         {
                             if ( query->has_failed( ) )
                             {
                                 log( Logger::ERROR, "Failed to update transaction status to dispatched." );
                             }
                             
-                            m_repository->destroy( query, [ ]( const shared_ptr< Query > )
+                            if ( status == DISPATCHED or status == REJECTED )
+                            {
+                                m_repository->destroy( query, [ ]( const shared_ptr< Query > )
+                                {
+                                    m_service->schedule( DispatchImpl::route );
+                                } );
+                            }
+                            else
                             {
                                 m_service->schedule( DispatchImpl::route );
-                            } );
+                            }
                         } );
                     } );
                 } );

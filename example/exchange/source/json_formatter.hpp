@@ -45,7 +45,7 @@ class JSONFormatter final : public restq::Formatter
         restq::Bytes compose( const restq::Resources& values, const bool styled = false );
         
         //Getters
-        const std::string get_mime_type( void ) const;
+        const std::string get_media_type( void ) const;
         
         //Setters
         void set_logger( const std::shared_ptr< restq::Logger >& value );

@@ -37,14 +37,14 @@ namespace restq
             //Constructors
             
             //Functionality
-            virtual Resources parse( const Bytes& value ) = 0;
+            virtual Resources parse( const Bytes& document ) = 0;
             
-            virtual bool try_parse( const Bytes& value, Resources& values ) noexcept = 0;
+            virtual bool try_parse( const Bytes& document, Resources& values ) noexcept = 0;
             
             virtual Bytes compose( const Resources& values, const bool styled = false ) = 0;
             
             //Getters
-            virtual const std::string get_mime_type( void ) const = 0;
+            virtual const std::string get_media_type( void ) const = 0;
             
             //Setters
             virtual void set_logger( const std::shared_ptr< Logger >& value ) = 0;
