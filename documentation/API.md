@@ -118,9 +118,9 @@ Parses a string and attemtps to validate if it holds a representation of an inte
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
 
 ##### Return Value
  
@@ -140,9 +140,9 @@ Parses a string and attemtps to validate if it holds a representation of a numer
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
 
 ##### Return Value
  
@@ -162,9 +162,9 @@ Parses a string ignoring case and attemtps to validate if it holds the represent
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
 
 ##### Return Value
  
@@ -184,10 +184,10 @@ Removes matching characters from the front and rear of the supplied string value
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline | input |
 
 ##### Return Value
  
@@ -207,10 +207,10 @@ Removes matching characters from the front of the supplied string value.
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline | input |
 
 ##### Return Value
  
@@ -230,10 +230,10 @@ Removes matching characters from the rear of the supplied string value.
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline | input |
 
 ##### Return Value
  
@@ -620,9 +620,9 @@ Replaces the contents of the query error status; see also [get_error_code](#get_
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   |     int     |      n/a      |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   |     int     | n/a | input |
 
 ##### Return Value
  
@@ -644,9 +644,9 @@ The index criteria specifies an offset into the recordset to begin the query, i.
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   start   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   start   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
 
 ##### Return Value
  
@@ -668,9 +668,9 @@ The limit criteria specifies the number of records to be returned. In combinatio
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   stop    | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   stop    | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
 
 ##### Return Value
  
@@ -690,9 +690,9 @@ Replaces the contents of the query's resultset; see also [get_resultset](#get_re
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   values   | [restq::Resources](#resourceresources) |      n/a      |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   values   | [restq::Resources](#resourceresources) | n/a | input |
 
 ##### Return Value
  
@@ -714,9 +714,9 @@ The include criteria represents a entity relationship between two or more record
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   relationship   | [restq::Bytes](#bytebytes) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   relationship   | [restq::Bytes](#bytebytes) | n/a | input |
 
 ##### Return Value
 
@@ -746,11 +746,11 @@ The key search criteria indicates that only records with these keys may be retur
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [restq::Bytes](#bytebytes) | n/a           |
-|   -   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
-|   values   | [std::vector](http://en.cppreference.com/w/cpp/container/vector) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [restq::Bytes](#bytebytes) | n/a | input |
+|   -   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+|   values   | [std::vector](http://en.cppreference.com/w/cpp/container/vector) | n/a | input |
 
 ##### Return Value
 
@@ -772,9 +772,9 @@ The fields search criteria indicates what fields (columns) from each record shou
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------:|
+|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) | n/a | input |
 
 ##### Return Value
 
@@ -796,9 +796,9 @@ Altering the client session property outside of the exchange will lead to undefi
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) | n/a | input |
 
 ##### Return Value
 
@@ -837,11 +837,11 @@ m_repository->read( query, ... );
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   name   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
-|   value   | [restq::Bytes](#bytebytes) | n/a           |
-|   values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------:|
+|   name   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+|   value   | [restq::Bytes](#bytebytes) | n/a | input |
+|   values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) | n/a | input |
 
 ##### Return Value
 
@@ -880,11 +880,11 @@ m_repository->read( query, ... );
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   name   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a           |
-|   value   | [restq::Bytes](#bytebytes) | n/a           |
-|   values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   name   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+|   value   | [restq::Bytes](#bytebytes) | n/a | input |
+|   values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) | n/a | input |
 
 ##### Return Value
 
@@ -1007,9 +1007,9 @@ Internally this value is compared with the number of pending messages awaiting d
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
 
 ##### Return Value
 
@@ -1031,9 +1031,9 @@ When creating a new message on a queue this vaule is consulted and if breached c
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
 
 ##### Return Value
 
@@ -1055,9 +1055,9 @@ Internally this value is compared with the number of consumers currently subscri
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|-----------|:-------------:|
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
 
 ##### Return Value
 
@@ -1090,7 +1090,7 @@ Parses a [restq::Byte](#bytebytes) sequence containing a document structure.
 
 | parameter |    type     | default value | direction |
 |:---------:|-----------|:-------------:|:---------:|
-|   document   | [restq::Byte](#bytebytes) | n/a | in |
+|   document   | [restq::Byte](#bytebytes) | n/a | input |
 
 ##### Return Value
 
@@ -1111,9 +1111,9 @@ Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a docu
 ##### Parameters
 
 | parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------:
-|   document   | [restq::Byte](#bytebytes) | n/a           | in |
-|   values   | [restq::Resoures](#resourceresources) | n/a           | out |
+|:---------:|-----------|:-------------:|:----------: |
+|   document   | [restq::Byte](#bytebytes) | n/a           | input |
+|   values   | [restq::Resoures](#resourceresources) | n/a           | output |
 
 ##### Return Value
 
@@ -1134,8 +1134,8 @@ Convert a collection of [restq::Resource](#resourceresources) entities into a do
 ##### Parameters
 
 | parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------:
-|   values   | [restq::Resoures](#resourceresources) | n/a | in |
+|:---------:|-----------|:-------------:|:----------: |
+|   values   | [restq::Resoures](#resourceresources) | n/a | input |
 |   styled   | bool | false | in |
 
 ##### Return Value
@@ -1181,8 +1181,8 @@ Replace the logger instance.
 ##### Parameters
 
 | parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------:
-|   value   | [restq::Logger](#logger) | n/a | in |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [restq::Logger](#logger) | n/a | input |
 
 ##### Return Value
 
