@@ -908,7 +908,7 @@ See [restbed::SSLSettings](https://github.com/corvusoft/restbed/documentation/AP
 
 ### Settings
 
-Represents the primary point of service, repository, and logger configuration. The mass majority of its implementation is inherited from [restbed::Settings](https://github.com/corvusoft/restbed/documentation/API.md#settings) with a additional RestQ specific methods included and the following methods removed:
+Represents the primary point of service, repository, and logger configuration. The mass majority of its implementation is inherited from [restbed::Settings](https://github.com/corvusoft/restbed/documentation/API.md#settings) with additional RestQ specific methods included and the following methods **removed**:
 
 ``` C++
 bool get_case_insensitive_uris( void ) const = delete;
@@ -1025,7 +1025,7 @@ n/a
 void set_default_queue_message_size_limit( const std::size_t value );
 ```
 
-Retrieves the default message size limit (1024 bytes) given to a freshly created queue; see also [get_default_queue_message_size_limit](#get_default_queue_message_size_limit).
+Replaces the default message size limit (1024 bytes) given to a freshly created queue; see also [get_default_queue_message_size_limit](#get_default_queue_message_size_limit).
 
 When creating a new message on a queue this vaule is consulted and if breached clients will receive 413 (Request Entity Too Large) error response. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
 
@@ -1049,7 +1049,7 @@ n/a
 void set_default_queue_subscription_limit( const std::size_t value );
 ```
 
-Retrieves the default subscription limit (25) given to a freshly created queue; see also [get_default_queue_subscription_limit](#get_default_queue_subscription_limit).
+Replaces the default subscription limit (25) given to a freshly created queue; see also [get_default_queue_subscription_limit](#get_default_queue_subscription_limit).
 
 Internally this value is compared with the number of consumers currently subscribed to a queue, if breached clients see a  503 (Service Unavailable) error response. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
 
