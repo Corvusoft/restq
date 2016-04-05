@@ -6,18 +6,18 @@
 1. [Document Scope](#example)
 2. [Byte/Bytes](#bytebytes)
 3. [Resource/Resources](#resourceresources)
-4. [LogLevel](#loglevel)
-5. [StatusCode](#statuscode)
-6. [String](#string)
-7. [URI](#uri)
-8. [Request](#request)
-9. [Response](#response)
-10. [Session](#session)
-11. [Query](#query)
-12. [SSLSettings](#sslsettings)
-13. [Settings](#settings)
-14. [Formatter](#formatter)
-15. [Logger](#logger)
+4. [StatusCode](#statuscode)
+5. [String](#string)
+6. [URI](#uri)
+7. [Request](#request)
+8. [Response](#response)
+9. [Session](#session)
+10. [Query](#query)
+11. [SSLSettings](#sslsettings)
+12. [Settings](#settings)
+13. [Formatter](#formatter)
+14. [Logger](#logger)
+15. [Logger::Level](#loggerlevel)
 16. [Exchange](#exchange)
 
 ### Byte/Bytes
@@ -50,29 +50,6 @@ typedef std::multimap< std::string, Bytes > Resource;
 typedef std::list< Resource > Resources;
 ```
 
-### LogLevel
-
-#### Description
-
-[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
-
-#### Definition
-
-``` C++
-class Logger
-{
-    enum Level : int
-    {
-        INFO = 0000,
-        DEBUG = 1000,
-        FATAL = 2000,
-        ERROR = 3000,
-        WARNING = 4000,
-        SECURITY = 5000
-    };
-}
-```
-
 ### StatusCode
 
 #### Description
@@ -101,14 +78,14 @@ enum : int
 Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from [restbed::String](https://github.com/corvusoft/restbed/documentation/API.md#string) and will not be restated here for convenience.
 
 #### Methods  
-* [is_integer](#is_integer)
-* [is_fraction](#is_fraction)
-* [is_boolean](#is_boolean)
-* [trim](#trim)
-* [trim_leading](#trim_leading)
-* [trim_lagging](#trim_lagging)
+* [is_integer](#stringis_integer)
+* [is_fraction](#stringis_fraction)
+* [is_boolean](#stringis_boolean)
+* [trim](#stringtrim)
+* [trim_leading](#stringtrim_leading)
+* [trim_lagging](#stringtrim_lagging)
 
-#### is_integer
+#### String::is_integer
 
 ``` C++
 static bool is_integer( const std::string& value );
@@ -130,7 +107,7 @@ boolean true if the argument is a string representation of an integer, otherwise
 
 n/a
 
-#### is_fraction
+#### String::is_fraction
 
 ``` C++
 static bool is_fraction( const std::string& value );
@@ -152,7 +129,7 @@ boolean true if the argument is a string representation of a fraction, otherwise
 
 n/a
 
-#### is_boolean
+#### String::is_boolean
 
 ``` C++
 static bool is_boolean( const std::string& value );
@@ -174,7 +151,7 @@ boolean true if the argument is a string or either 'true' or 'false', otherwise 
 
 n/a
 
-#### trim
+#### String::trim
 
 ``` C++
 static std::string trim( const std::string& value, const std::string& range = " \t\r\n" );
@@ -197,7 +174,7 @@ String matching the input value with the exception of removing leading and laggi
 
 n/a
 
-#### trim_leading
+#### String::trim_leading
 
 ``` C++
 static std::string trim_leading( const std::string& value, const std::string& range = " \t\r\n" );
@@ -220,7 +197,7 @@ String matching the input value with the exception of removing leading character
 
 n/a
 
-#### trim_lagging
+#### String::trim_lagging
 
 ``` C++
 static std::string trim_lagging( const std::string& value, const std::string& range = " \t\r\n" );
@@ -300,33 +277,33 @@ See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md
 Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensiablilty during Repository interaction.
 
 #### Methods  
-* [clear](#clear)
-* [has_failed](#has_failed)
-* [has_fields](#has_fields)
-* [has_resultset](#has_resultset)
-* [get_include](#get_include)
-* [get_error_code](#get_error_code)
-* [get_index](#get_index)
-* [get_limit](#get_limit)
-* [get_resultset](#get_resultset)
-* [get_fields](#get_fields)
-* [get_keys](#get_keys)
-* [get_session](#get_session)
-* [get_inclusive_filters](#get_inclusive_filters)
-* [get_exclusive_filters](#get_exclusive_filters)
-* [set_error_code](#set_error_code)
-* [set_index](#set_index)
-* [set_limit](#set_limit)
-* [set_resultset](#set_resultset)
-* [set_include](#set_include)
-* [set_key](#set_key)
-* [set_keys](#set_keys)
-* [set_fields](#set_fields)
-* [set_session](#set_session)
-* [set_inclusive_filters](#set_inclusive_filters)
-* [set_exclusive_filters](#set_exclusive_filters)
+* [clear](#queryclear)
+* [has_failed](#queryhas_failed)
+* [has_fields](#queryhas_fields)
+* [has_resultset](#queryhas_resultset)
+* [get_include](#queryget_include)
+* [get_error_code](#queryget_error_code)
+* [get_index](#queryget_index)
+* [get_limit](#queryget_limit)
+* [get_resultset](#queryget_resultset)
+* [get_fields](#queryget_fields)
+* [get_keys](#queryget_keys)
+* [get_session](#queryget_session)
+* [get_inclusive_filters](#queryget_inclusive_filters)
+* [get_exclusive_filters](#queryget_exclusive_filters)
+* [set_error_code](#queryset_error_code)
+* [set_index](#queryset_index)
+* [set_limit](#queryset_limit)
+* [set_resultset](#queryset_resultset)
+* [set_include](#queryset_include)
+* [set_key](#queryset_key)
+* [set_keys](#queryset_keys)
+* [set_fields](#queryset_fields)
+* [set_session](#queryset_session)
+* [set_inclusive_filters](#queryset_inclusive_filters)
+* [set_exclusive_filters](#queryset_exclusive_filters)
 
-#### clear
+#### Query::clear
 
 ``` C++
 void clear( void );
@@ -348,7 +325,7 @@ n/a
 
 n/a
 
-#### has_failed
+#### Query::has_failed
 
 ``` C++
 bool has_failed( void ) const;
@@ -368,7 +345,7 @@ true if the query has failed, false otherwise.
 
 n/a
 
-#### has_fields
+#### Query::has_fields
 
 ``` C++
 bool has_fields( void ) const;
@@ -388,7 +365,7 @@ true if the query contains a fields criteria, false otherwise.
 
 n/a
 
-#### has_resultset
+#### Query::has_resultset
 
 ``` C++
 bool has_resultset( void ) const;
@@ -408,7 +385,7 @@ true if the query contains results, false otherwise.
 
 n/a
 
-#### get_include
+#### Query::get_include
 
 ``` C++
 restq::Bytes get_include( void ) const;
@@ -428,7 +405,7 @@ n/a
 
 n/a
             
-#### get_error_code
+#### Query::get_error_code
 
 ``` C++
 int get_error_code( void ) const;
@@ -450,7 +427,7 @@ Signed integer representing an error condition.
 
 n/a
             
-#### get_index
+#### Query::get_index
 
 ``` C++
 std::size_t get_index( void ) const;
@@ -470,7 +447,7 @@ Unsigned integer representing the an offset position into the available results,
 
 n/a
 
-#### get_limit
+#### Query::get_limit
 
 ``` C++
 std::size_t get_limit( void ) const;
@@ -490,7 +467,7 @@ Unsigned integer representing the number of results to be returned, max( std::si
 
 n/a
 
-#### get_resultset
+#### Query::get_resultset
 
 ``` C++
 restq::Resources get_resultset( void ) const;
@@ -510,7 +487,7 @@ Collection of [restq::Resource](#resourceresources) representing the results of 
 
 n/a
         
-#### get_fields
+#### Query::get_fields
 
 ``` C++
 std::set< std::string > get_fields( void ) const;
@@ -530,7 +507,7 @@ n/a
 
 n/a        
            
-#### get_keys
+#### Query::get_keys
 
 ``` C++
 std::vector< std::string > get_keys( void ) const;
@@ -550,7 +527,7 @@ n/a
 
 n/a 
 
-#### get_session
+#### Query::get_session
 
 ``` C++
 std::shared_ptr< restq::Session > get_session( void ) const;
@@ -570,7 +547,7 @@ n/a
 
 n/a 
             
-#### get_inclusive_filters
+#### Query::get_inclusive_filters
 
 ``` C++
 std::multimap< std::string, restq::Bytes > get_inclusive_filters( void ) const;
@@ -590,7 +567,7 @@ n/a
 
 n/a             
      
-#### get_exclusive_filters
+#### Query::get_exclusive_filters
 
 ``` C++
 std::multimap< std::string, restq::Bytes > get_exclusive_filters( void ) const;
@@ -610,7 +587,7 @@ n/a
 
 n/a
             
-#### set_error_code
+#### Query::set_error_code
 
 ``` C++
 void set_error_code( const int value );
@@ -632,7 +609,7 @@ n/a
 
 n/a
 
-#### set_index
+#### Query::set_index
 
 ``` C++
 void set_index( const std::size_t start );
@@ -656,7 +633,7 @@ n/a
 
 n/a
 
-#### set_limit
+#### Query::set_limit
 
 ``` C++
 void set_limit( const std::size_t stop );
@@ -680,7 +657,7 @@ n/a
 
 n/a
  
-#### set_resultset
+#### Query::set_resultset
 
 ``` C++
 void set_resultset( const restq::Resources& values );
@@ -702,7 +679,7 @@ n/a
 
 n/a
  
-#### set_include
+#### Query::set_include
 
 ``` C++
 void set_include( const restq::Bytes& relationship );
@@ -726,7 +703,7 @@ n/a
 
 n/a  
             
-#### set_keys
+#### Query::set_keys
 
 ``` C++
 1. void set_key( const restq::Bytes& value );
@@ -760,7 +737,7 @@ n/a
 
 n/a 
 
-#### set_fields
+#### Query::set_fields
 
 ``` C++
 void set_fields( const std::set< std::string >& values );
@@ -784,7 +761,7 @@ n/a
 
 n/a 
             
-#### set_session
+#### Query::set_session
 
 ``` C++
 void set_session( const std::set< std::string >& values );
@@ -808,7 +785,7 @@ n/a
 
 n/a 
 
-#### set_inclusive_filters
+#### Query::set_inclusive_filters
 
 ``` C++
 1. void set_inclusive_filter( const std::string& name, const restq::Bytes& value );
@@ -851,7 +828,7 @@ n/a
 
 n/a 
 
-#### set_exclusive_filters
+#### Query::set_exclusive_filters
 
 ``` C++
 1. void set_exclusive_filter( const std::string& name, const restq::Bytes& value );
@@ -928,14 +905,14 @@ void set_default_headers( const std::multimap< std::string, std::string >& value
 
 #### Methods 
 
-* [get_default_queue_message_limit](#get_default_queue_message_limit)
-* [get_default_queue_message_size_limit](#get_default_queue_message_size_limit)
-* [get_default_queue_subscription_limit](#get_default_queue_subscription_limit)
-* [set_default_queue_message_limit](#set_default_queue_message_limit)
-* [set_default_queue_message_size_limit](#set_default_queue_message_size_limit)
-* [set_default_queue_subscription_limit](#set_default_queue_subscription_limit)
+* [get_default_queue_message_limit](#settingsget_default_queue_message_limit)
+* [get_default_queue_message_size_limit](#settingsget_default_queue_message_size_limit)
+* [get_default_queue_subscription_limit](#settingsget_default_queue_subscription_limit)
+* [set_default_queue_message_limit](#settingsset_default_queue_message_limit)
+* [set_default_queue_message_size_limit](#settingsset_default_queue_message_size_limit)
+* [set_default_queue_subscription_limit](#settingsset_default_queue_subscription_limit)
 
-#### get_default_queue_message_limit
+#### Settings::get_default_queue_message_limit
 
 ``` C++
 std::size_t get_default_queue_message_limit( void ) const;
@@ -955,7 +932,7 @@ unsigned integer representing maximum number of messages allowed on a queue befo
 
 n/a
 
-#### get_default_queue_message_size_limit
+#### Settings::get_default_queue_message_size_limit
 
 ``` C++
 std::size_t get_default_queue_message_size_limit( void ) const;
@@ -975,7 +952,7 @@ unsigned integer representing maximum message size in number of bytes before cli
 
 n/a    
             
-#### get_default_queue_subscription_limit
+#### Settings::get_default_queue_subscription_limit
 
 ``` C++
 std::size_t get_default_queue_subscription_limit( void ) const;
@@ -995,7 +972,7 @@ unsigned integer representing maximum number of subscriptions allowed on a queue
 
 n/a
 
-#### set_default_queue_message_limit
+#### Settings::set_default_queue_message_limit
 
 ``` C++
 void set_default_queue_message_limit( const std::size_t value );
@@ -1019,7 +996,7 @@ n/a
 
 n/a
 
-#### set_default_queue_message_size_limit
+#### Settings::set_default_queue_message_size_limit
 
 ``` C++
 void set_default_queue_message_size_limit( const std::size_t value );
@@ -1043,7 +1020,7 @@ n/a
 
 n/a    
             
-#### set_default_queue_subscription_limit
+#### Settings::set_default_queue_subscription_limit
 
 ``` C++
 void set_default_queue_subscription_limit( const std::size_t value );
@@ -1192,4 +1169,29 @@ n/a
 
 n/a  
 
+### Logger
 
+### Logger::Level
+
+#### Description
+
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
+
+#### Definition
+
+``` C++
+class Logger
+{
+    enum Level : int
+    {
+        INFO = 0000,
+        DEBUG = 1000,
+        FATAL = 2000,
+        ERROR = 3000,
+        WARNING = 4000,
+        SECURITY = 5000
+    };
+}
+```
+
+### Exchange
