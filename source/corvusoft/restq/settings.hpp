@@ -40,18 +40,18 @@ namespace restq
             //Functionality
             
             //Getters
-            size_t get_default_queue_message_limit( void ) const;
+            std::size_t get_default_queue_message_limit( void ) const;
             
-            size_t get_default_queue_message_size_limit( void ) const;
+            std::size_t get_default_queue_message_size_limit( void ) const;
             
-            size_t get_default_queue_subscription_limit( void ) const;
+            std::size_t get_default_queue_subscription_limit( void ) const;
             
             //Setters
-            void set_default_queue_message_limit( const size_t value );
+            void set_default_queue_message_limit( const std::size_t value );
             
-            void set_default_queue_message_size_limit( const size_t value );
+            void set_default_queue_message_size_limit( const std::size_t value );
             
-            void set_default_queue_subscription_limit( const size_t value );
+            void set_default_queue_subscription_limit( const std::size_t value );
             
             //Operators
             
