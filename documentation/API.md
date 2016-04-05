@@ -1123,10 +1123,73 @@ true if parsing was successful, false otherwise.
 
 noexcept specification:  [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
 
+#### Formatter::compose
 
+``` C++
+virtual restq::Bytes compose( const restq::Resources& values, const bool styled = false ) = 0;
+```
 
-            virtual restq::Bytes compose( const restq::Resources& values, const bool styled = false ) = 0;
-            virtual const std::string get_mime_type( void ) const = 0;
-            virtual void set_logger( const std::shared_ptr< restq::Logger >& value ) = 0;
+Convert a collection of [restq::Resource](#resourceresources) entities into a document structure. With an optional argument switch to allow styling documents into a more human consumable output, i.e JSON with whitespace included.
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|:-----------:|:-------------:|:----------:
+|   values   | [restq::Resoures](#resourceresources) | n/a | in |
+|   styled   | bool | false | in |
+
+##### Return Value
+
+[restq::Byte](#bytebytes) sequence containing a document structure.
+
+##### Exceptions
+
+If an exception is thrown for any reason, the service will close the active client session with an appropriate HTTP error response.
+
+#### Formatter::get_media_type
+
+``` C++
+virtual const std::string get_media_type( void ) const = 0;
+```
+
+Retreive the supported media type.
+
+This value is compared against the [Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2) and [Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5) headers to determine if it is capable of parsing the HTTP request/response body.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) specifying the media type supported by the Formatter.
+
+##### Exceptions
+
+If an exception is thrown for any reason, the service will close the active client session with an appropriate HTTP error response.           
+
+#### Formatter::set_logger
+
+``` C++
+virtual void set_logger( const std::shared_ptr< restq::Logger >& value ) = 0;
+```
+
+Replace the logger instance.
+
+[Dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) the logger instance to used (if at all) during parsing.
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|:-----------:|:-------------:|:----------:
+|   value   | [restq::Logger](#logger) | n/a | in |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a  
 
 
