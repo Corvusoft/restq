@@ -334,7 +334,7 @@ It is encouraged that any implementation of this interface be of an asynchronous
 
 ### Logger
 
-Interface detailing the required contract for logger extensions.  No default logger is supplied with the code base and it is the responsibility of third-party developers to implement the desired characterics.
+Interface detailing the required contract for logger extensions.  No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characterics.
 
 ```
  +------------------------------------------+
