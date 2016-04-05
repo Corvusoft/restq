@@ -1088,9 +1088,9 @@ Parses a [restq::Byte](#bytebytes) sequence containing a document structure.
 
 ##### Parameters
 
-| parameter |    type     | default value |
-|:---------:|:-----------:|:-------------:|
-|   document   | [restq::Byte](#bytebytes) | n/a           |
+| parameter |    type     | default value | direction |
+|:---------:|:-----------:|:-------------:|:---------:|
+|   document   | [restq::Byte](#bytebytes) | n/a | in |
 
 ##### Return Value
 
@@ -1106,7 +1106,7 @@ If an exception is thrown for any reason, the service will close the active clie
 virtual bool try_parse( const restq::Bytes& document, restq::Resources& values ) noexcept = 0;
 ```
 
-Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a document structure. The result of which is a collection of decoded [restq::Resource](#resourceresources) entities contained within the values parameter.
+Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a document structure. The result of which is a collection of decoded [restq::Resource](#resourceresources) entities held within the values parameter.
 
 ##### Parameters
 
