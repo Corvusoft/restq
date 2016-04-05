@@ -1072,13 +1072,35 @@ n/a
 Interface detailing the required contract for Format extensions. The concept of a format within RestQ is that of a document structure i.e JSON, XML, YAML, HTML.
 
 #### Methods  
-* [parse](#parse)
-* [try_parse](#try_parse)
-* [compose](#compose)
-* [get_mime_type](#get_mime_type)
-* [set_logger](#set_logger)
+* [parse](#formatterparse)
+* [try_parse](#formattertry_parse)
+* [compose](#formattercompose)
+* [get_mime_type](#formatterget_mime_type)
+* [set_logger](#formatterset_logger)
 
-            virtual restq::Resources parse( const restq::Bytes& value ) = 0;
+#### Formatter::parse
+
+``` C++
+virtual restq::Resources parse( const restq::Bytes& value ) = 0;
+```
+
+Parses a sequence of [restq::Byte](#bytebytes) containing a document structure.
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [restq::Byte](#bytebytes) | n/a           |
+
+##### Return Value
+
+Collection of decoded [restq::Resource](#resourceresources) entities. 
+
+##### Exceptions
+
+If an exception is thrown for any reason, the service will close the active client session with an appropriate HTTP error response.
+
+
             virtual bool try_parse( const restq::Bytes& value, restq::Resources& values ) noexcept = 0;
             virtual restq::Bytes compose( const restq::Resources& values, const bool styled = false ) = 0;
             virtual const std::string get_mime_type( void ) const = 0;
