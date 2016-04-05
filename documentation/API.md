@@ -75,7 +75,7 @@ enum : int
 
 ### String
 
-Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from [restbed::String](https://github.com/corvusoft/restbed/documentation/API.md#string) and will not be restated here for convenience.
+Utility class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from [restbed::String](https://github.com/corvusoft/restbed/documentation/API.md#string) and will not be restated here for convenience.
 
 #### Methods  
 * [is_integer](#stringis_integer)
