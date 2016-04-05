@@ -82,28 +82,28 @@ Resource represents an [associative array](http://en.cppreference.com/w/cpp/cont
 Represents a functor with variable parameters and return; this is used to help illustrate the design without introducing unnecassary complexity.
 ```
 +-----------------+
-|    <<typedef>>  |
-|     Callback    |
+|   <<typedef>>   |
+|    Callback     |
 +-----------------+
 |  std::function  |
 +-----------------+
 ```
 
-### LogLevel
+### Logger::Level
 
 [Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
 ```
-+--------------+
-|   <<enum>>   |
-|   LogLevel   |
-+--------------+
-| INFO         |
-| DEBUG        |
-| FATAL        |
-| ERROR        |
-| WARNING      |
-| SECURITY     |
-+--------------+
++---------------+
+|   <<enum>>    |
+| Logger::Level |
++---------------+
+| INFO          |
+| DEBUG         |
+| FATAL         |
+| ERROR         |
+| WARNING       |
+| SECURITY      |
++---------------+
 ```
 
 ### StatusCode
@@ -337,15 +337,15 @@ It is encouraged that any implementation of this interface be of an asynchronous
 Interface detailing the required contract for logger extensions.  No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characterics.
 
 ```
- +------------------------------------------+
- |             <<interface>>                |
- |                Logger                    |
- +------------------------------------------+
- | + stop(void)                        void |
- | + start(Settings)                   void |
- | + log(LogLevel,string)              void |
- | + log_if(condition,LogLevel,string) void |
- +------------------------------------------+
+ +-----------------------------------------------+
+ |                 <<interface>>                 |
+ |                    Logger                     |
+ +-----------------------------------------------+
+ | + stop(void)                             void |
+ | + start(Settings)                        void |
+ | + log(Logger::Level,string)              void |
+ | + log_if(condition,Logger::Level,string) void |
+ +-----------------------------------------------+
 ```
 
 ### Exchange
@@ -368,22 +368,22 @@ This my exchange description.
                                            +---------------------O-------------------+
                                                                  |
                                                                  |
-                    +--------------------------------------------+--------------------------------------------+
-                    |                                            |                                            |
-                    |                                            |                                            |
-                    |                                            |                                            |
- +------------------+---------------------+  +-------------------+---------------------+  +------------------------------------------+
- |            <<interface>>               |  |             <<interface>>               |  |             <<interface>>                |
- |              Formatter                 |  |               Repository                |  |                Logger                    |
- +----------------------------------------+  +-----------------------------------------+  +------------------------------------------+
- | + parse(Bytes)               Resources |  | + stop(void)                       void |  | + stop(void)                        void |
- | + try_parse(Bytes,Resources) bool      |  | + start(Settings)                  void |  | + start(Settings)                   void |
- | + compose(Resources,bool)    Bytes     |  | + create(Resources,Query,Callback) void |  | + log(LogLevel,string)              void |
- | + get_mime_type(void)        string    |  | + read(Query,Callback)             void |  | + log_if(condition,LogLevel,string) void |
- | + set_logger(Logger)         void      |  | + update(Resources,Query,Callback) void |  |                                          |
- |                                        |  | + destroy(Query,Callback)          void |  |                                          |
- |                                        |  | + set_logger(Logger)               void |  |                                          |
- +----------------------------------------+  +-----------------------------------------+  +------------------------------------------+
+                    +--------------------------------------------+------------------------------------------------+
+                    |                                            |                                                |
+                    |                                            |                                                |
+                    |                                            |                                                |
+ +------------------+---------------------+  +-------------------+---------------------+  +-----------------------------------------------+
+ |            <<interface>>               |  |             <<interface>>               |  |                 <<interface>>                 |
+ |              Formatter                 |  |               Repository                |  |                    Logger                     |
+ +----------------------------------------+  +-----------------------------------------+  +-----------------------------------------------+
+ | + parse(Bytes)               Resources |  | + stop(void)                       void |  | + stop(void)                             void |
+ | + try_parse(Bytes,Resources) bool      |  | + start(Settings)                  void |  | + start(Settings)                        void |
+ | + compose(Resources,bool)    Bytes     |  | + create(Resources,Query,Callback) void |  | + log(Logger::Level,string)              void |
+ | + get_mime_type(void)        string    |  | + read(Query,Callback)             void |  | + log_if(condition,Logger::Level,string) void |
+ | + set_logger(Logger)         void      |  | + update(Resources,Query,Callback) void |  |                                               |
+ |                                        |  | + destroy(Query,Callback)          void |  |                                               |
+ |                                        |  | + set_logger(Logger)               void |  |                                               |
+ +----------------------------------------+  +-----------------------------------------+  +-----------------------------------------------+
 ```
 
 ## Entity Interactions
