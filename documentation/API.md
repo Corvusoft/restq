@@ -1081,16 +1081,16 @@ Interface detailing the required contract for Format extensions. The concept of 
 #### Formatter::parse
 
 ``` C++
-virtual restq::Resources parse( const restq::Bytes& value ) = 0;
+virtual restq::Resources parse( const restq::Bytes& document ) = 0;
 ```
 
-Parses a sequence of [restq::Byte](#bytebytes) containing a document structure.
+Parses a [restq::Byte](#bytebytes) sequence containing a document structure.
 
 ##### Parameters
 
 | parameter |    type     | default value |
 |:---------:|:-----------:|:-------------:|
-|   value   | [restq::Byte](#bytebytes) | n/a           |
+|   document   | [restq::Byte](#bytebytes) | n/a           |
 
 ##### Return Value
 
@@ -1100,8 +1100,31 @@ Collection of decoded [restq::Resource](#resourceresources) entities.
 
 If an exception is thrown for any reason, the service will close the active client session with an appropriate HTTP error response.
 
+#### Formatter::try_parse
 
-            virtual bool try_parse( const restq::Bytes& value, restq::Resources& values ) noexcept = 0;
+``` C++
+virtual bool try_parse( const restq::Bytes& document, restq::Resources& values ) noexcept = 0;
+```
+
+Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a document structure. The result of which is a collection of decoded [restq::Resource](#resourceresources) entities contained within the values parameter.
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|:-----------:|:-------------:|:----------:
+|   document   | [restq::Byte](#bytebytes) | n/a           | in |
+|   values   | [restq::Resoures](#resourceresources) | n/a           | out |
+
+##### Return Value
+
+true if parsing was successful, false otherwise.
+
+##### Exceptions
+
+noexcept specification:  [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
+
+
+
             virtual restq::Bytes compose( const restq::Resources& values, const bool styled = false ) = 0;
             virtual const std::string get_mime_type( void ) const = 0;
             virtual void set_logger( const std::shared_ptr< restq::Logger >& value ) = 0;
