@@ -120,7 +120,7 @@ Represents a functor with variable parameters and return; this is used to help i
 
 ### String
 
-Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here for convenience.
+Utility class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here for convenience.
 ```
 +---------------------------------------+
 |              <<static>>               |
