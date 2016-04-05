@@ -297,7 +297,7 @@ Represents the primary point of service, repository, and logger configuration. T
 
 ### Formatter
 
-Interface detailing the required contract for Formatter extensions. The concept of a format within RestQ is that of a document structure i.e JSON, XML, YAML, HTML.
+Interface detailing the required contract for Format extensions. The concept of a format within RestQ is that of a document structure i.e JSON, XML, YAML, HTML.
 
 ```
  +------------------+---------------------+  
