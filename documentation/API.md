@@ -1065,4 +1065,23 @@ n/a
 
 ##### Exceptions
 
-n/a    
+n/a  
+
+### Formatter
+
+Interface detailing the required contract for Format extensions. The concept of a format within RestQ is that of a document structure i.e JSON, XML, YAML, HTML.
+
+#### Methods  
+* [parse](#parse)
+* [try_parse](#try_parse)
+* [compose](#compose)
+* [get_mime_type](#get_mime_type)
+* [set_logger](#set_logger)
+
+            virtual restq::Resources parse( const restq::Bytes& value ) = 0;
+            virtual bool try_parse( const restq::Bytes& value, restq::Resources& values ) noexcept = 0;
+            virtual restq::Bytes compose( const restq::Resources& values, const bool styled = false ) = 0;
+            virtual const std::string get_mime_type( void ) const = 0;
+            virtual void set_logger( const std::shared_ptr< restq::Logger >& value ) = 0;
+
+
