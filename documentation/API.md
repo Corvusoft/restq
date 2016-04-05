@@ -1188,7 +1188,7 @@ Interface detailing the required contract for logger extensions.  No default log
 
 #### Logger::log_if
 
-### Logger::Level
+#### Logger::Level
 
 #### Description
 
