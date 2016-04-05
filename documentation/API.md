@@ -1190,7 +1190,7 @@ Initialise a logger instance; see also [stop](#loggerstop).
 
 The [restq::Settings](#settings) passed are the same as those given to [restq::Exchange::start](#exchangestart).
 
-After this method has returned the Logger **MUST** be ready to start receiving [Logger::log](#loggerlog) and [Logger::log_if](#loggerlog_if) invocations.
+After this method has returned the instance **MUST** be ready to start receiving [log](#loggerlog) and [log_if](#loggerlog_if) invocations.
 
 ##### Parameters
 
