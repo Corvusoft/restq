@@ -1171,6 +1171,23 @@ n/a
 
 ### Logger
 
+Interface detailing the required contract for logger extensions.  No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characterics.
+
+#### Methods  
+* [stop](#loggerstop)
+* [start](#loggerstart)
+* [log](#loggerlog)
+* [log_if](#loggerlog_if)
+* [level](#loggerlevel)
+
+#### Logger::stop
+
+#### Logger::start
+
+#### Logger::log
+
+#### Logger::log_if
+
 ### Logger::Level
 
 #### Description
