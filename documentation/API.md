@@ -541,7 +541,7 @@ n/a
 
 ##### Return Value
  
-[std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) reference to the client's network [session](#session), nullptr by default.
+[std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) reference to the client's network [session](#session), [nullptr](http://en.cppreference.com/w/cpp/types/nullptr_t) by default.
 
 ##### Exceptions
 
@@ -1234,7 +1234,7 @@ virtual void log( const Level level, const char* format, ... ) = 0;
 
 Commit the message specified under the control of a format string, with the specified level of severity into the log; see also [log_if](#loggerlog_if).
 
-See [printf](http://en.cppreference.com/w/cpp/io/c/fprintf) family of functions for format options.
+See [printf](http://en.cppreference.com/w/cpp/io/c/fprintf) family of functions for format directives.
 
 >The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream; and conversion
 >specifications, each of which results in fetching zero or more subsequent arguments.  Each conversion specification is >introduced by the % character.
@@ -1300,3 +1300,199 @@ class Logger
 [Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
 
 ### Exchange
+
+my exchange description here.
+
+#### Methods  
+* [start](#exchangestart)
+* [stop](#exchangestop)
+* [restart](#exchangerestart)
+* [add_format](#exchangeadd_format)
+* [add_signal_handler](#exchangeadd_signal_handler)
+* [set_logger](#exchangeset_logger)
+* [set_repository](#exchangeset_repository)
+* [set_ready_handler](#exchangeset_ready_handler)
+
+#### Exchange::start
+
+``` C++
+void start( const std::shared_ptr< const Settings >& settings = nullptr );
+```
+
+Bring the message service online for public consumption; see also [stop](#exchangestop).
+
+When the exchange starts it publishes queue, subscription, and message resources with their associated collections, see [Network API(#NETWORK-API.md) for details.
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [restq::Settings](#settings) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+[std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown if no repository has been supplied.
+
+#### Exchange::stop
+
+``` C++
+void stop( void );
+```
+
+Gracefully teardown the exchange; see also [stop](#exchangestart).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in a dirty service teardown.
+
+#### Exchange::restart
+
+``` C++
+void restart( const std::shared_ptr< const Settings >& settings = nullptr );
+```
+
+Restart the exchange, this is equivalent to calling [stop](#exchangestop) and then subsequently [start](#exchangestart); see also [start](#exchangestart), [stop](#exchangestop).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [restq::Settings](#settings) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+[std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown if no repository has been supplied.
+
+#### Exchange::add_format
+
+``` C++
+void add_format( const std::string& media_type, const std::shared_ptr< Formatter >& value );
+```
+
+Add a media type document formatter to the exchange; see also [Formatter](#formatter).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   media_type   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+|   value   | [Formatter](#formatter) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+[std::invalid_argument](http://en.cppreference.com/w/cpp/error/invalid_argument) is thrown when settings value as a [nullptr](http://en.cppreference.com/w/cpp/types/nullptr_t).
+
+[std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown when attempting to modify a service that is currently active, i.e [start](#exchangestart) has already been called.
+
+#### Exchange::add_signal_handler
+
+``` C++
+void add_signal_handler( const int signal, const std::function< void ( const int ) >& value );
+```
+
+Inform the exchange to invoke the error handler on recieving the specified system [signal](http://en.cppreference.com/w/cpp/utility/program/signal).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   signal   | [int](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
+|   value   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+[std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown when attempting to modify a service that is currently active, i.e [start](#exchangestart) has been called.
+
+#### Exchange::set_logger
+
+``` C++
+void set_logger( const std::shared_ptr< Logger >& value );
+```
+
+Replace the logger to be used by the exchange; see also [Logger](#logger).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [Logger](#logger) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+[std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown when attempting to modify a service that is currently active, i.e [start](#exchangestart) has already been called.
+
+#### Exchange::set_repository
+
+``` C++
+void set_repository( const std::shared_ptr< Repository >& value );
+```
+
+Replace the repository to be used by the exchange; see also [Repository](#repository).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [Repository](#repository) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+[std::invalid_argument](http://en.cppreference.com/w/cpp/error/invalid_argument) is thrown when settings value as a [nullptr](http://en.cppreference.com/w/cpp/types/nullptr_t).
+
+[std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown when attempting to modify a service that is currently active, i.e [start](#exchangestart) has been called.
+
+#### Exchange::set_ready_handler
+
+``` C++
+void set_ready_handler( const std::function< void ( Exchange& ) >& value );
+```
+
+Replace the service ready callback.
+
+The callback specified in value will be invoked once the service is online and ready to serve incoming client requests.
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+[std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown when attempting to modify a service that is currently active, i.e [start](#exchangestart) has already been called.
