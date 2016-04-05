@@ -1129,7 +1129,7 @@ If an exception is thrown for any reason, the service will close the active clie
 virtual const std::string get_media_type( void ) const = 0;
 ```
 
-Retreive the supported media type.
+Retreive the supported media type, i.e application/json.
 
 This value is compared against the [Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2) and [Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5) headers to determine if it is capable of parsing the HTTP request/response body.
 
