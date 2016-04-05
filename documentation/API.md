@@ -1190,8 +1190,6 @@ Interface detailing the required contract for logger extensions.  No default log
 
 #### Logger::Level
 
-#### Description
-
 ``` C++
 class Logger
 {
