@@ -1192,10 +1192,6 @@ Interface detailing the required contract for logger extensions.  No default log
 
 #### Description
 
-[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
-
-#### Definition
-
 ``` C++
 class Logger
 {
@@ -1210,5 +1206,7 @@ class Logger
     };
 }
 ```
+
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
 
 ### Exchange
