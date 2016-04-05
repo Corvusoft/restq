@@ -599,7 +599,7 @@ Replaces the contents of the query error status; see also [get_error_code](#get_
 
 | parameter |    type     | default value | direction |
 |:---------:|-----------|:-------------:|:----------: |
-|   value   |     int     | n/a | input |
+|   value   |     [int](http://en.cppreference.com/w/cpp/language/types)     | n/a | input |
 
 ##### Return Value
  
@@ -1113,7 +1113,7 @@ Convert a collection of [restq::Resource](#resourceresources) entities into a do
 | parameter |    type     | default value | direction |
 |:---------:|-----------|:-------------:|:----------: |
 |   values   | [restq::Resoures](#resourceresources) | n/a | input |
-|   styled   | bool | false | in |
+|   styled   | [bool](http://en.cppreference.com/w/cpp/language/types) | false | in |
 
 ##### Return Value
 
@@ -1182,9 +1182,78 @@ Interface detailing the required contract for logger extensions.  No default log
 
 #### Logger::stop
 
+``` C++
+virtual void stop( void ) = 0;
+```
+
+Halt/Clean-up logger resources; see also [Logger::start](#loggerstart).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Exceptions raised will result in a dirty service teardown.
+
 #### Logger::start
 
+``` C++
+virtual void start( const std::shared_ptr< const restq::Settings >& settings ) = 0;
+```
+
+Initialise a logger instance; see also [Logger::stop](#loggerstop).
+
+The [restq::Settings](#settings) passed are the same as those given to [restq::Exchange::start](#exchangestart).
+
+After this method has been invoked the Logger **MUST** be ready to start receiving [Logger::log](#loggerlog) and [Logger::log_if](#loggerlog_if) calls.
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [restq::Settings](#settings) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in the service failing to start.
+
 #### Logger::log
+
+``` C++
+virtual void log( const Level level, const char* format, ... ) = 0;
+```
+
+Commit the message specified under the control of a format string, with the speified level severity into the log.
+
+See [printf](http://en.cppreference.com/w/cpp/io/c/fprintf) family of functions for format options.
+
+>The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream; and conversion
+>specifications, each of which results in fetching zero or more subsequent arguments.  Each conversion specification is >introduced by the % character.
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [restq::Logger::Level](#loggerlevel) | n/a | input |
+|   value   | [char*](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
+|   ...   | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in the service ignore the log entry and printing to [stderr](http://en.cppreference.com/w/cpp/io/c).
 
 #### Logger::log_if
 
