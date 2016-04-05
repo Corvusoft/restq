@@ -1061,7 +1061,7 @@ Interface detailing the required contract for Format extensions. The concept of 
 virtual restq::Resources parse( const restq::Bytes& document ) = 0;
 ```
 
-Parses a [restq::Byte](#bytebytes) sequence containing a document structure.
+Parses a [restq::Byte](#bytebytes) sequence containing a document structure; see also [parse](#formattertry_parse).
 
 ##### Parameters
 
@@ -1083,7 +1083,7 @@ If an exception is thrown for any reason, the service will close the active clie
 virtual bool try_parse( const restq::Bytes& document, restq::Resources& values ) noexcept = 0;
 ```
 
-Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a document structure. The result of which is a collection of decoded [restq::Resource](#resourceresources) entities held within the values parameter.
+Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a document structure. The result of which is a collection of decoded [restq::Resource](#resourceresources) entities held within the values parameter; see also [parse](#formatterparse).
 
 ##### Parameters
 
@@ -1174,31 +1174,11 @@ n/a
 Interface detailing the required contract for logger extensions.  No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characterics.
 
 #### Methods  
-* [stop](#loggerstop)
 * [start](#loggerstart)
+* [stop](#loggerstop)
 * [log](#loggerlog)
 * [log_if](#loggerlog_if)
 * [level](#loggerlevel)
-
-#### Logger::stop
-
-``` C++
-virtual void stop( void ) = 0;
-```
-
-Halt/Clean-up logger resources; see also [Logger::start](#loggerstart).
-
-##### Parameters
-
-n/a
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-Exceptions raised will result in a dirty service teardown.
 
 #### Logger::start
 
@@ -1206,11 +1186,11 @@ Exceptions raised will result in a dirty service teardown.
 virtual void start( const std::shared_ptr< const restq::Settings >& settings ) = 0;
 ```
 
-Initialise a logger instance; see also [Logger::stop](#loggerstop).
+Initialise a logger instance; see also [stop](#loggerstop).
 
 The [restq::Settings](#settings) passed are the same as those given to [restq::Exchange::start](#exchangestart).
 
-After this method has been invoked the Logger **MUST** be ready to start receiving [Logger::log](#loggerlog) and [Logger::log_if](#loggerlog_if) calls.
+After this method has returned the Logger **MUST** be ready to start receiving [Logger::log](#loggerlog) and [Logger::log_if](#loggerlog_if) invocations.
 
 ##### Parameters
 
@@ -1226,13 +1206,33 @@ n/a
 
 Any exceptions raised will result in the service failing to start.
 
+#### Logger::stop
+
+``` C++
+virtual void stop( void ) = 0;
+```
+
+Halt/Clean-up logger resources; see also [start](#loggerstart).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Exceptions raised will result in a dirty service teardown.
+
 #### Logger::log
 
 ``` C++
 virtual void log( const Level level, const char* format, ... ) = 0;
 ```
 
-Commit the message specified under the control of a format string, with the speified level severity into the log.
+Commit the message specified under the control of a format string, with the specified level of severity into the log; see also [log_if](#loggerlog_if).
 
 See [printf](http://en.cppreference.com/w/cpp/io/c/fprintf) family of functions for format options.
 
@@ -1243,8 +1243,8 @@ See [printf](http://en.cppreference.com/w/cpp/io/c/fprintf) family of functions 
 
 | parameter |    type     | default value | direction |
 |:---------:|-----------|:-------------:|:----------: |
-|   value   | [restq::Logger::Level](#loggerlevel) | n/a | input |
-|   value   | [char*](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
+|   level   | [restq::Logger::Level](#loggerlevel) | n/a | input |
+|   format   | [char*](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
 |   ...   | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) | n/a | input |
 
 ##### Return Value
@@ -1253,9 +1253,32 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service ignore the log entry and printing to [stderr](http://en.cppreference.com/w/cpp/io/c).
+Any exceptions raised will result in the service ignoring the fault and printing directly to [Standard Error (stderr)](http://en.cppreference.com/w/cpp/io/c).
 
 #### Logger::log_if
+
+``` C++
+virtual void log_if( bool expression, const Level level, const char* format, ... ) = 0;
+```
+
+Commit the message specified under the control of a format string, with the specified level of severity into the log, under the condition that expression is equal to boolean true; see also [log](#loggerlog).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   expresssion   | [bool](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
+|   level   | [restq::Logger::Level](#loggerlevel) | n/a | input |
+|   format   | [char*](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
+|   ...   | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in the service ignoring the fault and printing directly to [Standard Error (stderr)](http://en.cppreference.com/w/cpp/io/c).
 
 #### Logger::Level
 
