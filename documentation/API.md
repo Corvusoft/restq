@@ -1052,7 +1052,7 @@ Interface detailing the required contract for Format extensions. The concept of 
 * [parse](#formatterparse)
 * [try_parse](#formattertry_parse)
 * [compose](#formattercompose)
-* [get_mime_type](#formatterget_mime_type)
+* [get_media_type](#formatterget_media_type)
 * [set_logger](#formatterset_logger)
 
 #### Formatter::parse
