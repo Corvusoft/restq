@@ -26,6 +26,8 @@
 
 Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with Standard Template Library (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics. 
 
+See also [restbed::Bytes](https://github.com/corvusoft/restbed/documentation/API.md#bytebytes) for details.
+
 #### Definition
 
 ``` C++
@@ -96,7 +98,7 @@ enum : int
 
 ### String
 
-Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here for convenience.
+Utiltiy class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from [restbed::String](https://github.com/corvusoft/restbed/documentation/API.md#string) and will not be restated here for convenience.
 
 #### Methods  
 * [is_integer](#is_integer)
@@ -891,3 +893,176 @@ n/a
 ##### Exceptions
 
 n/a 
+
+### SSLSettings
+
+Represents Secure Socket Layer service configuration.
+
+#### Definition
+
+``` C++
+using SSLSettings = restbed::SSLSettings;
+```
+
+See [restbed::SSLSettings](https://github.com/corvusoft/restbed/documentation/API.md#sslsettings) for details.
+
+### Settings
+
+Represents the primary point of service, repository, and logger configuration. The mass majority of its implementation is inherited from [restbed::Settings](https://github.com/corvusoft/restbed/documentation/API.md#settings) with a additional RestQ specific methods included and the following methods removed:
+
+``` C++
+bool get_case_insensitive_uris( void ) const = delete;
+std::string get_property( const std::string& name ) const = delete;
+std::map< std::string, std::string > get_properties( void ) const = delete;
+std::string get_status_message( const int code ) const = delete;
+std::map< int, std::string > get_status_messages( void ) const = delete;
+std::multimap< std::string, std::string > get_default_headers( void ) const = delete;
+void set_case_insensitive_uris( const bool value ) = delete;
+void set_property( const std::string& name, const std::string& value ) = delete;
+void set_properties( const std::map< std::string, std::string >& values ) = delete;
+void set_status_message( const int code, const std::string& message ) = delete;
+void set_status_messages( const std::map< int, std::string >& values ) = delete;
+void set_default_header( const std::string& name, const std::string& value ) = delete;
+void set_default_headers( const std::multimap< std::string, std::string >& values ) = delete;
+```
+
+#### Methods 
+
+* [get_default_queue_message_limit](#get_default_queue_message_limit)
+* [get_default_queue_message_size_limit](#get_default_queue_message_size_limit)
+* [get_default_queue_subscription_limit](#get_default_queue_subscription_limit)
+* [set_default_queue_message_limit](#set_default_queue_message_limit)
+* [set_default_queue_message_size_limit](#set_default_queue_message_size_limit)
+* [set_default_queue_subscription_limit](#set_default_queue_subscription_limit)
+
+#### get_default_queue_message_limit
+
+``` C++
+std::size_t get_default_queue_message_limit( void ) const;
+```
+
+Retrieves the default message limit given to a freshly created queue; see also [set_default_queue_message_limit](#set_default_queue_message_limit).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+unsigned integer representing maximum number of messages allowed on a queue before client rejection.
+
+##### Exceptions
+
+n/a
+
+#### get_default_queue_message_size_limit
+
+``` C++
+std::size_t get_default_queue_message_size_limit( void ) const;
+```
+
+Retrieves the default message size limit given to a freshly created queue; see also [set_default_queue_message_size_limit](#set_default_queue_message_size_limit).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+unsigned integer representing maximum message size in number of bytes before client rejection.
+
+##### Exceptions
+
+n/a    
+            
+#### get_default_queue_subscription_limit
+
+``` C++
+std::size_t get_default_queue_subscription_limit( void ) const;
+```
+
+Retrieves the default subscription limit given to a freshly created queue; see also [set_default_queue_subscription_limit](#set_default_queue_subscription_limit).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+unsigned integer representing maximum number of subscriptions allowed on a queue before client rejection.
+
+##### Exceptions
+
+n/a
+
+#### set_default_queue_message_limit
+
+``` C++
+void set_default_queue_message_limit( const std::size_t value );
+```
+
+Replaces the default message limit (100) given to a freshly created queue; see also [get_default_queue_message_limit](#get_default_queue_message_limit).
+
+Internally this value is compared with the number of pending messages awaiting delivery for a particular queue. If this watermark is breached clients begin to receive the 503 (Service Unavailable) error status until messages have been successful dispatched. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a           |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### set_default_queue_message_size_limit
+
+``` C++
+void set_default_queue_message_size_limit( const std::size_t value );
+```
+
+Retrieves the default message size limit (1024 bytes) given to a freshly created queue; see also [get_default_queue_message_size_limit](#get_default_queue_message_size_limit).
+
+When creating a new message on a queue this vaule is consulted and if breached clients will receive 413 (Request Entity Too Large) error response. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a           |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a    
+            
+#### set_default_queue_subscription_limit
+
+``` C++
+void set_default_queue_subscription_limit( const std::size_t value );
+```
+
+Retrieves the default subscription limit (25) given to a freshly created queue; see also [get_default_queue_subscription_limit](#get_default_queue_subscription_limit).
+
+Internally this value is compared with the number of consumers currently subscribed to a queue, if breached clients see a  503 (Service Unavailable) error response. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
+
+##### Parameters
+
+| parameter |    type     | default value |
+|:---------:|:-----------:|:-------------:|
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a           |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a    
