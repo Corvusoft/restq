@@ -23,6 +23,8 @@ Below is a table of available network endpoints. Requesting any other path will 
 
 ## RESTful Resources
 
+Mention [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations.
+
 All resources with the exception of Message and Collection entities may hold any number of generic properties presented to the exchange in a supported document format. These properties are persisted in the repository and can then be used with the filter functionality to discover data-sources (Queues) of interest.
 
 Within the exchange a select number of property names are reserved for internal use and/or Queue/Subscription configuration.  Setting/Altering these properties with invalid content will result in a 400 (Bad Request) response status code.
