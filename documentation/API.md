@@ -16,9 +16,10 @@
 11. [SSLSettings](#sslsettings)
 12. [Settings](#settings)
 13. [Formatter](#formatter)
-14. [Logger](#logger)
-15. [Logger::Level](#loggerlevel)
-16. [Exchange](#exchange)
+14. [Repository](#repository)
+15. [Logger](#logger)
+16. [Logger::Level](#loggerlevel)
+17. [Exchange](#exchange)
 
 ### Byte/Bytes
 
@@ -885,7 +886,7 @@ See [restbed::SSLSettings](https://github.com/corvusoft/restbed/documentation/AP
 
 ### Settings
 
-Represents the primary point of service, repository, and logger configuration. The mass majority of its implementation is inherited from [restbed::Settings](https://github.com/corvusoft/restbed/documentation/API.md#settings) with additional RestQ specific methods included and the following methods **removed**:
+Represents the primary point of [service](#exchange), [repository](#repository), and [logger](#logger) configuration. The mass majority of its implementation is inherited from [restbed::Settings](https://github.com/corvusoft/restbed/documentation/API.md#settings) with additional RestQ specific methods included and the following methods **removed**:
 
 ``` C++
 bool get_case_insensitive_uris( void ) const = delete;
@@ -1168,6 +1169,69 @@ n/a
 ##### Exceptions
 
 n/a  
+
+### Repository
+
+Interface detailing the required contract for repository extensions. A repository represents a data-store for the long term persistence of dynamically created resources via the [Network API](#NETWORK-API.md).
+
+It is encouraged that any implementation of this interface **SHOULD** be of an asynchronous nature, to reduce thread contention within the exchange. This can be achieved with MySQL, PostgreSQL, and other database products.
+
+#### Methods  
+* [start](#repositorystart)
+* [stop](#repositorystop)
+* [create](#repositorycreate)
+* [read](#repositoryread)
+* [update](#repositoryupdate)
+* [destroy](#repositorystartdestroy)
+* [set_logger](#repositoryset_logger)
+
+#### Repository::start
+
+``` C++
+virtual void stop( void ) = 0;
+```
+
+#### Repository::start
+
+``` C++
+virtual void stop( void ) = 0;
+```
+
+#### Repository::create
+
+``` C++
+virtual void create( const Resources values,
+                     const std::shared_ptr< Query > query,
+                     const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
+```
+
+#### Repository::read
+
+``` C++
+virtual void read( const std::shared_ptr< Query > query,
+                   const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
+```
+
+#### Repository::update
+
+``` C++
+virtual void update( const Resource changeset,
+                     const std::shared_ptr< Query > query,
+                     const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
+```
+
+#### Repository::destroy
+
+``` C++
+virtual void destroy( const std::shared_ptr< Query > query,
+                      const std::function< void ( const std::shared_ptr< Query > ) >& callback = nullptr ) = 0;
+```            
+
+#### Repository::set_logger
+
+``` C++
+virtual void set_logger( const std::shared_ptr< Logger >& value ) = 0;
+```
 
 ### Logger
 
