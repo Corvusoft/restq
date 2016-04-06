@@ -4,6 +4,9 @@ RestQ provides an open Hyper Text Transfer Protocol (HTTP) API for technology ag
 
 This document will describe the available network endpoints for queue, subscription, and message management.  For detailed examples of interacting with the network interface please see the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
 
+## Interpretation
+The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
+
 ## URI Map
 
 Below is a table of available network endpoints. Requesting any other path will result in 404 (Not Found) response status code. If you perform a Method on an endpoint that lacks support, yet is available elsewhere in the exchange, you will recieve a 405 (Method Not Allowed) status, otherwise a 501 (Method Not Implemented) status code is returned.
