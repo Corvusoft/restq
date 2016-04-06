@@ -1256,7 +1256,7 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+Any exceptions raised will result in the service closing the active client session with a 500 (Internal Server Error) error response.
 
 #### Repository::read
 
@@ -1280,7 +1280,7 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+Any exceptions raised will result in the service closing the active client session with a 500 (Internal Server Error) error response.
 
 #### Repository::update
 
@@ -1306,7 +1306,7 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+Any exceptions raised will result in the service closing the active client session with a 500 (Internal Server Error) error response.
 
 #### Repository::destroy
 
@@ -1330,7 +1330,7 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+Any exceptions raised will result in the service closing the active client session with a 500 (Internal Server Error) error response.
 
 #### Repository::set_logger
 
