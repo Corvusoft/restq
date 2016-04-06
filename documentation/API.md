@@ -2,6 +2,10 @@
 
 ### Document Scope
 
+
+### Interpretation
+The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
+
 ## Table of Contents  
 1. [Document Scope](#example)
 2. [Byte/Bytes](#bytebytes)
