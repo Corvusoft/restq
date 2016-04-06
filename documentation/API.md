@@ -1,7 +1,8 @@
 ##API Overview
 
-### Document Scope
+This document is intented to accurately communicate the Application Programming Interface (API) exposed by the RestQ framework for public consumption. It does not go into detail regarding the [Network API](#NETWORK-API.md).
 
+A description of the frameworks software architecture is provided by the [Design Overview](#DESIGN.md) documentation.
 
 ### Interpretation
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
