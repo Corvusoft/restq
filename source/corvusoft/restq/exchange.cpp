@@ -122,7 +122,7 @@ namespace restq
         start( settings );
     }
     
-    void Exchange::add_format( const string& mime_pattern, const shared_ptr< Formatter >& value )
+    void Exchange::add_format( const string& media_type, const shared_ptr< Formatter >& value )
     {
         if ( m_pimpl->m_boot_time )
         {
@@ -134,7 +134,20 @@ namespace restq
             throw invalid_argument( "Null formats are not supported." );
         }
         
-        m_pimpl->m_formats.insert( make_pair( mime_pattern, value ) );
+        m_pimpl->m_formats.insert( make_pair( media_type, value ) );
+    }
+    
+    void Exchange::add_signal_handler( const int signal, const function< void ( const int ) >& value )
+    {
+        if ( m_pimpl->m_boot_time )
+        {
+            throw runtime_error( "Runtime modifications of the exchange are prohibited." );
+        }
+        
+        if ( value not_eq nullptr )
+        {
+            m_pimpl->m_service->set_signal_handler( signal, value );
+        }
     }
     
     void Exchange::set_logger( const shared_ptr< Logger >& value )
@@ -172,19 +185,6 @@ namespace restq
         if ( value not_eq nullptr )
         {
             m_pimpl->m_ready_handler = bind( value, std::ref( *this ) );
-        }
-    }
-    
-    void Exchange::set_signal_handler( const int signal, const function< void ( const int ) >& value )
-    {
-        if ( m_pimpl->m_boot_time )
-        {
-            throw runtime_error( "Runtime modifications of the exchange are prohibited." );
-        }
-        
-        if ( value not_eq nullptr )
-        {
-            m_pimpl->m_service->set_signal_handler( signal, value );
         }
     }
 }

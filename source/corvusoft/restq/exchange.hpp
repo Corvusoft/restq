@@ -52,7 +52,9 @@ namespace restq
             
             void restart( const std::shared_ptr< const Settings >& settings = nullptr );
             
-            void add_format( const std::string& mime_pattern, const std::shared_ptr< Formatter >& value );
+            void add_format( const std::string& media_type, const std::shared_ptr< Formatter >& value );
+            
+            void add_signal_handler( const int signal, const std::function< void ( const int ) >& value );
             
             //Getters
             
@@ -62,8 +64,6 @@ namespace restq
             void set_repository( const std::shared_ptr< Repository >& value );
             
             void set_ready_handler( const std::function< void ( Exchange& ) >& value );
-            
-            void set_signal_handler( const int signal, const std::function< void ( const int ) >& value );
             
             //Operators
             

@@ -49,14 +49,16 @@ namespace restq
                                  const std::shared_ptr< Query > query,
                                  const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
                                  
-            virtual void read( const std::shared_ptr< Query > query, const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
-            
+            virtual void read( const std::shared_ptr< Query > query,
+                               const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
+                               
             virtual void update( const Resource changeset,
                                  const std::shared_ptr< Query > query,
                                  const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
                                  
-            virtual void destroy( const std::shared_ptr< Query > query, const std::function< void ( const std::shared_ptr< Query > ) >& callback = nullptr ) = 0;
-            
+            virtual void destroy( const std::shared_ptr< Query > query,
+                                  const std::function< void ( const std::shared_ptr< Query > ) >& callback = nullptr ) = 0;
+                                  
             //Getters
             
             //Setters
