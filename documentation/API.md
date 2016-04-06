@@ -215,53 +215,45 @@ n/a
 
 ### Uri
 
+``` C++
+using Uri = restbed::Uri;
+```
+
 Represents a Uniform Resource Identifier as specificed in RFC 3986.
 
 > A generic URI is of the form:
 >
 > scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
 
-#### Definition
-
-``` C++
-using Uri = restbed::Uri;
-```
-
 See [restbed::Uri](https://github.com/corvusoft/restbed/documentation/API.md#uri) for details.
 
 ### Request
-
-Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
-
-#### Definition
 
 ``` C++
 using Request = restbed::Request;
 ```
 
+Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
+
 See [restbed::Request](https://github.com/corvusoft/restbed/documentation/API.md#request) for details.
 
 ### Response
-
-Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
-
-#### Definition
 
 ``` C++
 using Response = restbed::Response;
 ```
 
+Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
+
 See [restbed::Response](https://github.com/corvusoft/restbed/documentation/API.md#response) for details.
 
 ### Session
 
-Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
-
-#### Definition
-
 ``` C++
 using Session = restbed::Session;
 ```
+
+Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
 
 See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md#session) for details.
 
@@ -866,13 +858,11 @@ n/a
 
 ### SSLSettings
 
-Represents Secure Socket Layer service configuration.
-
-#### Definition
-
 ``` C++
 using SSLSettings = restbed::SSLSettings;
 ```
+
+Represents Secure Socket Layer service configuration.
 
 See [restbed::SSLSettings](https://github.com/corvusoft/restbed/documentation/API.md#sslsettings) for details.
 
