@@ -7,6 +7,9 @@ Of the many tools available within UML we primarly employ Class diagrams for det
 
 This document outlines our interpretation of relevant UML concepts and aims in creating a level playing field for all  participants during software design discussions.
 
+## Interpretation
+The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
+
 ### Class Diagrams
 
 #### Relationships
