@@ -27,27 +27,17 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 
 ### Byte/Bytes
 
-#### Description
-
-Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics. 
-
-See also [restbed::Bytes](https://github.com/corvusoft/restbed/documentation/API.md#bytebytes) for details.
-
-#### Definition
-
 ``` C++
 using Byte = restbed::Byte;
     
 using Bytes = restbed::Bytes;
 ```
 
+Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics. 
+
+See also [restbed::Bytes](https://github.com/corvusoft/restbed/documentation/API.md#bytebytes) for details.
+
 ### Resource/Resources
-
-#### Description
-
-Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
-
-#### Definition
 
 ``` C++
 typedef std::multimap< std::string, Bytes > Resource;
@@ -55,13 +45,9 @@ typedef std::multimap< std::string, Bytes > Resource;
 typedef std::list< Resource > Resources;
 ```
 
+Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
+
 ### StatusCode
-
-#### Description
-
-[Enumeration](http://en.cppreference.com/w/cpp/language/enum) of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1).
-
-#### Definition
 
 ``` C++
 enum : int
@@ -77,6 +63,8 @@ enum : int
     ...
 }
 ```
+
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1).
 
 ### String
 
@@ -1484,7 +1472,7 @@ class Logger
 
 ### Exchange
 
-my exchange description here.
+The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
 
 #### Methods  
 * [start](#exchangestart)
