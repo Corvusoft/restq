@@ -267,7 +267,7 @@ See [restbed::Response](https://github.com/corvusoft/restbed/documentation/API.m
 
 ### Session
 
-Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only Authenticators and Repository developers require access to this functionality.
+Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
 
 #### Definition
 
@@ -279,7 +279,7 @@ See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md
 
 ### Query
 
-Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensiablilty during Repository interaction.
+Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensiablilty during [Repository](#repository) interaction.
 
 #### Methods  
 * [clear](#queryclear)
@@ -890,7 +890,7 @@ See [restbed::SSLSettings](https://github.com/corvusoft/restbed/documentation/AP
 
 ### Settings
 
-Represents the primary point of [service](#exchange), [repository](#repository), and [logger](#logger) configuration. The mass majority of its implementation is inherited from [restbed::Settings](https://github.com/corvusoft/restbed/documentation/API.md#settings) with additional RestQ specific methods included and the following methods **removed**:
+Represents the primary point of [Exchange](#exchange), [Repository](#repository), and [Logger](#logger) configuration. The mass majority of its implementation is inherited from [restbed::Settings](https://github.com/corvusoft/restbed/documentation/API.md#settings) with additional RestQ specific methods included and the following methods **removed**:
 
 ``` C++
 bool get_case_insensitive_uris( void ) const = delete;
@@ -1158,8 +1158,6 @@ virtual void set_logger( const std::shared_ptr< restq::Logger >& value ) = 0;
 
 Replace the logger instance.
 
-[Dependency inject](https://en.wikipedia.org/wiki/Dependency_injection) the logger instance to be used, if at all, during parsing.
-
 ##### Parameters
 
 | parameter |    type     | default value | direction |
@@ -1192,14 +1190,47 @@ It is encouraged that any implementation of this interface **SHOULD** be of an a
 #### Repository::start
 
 ``` C++
-virtual void stop( void ) = 0;
+virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
 ```
 
-#### Repository::start
+Initialise a repository instance; see also [stop](#repositorystop).
+
+The [Settings](#settings) passed are the same as those given to [Exchange::start](#exchangestart).
+
+After this method has returned the instance **MUST** be ready to start receiving [create](#repositorycreate), [read](#repositoryread), [update](#repositoryupdate) and [destroy](#repositorydestroy) invocations.
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [restq::Settings](#settings) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in the service failing to start.
+
+#### Repository::stop
 
 ``` C++
 virtual void stop( void ) = 0;
 ```
+Halt/Clean-up repository resources, i.e database connections; see also [start](#repositorystart).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Exceptions raised will result in a dirty service teardown.
 
 #### Repository::create
 
@@ -1209,12 +1240,47 @@ virtual void create( const Resources values,
                      const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
 ```
 
+Create one or more resources; see also [Resources](#resourceresources) and [Query](#query).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   values   | [restq::Resources](#resourceresources) | n/a | input |
+|   query   | [restq::Query](#query) | n/a | input |
+|   callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+
 #### Repository::read
 
 ``` C++
 virtual void read( const std::shared_ptr< Query > query,
                    const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
 ```
+
+Read one or more resources; see also [Query](#query).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   query   | [restq::Query](#query) | n/a | input |
+|   callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
 
 #### Repository::update
 
@@ -1224,6 +1290,24 @@ virtual void update( const Resource changeset,
                      const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
 ```
 
+Update one or more resources; see also [Resource](#resourceresources) and [Query](#query).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   changeset   | [restq::Resource](#resourceresources) | n/a | input |
+|   query   | [restq::Query](#query) | n/a | input |
+|   callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+
 #### Repository::destroy
 
 ``` C++
@@ -1231,11 +1315,42 @@ virtual void destroy( const std::shared_ptr< Query > query,
                       const std::function< void ( const std::shared_ptr< Query > ) >& callback = nullptr ) = 0;
 ```            
 
+Delete one or more resources; see also [Query](#query).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   query   | [restq::Query](#query) | n/a | input |
+|   callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+
 #### Repository::set_logger
 
 ``` C++
 virtual void set_logger( const std::shared_ptr< Logger >& value ) = 0;
 ```
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   value   | [restq::Logger](#logger) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a 
 
 ### Logger
 
