@@ -39,7 +39,7 @@ Within the exchange a select number of property names are reserved for internal 
 
 Endpoints identified by a pluralised resource name, i.e queues, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
-Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a queue). Reading (HTTP GET) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a queue). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
 
 ### Queue Resource
 
@@ -69,7 +69,7 @@ The queue resource represents the desired configuration of a message chain.
 
 Endpoints identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
-Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading (HTTP GET) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
 
 ### Subscription Resource
 
@@ -98,7 +98,7 @@ The subscription resource represents the desired configuration of a message cons
 
 Endpoints identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
-Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading (HTTP GET) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
 
 ### Message Resource
 
@@ -161,7 +161,22 @@ The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resourc
 
 ### Keys
 
-
-
 ## HTTP Header Support
 
+### Accept-Charset
+### Accept-Encoding
+### Accept-Language
+### Accept-Ranges
+### Accept
+### Content-Encoding
+### Content-Language
+### Content-Length
+### Content-MD5
+### Content-Type
+### Date
+### ETag
+### Expect
+### Host
+### Last-Modified
+### Location
+### Range
