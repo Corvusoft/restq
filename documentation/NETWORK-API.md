@@ -162,7 +162,7 @@ The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Ident
 | limit     | numeric    | 0 - max(unsigned integer)    |  max(unsigned integer)|
 | echo      | boolean    | yes/no, true/false, 1/0      |  true                 |
 | style     | boolean    | yes/no, true/false, 1/0      |  false                |
-| keys      | string(s)  | one or more UUID strings.    |  null                 |
+| keys      | string(s)  | one or more [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier) strings.    |  null                 |
 
 ### Parameters  
 * [Fields](#fields)
