@@ -157,14 +157,14 @@ The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Ident
 | style     | boolean    | yes/no, true/false, 1/0      |  false                |
 | keys      | string(s)  | one or more UUID strings.    |  null                 |
 
-### Table of Contents  
-1. [Fields](#fields)
-2. [Index](#index)
-3. [Limit](#limit)
-4. [Echo](#echo)
-5. [Style](#style)
-6. [Keys](#keys)
-7. [Filters](#filters)
+### Parameters  
+* [Fields](#fields)
+* [Index](#index)
+* [Limit](#limit)
+* [Echo](#echo)
+* [Style](#style)
+* [Keys](#keys)
+* [Filters](#filters)
 
 #### Fields
 
@@ -182,25 +182,24 @@ The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Ident
 
 ## HTTP Headers Supported
 
-### Table of Contents  
-1. [Accept-Charset](#acceptcharset)
-2. Accept-Charset
-3. Accept-Encoding
-4. Accept-Language
-5. Accept-Ranges
-6. Accept
-7. Content-Encoding
-8. Content-Language
-9. Content-Length
-10. Content-MD5
-11. Content-Type
-12. Date
-13. ETag
-14. Expect
-15. Host
-16. Last-Modified
-17. Location
-18. Range
+### Headers 
+* [Accept-Charset](#accept-charset)
+* [Accept-Encoding](#accept-encoding)
+* [Accept-Language](#accept-language)
+* [Accept-Ranges](#accept-ranges)
+* [Accept](#accept)
+* [Content-Encoding](#content-encoding)
+* [Content-Language](#content-language)
+* [Content-Length](#content-length)
+* [Content-MD5](#content-md5)
+* [Content-Type](#content-type)
+* [Date](#date)
+* [ETag](#etag)
+* [Expect](#expect)
+* [Host](#host)
+* [Last-Modified](#last-modified)
+* [Location](#location)
+* [Range](#range)
 
 #### Accept-Charset
 #### Accept-Encoding
