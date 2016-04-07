@@ -31,7 +31,7 @@ All resources with the exception of Message and Collection entities may hold any
 
 Within the exchange a select number of property names are reserved for internal use and/or Queue/Subscription configuration.  Setting/Altering these properties with invalid content will result in a 400 (Bad Request) response status code.
 
-### Queue Collection
+### Queues Collection
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
@@ -61,7 +61,7 @@ The queue resource represents the desired configuration for a message chain.
 | subscription-limit  | unsigned integer | Maximum number of subscriptions allowed on a Queue before rejection (Bad Request).             |  Optional     |     25          |  Read/Write   |
 
         
-### Subscription Collection
+### Subscriptions Collection
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
@@ -89,7 +89,7 @@ The subscription resource represents the desired configuration for a message con
 | endpoint            | uri              | Uniform Resource Identifier detailing how to reach the subscription consumer.                  |  Mandatory    |    n/a          |  Read/Write   |
 
 
-### Message Collection
+### Messages Collection
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
