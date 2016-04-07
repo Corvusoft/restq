@@ -2,14 +2,14 @@
 
 RestQ provides an open Hyper Text Transfer Protocol (HTTP) API for technology agnostic and language neutral message broking services. It is the intention to maintain a standards compliant interface as outlined in [RFC 7230](https://tools.ietf.org/html/rfc7230).
 
-This document will describe the available network endpoints for queue, subscription, and message management.  For detailed examples of interacting with the network interface please see the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
+This document will describe the available [network endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) for queue, subscription, and message management.  For detailed examples of interacting with the network interface please see the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
 
 ## Interpretation
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
 
 ## URI Map
 
-Below is a table of available network endpoints. Requesting any other path will result in 404 (Not Found) response status code. If you perform a Method on an endpoint that lacks support, yet is available elsewhere in the exchange, you will recieve a 405 (Method Not Allowed) status, otherwise a 501 (Method Not Implemented) status code is returned.
+Below is a table of available network [endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier). Requesting any other path will result in 404 (Not Found) response status code. If you perform a Method on an endpoint that lacks support, yet is available elsewhere in the exchange, you will recieve a 405 (Method Not Allowed) status, otherwise a 501 (Method Not Implemented) status code is returned.
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
@@ -39,7 +39,7 @@ Within the exchange a select number of property names are reserved for internal 
 | ------------------------------ | ----------- | -------------------------------- |
 | /queues                        | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-Endpoints identified by a pluralised resource name, i.e queues, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e queues, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
 Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a queue). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
 
@@ -69,7 +69,7 @@ The queue resource represents the desired configuration for a message chain.
 | ------------------------------ | ----------- | -------------------------------- |
 | /subscriptions                 | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-Endpoints identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
 Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
 
@@ -98,7 +98,7 @@ The subscription resource represents the desired configuration for a message con
 | /messages                      | Collection  | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                    |
 | /queues/{uuid}/messages        | Collection  | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                    |
 
-Endpoints identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
 Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
 
@@ -113,7 +113,7 @@ The HTTP Request body of a Message is not interpreted by the exchange and is for
 
 ### Asterisk Resource
 
-The Asterisk (*) endpoint is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, Threads, and Runtime via HTTP headers CPU, Memory, Workers, and Uptime respectively.
+The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, Threads, and Runtime via HTTP headers CPU, Memory, Workers, and Uptime respectively.
 
 ```
 > OPTIONS /* HTTP/1.1
