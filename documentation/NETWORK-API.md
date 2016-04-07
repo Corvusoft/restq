@@ -41,17 +41,16 @@ All resources, with the exception of Message and Collection entities, may hold a
 
 Within the exchange a select number of property names are reserved for internal use and/or Queue/Subscription configuration. Altering these properties with invalid content will result in a 400 (Bad Request) error response status code.
 
-### Queues Collection
+### Resources
+* [Queue](#queue-resource)
+* [Queues](#queues-collection)
+* [Subscription](#subscription-resource)
+* [Subscriptions](#subscriptions-collection)
+* [Message](#message-resource)
+* [Messages](#messages-collection)
+* [Asterisk](#asterisk-resource)
 
-| Path                           |  Type       | Methods                          |
-| ------------------------------ | ----------- | -------------------------------- |
-| /queues                        | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
-
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e queues, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
-
-Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a queue). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
-
-### Queue Resource
+#### Queue Resource
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
@@ -70,18 +69,17 @@ The queue resource represents the desired configuration for a message chain.
 | message-size-limit  | unsigned integer | Maximum allowed size in bytes of the message body before rejection (Request Entity Too Large). |  Optional     |    1024         |  Read/Write   |
 | subscription-limit  | unsigned integer | Maximum number of subscriptions allowed on a Queue before rejection (Bad Request).             |  Optional     |     25          |  Read/Write   |
 
-        
-### Subscriptions Collection
+#### Queues Collection
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
-| /subscriptions                 | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
+| /queues                        | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e queues, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
-Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a queue). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
 
-### Subscription Resource
+#### Subscription Resource
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
@@ -98,8 +96,26 @@ The subscription resource represents the desired configuration for a message con
 | origin              | string           | Originating address of the client responsible for creation.                                    |  Internal     |    n/a          |  Read-Only    |
 | endpoint            | uri              | Uniform Resource Identifier detailing how to reach the subscription consumer.                  |  Mandatory    |    n/a          |  Read/Write   |
 
+#### Subscriptions Collection
 
-### Messages Collection
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /subscriptions                 | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
+
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+
+Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+
+#### Message Resource
+
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /messages/{uuid}               | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                          |
+| /queues/{uuid}/messages/{uuid} | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                          |
+
+The HTTP Request body of a Message is not interpreted by the exchange and is forwarded without modification to subscribed consumers.  This allows any form for data to be sent across the wire e.g Text, Image, Binary.
+
+#### Messages Collection
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
@@ -110,16 +126,7 @@ The subscription resource represents the desired configuration for a message con
 
 Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
 
-### Message Resource
-
-| Path                           |  Type       | Methods                          |
-| ------------------------------ | ----------- | -------------------------------- |
-| /messages/{uuid}               | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                          |
-| /queues/{uuid}/messages/{uuid} | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                          |
-
-The HTTP Request body of a Message is not interpreted by the exchange and is forwarded without modification to subscribed consumers.  This allows any form for data to be sent across the wire e.g Text, Image, Binary.
-
-### Asterisk Resource
+#### Asterisk Resource
 
 The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, Threads, and Runtime via HTTP headers CPU, Memory, Workers, and Uptime respectively.
 
