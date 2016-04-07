@@ -13,15 +13,15 @@ Below is a table of available network endpoints. Requesting any other path will 
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
-| /queues                        | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
-| /queues/{uuid}                 | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
-| /queues/{uuid}/messages        | Collection  | POST, OPTIONS                    |
-| /queues/{uuid}/messages/{uuid} | Resource    | OPTIONS                          |
-| /subscriptions                 | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
-| /subscriptions/{uuid}          | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
-| /messages                      | Collection  | POST, OPTIONS                    |
-| /messages/{uuid}               | Resource    | OPTIONS                          |
-| /*                             | Resource    | OPTIONS                          |
+| /queues                        | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
+| /queues/{uuid}                 | Resource    | [GET, PUT, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)  |
+| /queues/{uuid}/messages        | Collection  | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                    |
+| /queues/{uuid}/messages/{uuid} | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                          |
+| /subscriptions                 | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
+| /subscriptions/{uuid}          | Resource    | [GET, PUT, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)  |
+| /messages                      | Collection  | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                    |
+| /messages/{uuid}               | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                          |
+| /*                             | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                         |
 
 ## RESTful Resources
 
@@ -37,7 +37,7 @@ Within the exchange a select number of property names are reserved for internal 
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
-| /queues                        | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
+| /queues                        | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
 Endpoints identified by a pluralised resource name, i.e queues, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
@@ -47,7 +47,7 @@ Collection resources have no associated data fields, and merely represent a coll
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
-| /queues/{uuid}                 | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
+| /queues/{uuid}                 | Resource    | [GET, PUT, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)  |
 
 The queue resource represents the desired configuration for a message chain.
 
@@ -67,7 +67,7 @@ The queue resource represents the desired configuration for a message chain.
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
-| /subscriptions                 | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
+| /subscriptions                 | Collection  | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
 Endpoints identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
@@ -77,7 +77,7 @@ Collection resources have no associated data fields, and merely represent a coll
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
-| /subscriptions/{uuid}          | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
+| /subscriptions/{uuid}          | Resource    | [GET, PUT, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)  |
 
 The subscription resource represents the desired configuration for a message consumer.
 
@@ -95,8 +95,8 @@ The subscription resource represents the desired configuration for a message con
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
-| /messages                      | Collection  | POST, OPTIONS                    |
-| /queues/{uuid}/messages        | Collection  | POST, OPTIONS                    |
+| /messages                      | Collection  | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                    |
+| /queues/{uuid}/messages        | Collection  | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                    |
 
 Endpoints identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
@@ -106,8 +106,8 @@ Collection resources have no associated data fields, and merely represent a coll
 
 | Path                           |  Type       | Methods                          |
 | ------------------------------ | ----------- | -------------------------------- |
-| /messages/{uuid}               | Resource    | OPTIONS                          |
-| /queues/{uuid}/messages/{uuid} | Resource    | OPTIONS                          |
+| /messages/{uuid}               | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                          |
+| /queues/{uuid}/messages/{uuid} | Resource    | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)                          |
 
 The HTTP Request body of a Message is not interpreted by the exchange and is forwarded without modification to subscribed consumers.  This allows any form for data to be sent across the wire e.g Text, Image, Binary.
 
