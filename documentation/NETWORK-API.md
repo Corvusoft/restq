@@ -1,6 +1,6 @@
 ## Network API Overview
 
-RestQ provides an open Hyper Text Transfer Protocol (HTTP) API for technology agnostic and language neutral message broking services. It is the intention to maintain a standards compliant interface as outlined in RFC 7230.
+RestQ provides an open Hyper Text Transfer Protocol (HTTP) API for technology agnostic and language neutral message broking services. It is the intention to maintain a standards compliant interface as outlined in [RFC 7230](https://tools.ietf.org/html/rfc7230).
 
 This document will describe the available network endpoints for queue, subscription, and message management.  For detailed examples of interacting with the network interface please see the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
 
@@ -25,11 +25,13 @@ Below is a table of available network endpoints. Requesting any other path will 
 
 ## RESTful Resources
 
-Mention [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations.
+RestQ exports a REpresentational State Transfer (REST) API which relies on a stateless, client-server, and cacheable communications protocol. This is achieved over the [HTTP 1.1 standard](https://tools.ietf.org/html/rfc7230).
 
-All resources with the exception of Message and Collection entities may hold any number of generic properties presented to the exchange in a supported document format. These properties are persisted in the repository and can then be used with the filter functionality to discover data-sources (Queues) of interest.
+The framework implements [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations to present a clean consistent experience for the configuration of interrelated entities.
 
-Within the exchange a select number of property names are reserved for internal use and/or Queue/Subscription configuration.  Setting/Altering these properties with invalid content will result in a 400 (Bad Request) response status code.
+All resources, with the exception of Message and Collection entities, may hold any number of generic properties presented to the exchange in a supported document format (see [add_format](API.md#exchangeadd_format)). These properties are persisted in the repository and can then be used with the filter functionality to discover data-sources (Queues) of interest.
+
+Within the exchange a select number of property names are reserved for internal use and/or Queue/Subscription configuration. Altering these properties with invalid content will result in a 400 (Bad Request) error response status code.
 
 ### Queues Collection
 
