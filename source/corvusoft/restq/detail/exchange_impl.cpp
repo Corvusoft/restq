@@ -126,7 +126,14 @@ namespace restq
         {
             if ( m_logger not_eq nullptr )
             {
-                m_logger->log( level, "%s", message.data( ) );
+                try
+                {
+                    m_logger->log( level, "%s", message.data( ) );
+                }
+                catch ( ... )
+                {
+                    fprintf( stderr, "failed to create log entry: %s", message.data( ) );
+                }
             }
         }
         

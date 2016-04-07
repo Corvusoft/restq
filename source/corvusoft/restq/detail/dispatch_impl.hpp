@@ -93,8 +93,7 @@ namespace restq
                 DispatchImpl( const DispatchImpl& original ) = delete;
                 
                 //Functionality
-                static void log( const Logger::Level level, const std::string& message ); //make abstract class
-                
+                static void log( const Logger::Level level, const std::string& message );
                 
                 //Getters
                 
