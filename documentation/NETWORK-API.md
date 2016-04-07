@@ -12,8 +12,8 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 2. [Interpretation](#interpretation)
 3. [URI Map](#uri-map)
 4. [Restful Resources](#restful-resources)
-5. [Query Parameters Supported](#query-parameters-supported)
-6. [HTTP Headers Supported](#http-headers-supported)
+5. [Supported Query Parameters](#supported-query-parameters)
+6. [Supported HTTP Headers](#supported-http-headers)
 
 ## URI Map
 
@@ -152,7 +152,7 @@ The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Ident
 < Vary: Accept,Accept-Encoding,Accept-Charset,Accept-Language
 ``` 
 
-## Query Parameters Supported
+## Supported Query Parameters
 
 | parameter |   Type     | Range                        | Default Value         |
 | --------- | :--------: | :--------------------------: | :-------------------: |
@@ -187,7 +187,7 @@ The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Ident
 
 #### Filters
 
-## HTTP Headers Supported
+## Supported HTTP Headers
 
 ### Headers 
 * [Accept-Charset](#accept-charset)
