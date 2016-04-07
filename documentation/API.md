@@ -1,39 +1,33 @@
 ##API Overview
 
-### Document Scope
+This document is intented to accurately communicate the Application Programming Interface (API) exposed by the RestQ framework for public consumption. It does not go into detail regarding the [Network API](#NETWORK-API.md).
 
+A description of the frameworks software architecture is provided by the [Design Overview](#DESIGN.md) documentation.
 
 ### Interpretation
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
 
 ## Table of Contents  
-1. [Document Scope](#example)
-2. [Byte/Bytes](#bytebytes)
-3. [Resource/Resources](#resourceresources)
-4. [StatusCode](#statuscode)
-5. [String](#string)
-6. [URI](#uri)
-7. [Request](#request)
-8. [Response](#response)
-9. [Session](#session)
-10. [Query](#query)
-11. [SSLSettings](#sslsettings)
-12. [Settings](#settings)
-13. [Formatter](#formatter)
-14. [Repository](#repository)
-15. [Logger](#logger)
-16. [Logger::Level](#loggerlevel)
-17. [Exchange](#exchange)
+1. [Overview](#api-overview)
+2. [Interpretation](#interpretation)
+3. [Byte/Bytes](#bytebytes)
+4. [Resource/Resources](#resourceresources)
+5. [StatusCode](#statuscode)
+6. [String](#string)
+7. [URI](#uri)
+8. [Request](#request)
+9. [Response](#response)
+10. [Session](#session)
+11. [Query](#query)
+12. [SSLSettings](#sslsettings)
+13. [Settings](#settings)
+14. [Formatter](#formatter)
+15. [Repository](#repository)
+16. [Logger](#logger)
+17. [Logger::Level](#loggerlevel)
+18. [Exchange](#exchange)
 
 ### Byte/Bytes
-
-#### Description
-
-Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics. 
-
-See also [restbed::Bytes](https://github.com/corvusoft/restbed/documentation/API.md#bytebytes) for details.
-
-#### Definition
 
 ``` C++
 using Byte = restbed::Byte;
@@ -41,13 +35,11 @@ using Byte = restbed::Byte;
 using Bytes = restbed::Bytes;
 ```
 
+Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics. 
+
+See also [restbed::Bytes](https://github.com/corvusoft/restbed/documentation/API.md#bytebytes) for details.
+
 ### Resource/Resources
-
-#### Description
-
-Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
-
-#### Definition
 
 ``` C++
 typedef std::multimap< std::string, Bytes > Resource;
@@ -55,13 +47,9 @@ typedef std::multimap< std::string, Bytes > Resource;
 typedef std::list< Resource > Resources;
 ```
 
+Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
+
 ### StatusCode
-
-#### Description
-
-[Enumeration](http://en.cppreference.com/w/cpp/language/enum) of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1).
-
-#### Definition
 
 ``` C++
 enum : int
@@ -77,6 +65,8 @@ enum : int
     ...
 }
 ```
+
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1).
 
 ### String
 
@@ -227,53 +217,45 @@ n/a
 
 ### Uri
 
+``` C++
+using Uri = restbed::Uri;
+```
+
 Represents a Uniform Resource Identifier as specificed in RFC 3986.
 
 > A generic URI is of the form:
 >
 > scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
 
-#### Definition
-
-``` C++
-using Uri = restbed::Uri;
-```
-
 See [restbed::Uri](https://github.com/corvusoft/restbed/documentation/API.md#uri) for details.
 
 ### Request
-
-Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
-
-#### Definition
 
 ``` C++
 using Request = restbed::Request;
 ```
 
+Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
+
 See [restbed::Request](https://github.com/corvusoft/restbed/documentation/API.md#request) for details.
 
 ### Response
-
-Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
-
-#### Definition
 
 ``` C++
 using Response = restbed::Response;
 ```
 
+Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
+
 See [restbed::Response](https://github.com/corvusoft/restbed/documentation/API.md#response) for details.
 
 ### Session
 
-Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
-
-#### Definition
-
 ``` C++
 using Session = restbed::Session;
 ```
+
+Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
 
 See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md#session) for details.
 
@@ -878,13 +860,11 @@ n/a
 
 ### SSLSettings
 
-Represents Secure Socket Layer service configuration.
-
-#### Definition
-
 ``` C++
 using SSLSettings = restbed::SSLSettings;
 ```
+
+Represents Secure Socket Layer service configuration.
 
 See [restbed::SSLSettings](https://github.com/corvusoft/restbed/documentation/API.md#sslsettings) for details.
 
@@ -1256,7 +1236,7 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+Any exceptions raised will result in the service closing the active client session with a 500 (Internal Server Error) error response.
 
 #### Repository::read
 
@@ -1280,7 +1260,7 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+Any exceptions raised will result in the service closing the active client session with a 500 (Internal Server Error) error response.
 
 #### Repository::update
 
@@ -1306,7 +1286,7 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+Any exceptions raised will result in the service closing the active client session with a 500 (Internal Server Error) error response.
 
 #### Repository::destroy
 
@@ -1330,7 +1310,7 @@ n/a
 
 ##### Exceptions
 
-Any exceptions raised will result in the service closing the active client session with an 500 (Internal Server Error) error response.
+Any exceptions raised will result in the service closing the active client session with a 500 (Internal Server Error) error response.
 
 #### Repository::set_logger
 
@@ -1484,7 +1464,7 @@ class Logger
 
 ### Exchange
 
-my exchange description here.
+The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
 
 #### Methods  
 * [start](#exchangestart)

@@ -353,7 +353,7 @@ Interface detailing the required contract for logger extensions.  No default log
 
 ### Exchange
 
-This my exchange description.
+The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
 
 ```
                                            +-----------------------------------------+
