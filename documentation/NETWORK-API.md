@@ -47,7 +47,7 @@ Collection resources have no associated data fields, and merely represent a coll
 | ------------------------------ | ----------- | -------------------------------- |
 | /queues/{uuid}                 | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
 
-The queue resource represents the desired configuration of a message chain.
+The queue resource represents the desired configuration for a message chain.
 
 | Property            |   Type           | Description                                                                                    | Restriction   | Default Value   | Access        |
 | ------------------- | :--------------: |----------------------------------------------------------------------------------------------- | :-----------: | :-------------: | :-----------: |
@@ -77,7 +77,7 @@ Collection resources have no associated data fields, and merely represent a coll
 | ------------------------------ | ----------- | -------------------------------- |
 | /subscriptions/{uuid}          | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
 
-The subscription resource represents the desired configuration of a message consumer.
+The subscription resource represents the desired configuration for a message consumer.
 
 | Property            |   Type           | Description                                                                                    | Restriction   | Default Value   | Access        |
 | ------------------- | :--------------: |----------------------------------------------------------------------------------------------- | :-----------: | :-------------: | :-----------: |
