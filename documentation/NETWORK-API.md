@@ -11,15 +11,17 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 
 Below is a table of available network endpoints. Requesting any other path will result in 404 (Not Found) response status code. If you perform a Method on an endpoint that lacks support, yet is available elsewhere in the exchange, you will recieve a 405 (Method Not Allowed) status, otherwise a 501 (Method Not Implemented) status code is returned.
 
-| Path                  |  Type       | Methods                          |
-| --------------------- | ----------- | -------------------------------- |
-| /queues               | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
-| /queues/{uuid}        | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
-| /subscriptions        | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
-| /subscriptions/{uuid} | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
-| /messages             | Collection  | POST, OPTIONS                    |
-| /messages/{uuid}      | Resource    | OPTIONS                          |
-| /*                    | Resource    | OPTIONS                          |
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /queues                        | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
+| /queues/{uuid}                 | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
+| /queues/{uuid}/messages        | Collection  | POST, OPTIONS                    |
+| /queues/{uuid}/messages/{uuid} | Resource    | OPTIONS                          |
+| /subscriptions                 | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
+| /subscriptions/{uuid}          | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
+| /messages                      | Collection  | POST, OPTIONS                    |
+| /messages/{uuid}               | Resource    | OPTIONS                          |
+| /*                             | Resource    | OPTIONS                          |
 
 ## RESTful Resources
 
@@ -31,7 +33,21 @@ Within the exchange a select number of property names are reserved for internal 
 
 ### Queue Collection
 
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /queues                        | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
+
+Endpoints identified by a pluralised resource name, i.e queues, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+
+Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a queue). Reading (HTTP GET) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+
 ### Queue Resource
+
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /queues/{uuid}                 | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
+
+The queue resource represents the desired configuration of a message chain.
 
 | Property            |   Type           | Description                                                                                    | Restriction   | Default Value   | Access        |
 | ------------------- | :--------------: |----------------------------------------------------------------------------------------------- | :-----------: | :-------------: | :-----------: |
@@ -47,7 +63,21 @@ Within the exchange a select number of property names are reserved for internal 
         
 ### Subscription Collection
 
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /subscriptions                 | Collection  | GET, POST, HEAD, DELETE, OPTIONS |
+
+Endpoints identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+
+Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading (HTTP GET) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+
 ### Subscription Resource
+
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /subscriptions/{uuid}          | Resource    | GET, PUT, HEAD, DELETE, OPTIONS  |
+
+The subscription resource represents the desired configuration of a message consumer.
 
 | Property            |   Type           | Description                                                                                    | Restriction   | Default Value   | Access        |
 | ------------------- | :--------------: |----------------------------------------------------------------------------------------------- | :-----------: | :-------------: | :-----------: |
@@ -61,7 +91,21 @@ Within the exchange a select number of property names are reserved for internal 
 
 ### Message Collection
 
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /messages                      | Collection  | POST, OPTIONS                    |
+| /queues/{uuid}/messages        | Collection  | POST, OPTIONS                    |
+
+Endpoints identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+
+Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading (HTTP GET) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+
 ### Message Resource
+
+| Path                           |  Type       | Methods                          |
+| ------------------------------ | ----------- | -------------------------------- |
+| /messages/{uuid}               | Resource    | OPTIONS                          |
+| /queues/{uuid}/messages/{uuid} | Resource    | OPTIONS                          |
 
 The HTTP Request body of a Message is not interpreted by the exchange and is forwarded without modification to subscribed consumers.  This allows any form for data to be sent across the wire e.g Text, Image, Binary.
 
