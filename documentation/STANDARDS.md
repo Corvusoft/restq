@@ -1,11 +1,26 @@
 ##Standards Overview
 
+**most importantly:** "know when to be inconsistent -- sometimes the style guide just doesn't apply.  When in doubt, use your best judgment.  Look at other examples and decide what looks best.  And don't hesitate to ask!" -- Guido van Rossum, Barry Warsaw, Nick Coghlan.
+
 ## Interpretation
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
 
-**most importantly:** "know when to be inconsistent -- sometimes the style guide just doesn't apply.  When in doubt, use your best judgment.  Look at other examples and decide what looks best.  And don't hesitate to ask!" -- Guido van Rossum, Barry Warsaw, Nick Coghlan.
+## Table of Contents  
+1. [Brackets](#brackets)
+2. [Indentation](#indentation)
+3. [Comments](#comments)
+4. [Properties/Variables](#propertiesvariables)
+5. [Classes](#classes)
+6. [Enumerations](#enumerations)
+7. [Structures](#structures)
+8. [Methods/Functions](#methodsfunctions)
+9. [Whitespace](#whitespace)
+10. [Pointers/References](#pointersreferences)
+11. [Exceptions](#exceptions)
+12. [Namespaces](#namespace)
+13. [Optimisations](#optimisations)
 
-**Brackets**
+### Brackets
 
 1. Allman style broken braces, and avoid unbraced one line conditional statements.
 ``` C++
@@ -19,10 +34,10 @@ else
 }
 ```
 
-**Indentation**
+### Indentation
 
-1. Do **not** use tabs.  All indentation is of 4 spaces.
-2. Class, Namespace, Struct, If, For, Switch, etc.. statements **must** be indented.
+* Do **not** use tabs.  All indentation is of 4 spaces.
+* Class, Namespace, Struct, If, For, Switch, etc.. statements **must** be indented.
 ``` C++
 namespace transport
 {
@@ -46,34 +61,34 @@ namespace transport
 }
 ```
 
-**Comments**
+### Comments
 
-1. Comments **should** be avoided as they add an additional layer of management and/or technical-debt.
-2. Commenting is just as ineffective as poorly readable code.
-3. Code should be self documenting with descriptive naming conventions applied to functions, variables, files, directories, etc... 
-4. Commenting may be a sign you need to split the logic into multiple manageable blocks.
+* Comments **should** be avoided as they add an additional layer of management and/or technical-debt.
+* Commenting is just as ineffective as poorly readable code.
+* Code should be self documenting with descriptive naming conventions applied to functions, variables, files, directories, etc... 
+* Commenting may be a sign you need to split the logic into multiple manageable blocks.
 
-**Properties/Variables**
+### Properties/Variables
 
-1. Property and Variables names **must** follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
-2. Property and Variables **must** be initialised to a known state on declaration.
+* Property and Variables names **must** follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
+* Property and Variables **must** be initialised to a known state on declaration.
 ``` C++
 int limit = 0;
 int person_age = 21;
 string name = String::empty;
 ```
 
-**Classes**
+### Classes
 
-1. Class property names **must** be prefixed with `m_` and follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
-2. Class properties **must** be initialised to a known state on instance creation.
-3. Class properties **must** be private in scope.
-4. Class getter/setter accessor methods **must not** return non-const pointers/references.
-5. There **must** be **no** using namespace declarations in class header files.
-6. Forward declarations are favoured over ```#include``` within class header files; with the exception of the standard template library.
-7. Empty method bodies (when unavoidable) shall be marked with a single return.
-8. Public classes **must** implement an [opaque pointer](http://en.wikipedia.org/wiki/Opaque_pointer). 
-9. Class names **must** start each word boundary with an UPPERCASED letter. 
+* Class property names **must** be prefixed with `m_` and follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
+* Class properties **must** be initialised to a known state on instance creation.
+* Class properties **must** be private in scope.
+* Class getter/setter accessor methods **must not** return non-const pointers/references.
+* There **must** be **no** using namespace declarations in class header files.
+* Forward declarations are favoured over ```#include``` within class header files; with the exception of the standard template library.
+* Empty method bodies (when unavoidable) shall be marked with a single return.
+* Public classes **must** implement an [opaque pointer](http://en.wikipedia.org/wiki/Opaque_pointer). 
+* Class names **must** start each word boundary with an UPPERCASED letter. 
 ``` C++
 class Person
 {
@@ -98,12 +113,12 @@ class Person
 }
 ```
 
-**Enumerations**
+### Enumerations
 
-1. Enumerations **must** be strongly typed.
-2. Enumeration fields **must** be UPPERCASED.
-3. Enumeration fields **must** be initialised to a known state.
-4. Enumeration names **must** start each word boundary with an UPPERCASED letter.
+* Enumerations **must** be strongly typed.
+* Enumeration fields **must** be UPPERCASED.
+* Enumeration fields **must** be initialised to a known state.
+* Enumeration names **must** start each word boundary with an UPPERCASED letter.
 ``` C++
 enum LogLevel : int
 {
@@ -116,11 +131,11 @@ enum LogLevel : int
 }
 ```
 
-**Structures**
+### Structures
 
-1. Structure property names **must** follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
-2. Structure properties **must** be initialised to a known state on instance creation.
-3. Structure names **must** start each word boundary with an UPPERCASED letter. 
+* Structure property names **must** follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
+* Structure properties **must** be initialised to a known state on instance creation.
+* Structure names **must** start each word boundary with an UPPERCASED letter. 
 ``` C++
 struct HttpRequest
 {
@@ -134,12 +149,12 @@ struct HttpRequest
 }
 ```
 
-**Methods/Functions**
+### Methods/Functions
 
-1. Functions and Methods **must** use the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
-2. Functions and Methods **should** perform one mental operation which is reflected in their name.
-3. Function and Method declarations **should** avoid similar argument types.
-4. It is recommended that Functions and Methods are no greater than 70 lines of code. If you find that the LOC exceed this limit, it may be an indication that it is performing more than one mental operation; see rule 2. 
+* Functions and Methods **must** use the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
+* Functions and Methods **should** perform one mental operation which is reflected in their name.
+* Function and Method declarations **should** avoid similar argument types.
+* It is recommended that Functions and Methods are no greater than 70 lines of code. If you find that the LOC exceed this limit, it may be an indication that it is performing more than one mental operation; see rule 2. 
 
 ``` C++
 int ping( Hostname hostname, Interface interface, int16_t port )
@@ -154,9 +169,9 @@ int ping( Hostname hostname, Interface interface, int16_t port )
 }
 ```
 
-**Whitespace**
+### Whitespace
 
-1. Whitespace is free, don't be scared to use it.
+* Whitespace is free, don't be scared to use it.
 ``` C++
 int process_exit_status = 0;
 const string filename = "/bin/ls";
@@ -171,19 +186,19 @@ do
 while ( process_exit_status not_eq -1 );
 ```
 
-**Pointers/References**
+### Pointers/References
 
-1. Pointers and References **must** be aligned to the data type (left).
+* Pointers and References **must** be aligned to the data type (left).
 ``` C++
 int* age = nullptr;
 char* forename = nullptr;
 string& surname = m_surname;
 ```
 
-**Exceptions**
+### Exceptions
 
-1. Logic within catch-blocks **must** be short & sweet.
-2. Name exceptions per Java styling.
+* Logic within catch-blocks **must** be short & sweet.
+* Name exceptions per Java styling.
 ``` C++
 try
 {
@@ -203,10 +218,10 @@ catch ( const exception& ex )
 }
 ```
 
-**Namespaces**
+### Namespaces
 
-1. **Do not** include entire Namespaces, import only the artifact you're interested in.
-2. Namespace names **must only** contain lowercased letters.
+* **Do not** include entire Namespaces, import only the artifact you're interested in.
+* Namespace names **must only** contain lowercased letters.
 ``` C++
 using std::mutex;
 using std::string;
@@ -218,6 +233,6 @@ using namespace restq
 }
 ```
 
-**Optimisation**
+### Optimisations
 
-1. Avoid premature optimisation, **readable, maintainable code is more important**.
+* Avoid premature optimisation, **readable, maintainable code is more important**.
