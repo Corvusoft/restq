@@ -263,7 +263,9 @@ See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md
 
 Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensiablilty during [Repository](#repository) interaction.
 
-#### Methods  
+#### Methods
+* [constructor](#queryconstructor)
+* [destructor](#querydestructor)
 * [clear](#queryclear)
 * [has_failed](#queryhas_failed)
 * [has_fields](#queryhas_fields)
@@ -289,6 +291,49 @@ Represents a data store enquire for creating, reading, updating, and/or deleting
 * [set_session](#queryset_session)
 * [set_inclusive_filters](#queryset_inclusive_filters)
 * [set_exclusive_filters](#queryset_exclusive_filters)
+
+#### Query::constructor
+
+``` C++
+Query( void );
+Query( const std::shared_ptr< Session >& value );
+```
+
+Initialise a new class instance, if a [Session](#session) is supplied it will be used to override the default class property values; see also [destructor](#querydestructor).
+
+##### Parameters
+
+| parameter |    type     | default value | direction |
+|:---------:|-----------|:-------------:|:----------: |
+|   start   | [Session](#session) | n/a | input |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Query::destructor
+
+``` C++
+virtual ~Query( void );
+```
+
+Clean-up class instance; see also [constructor](#queryconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+noexcept specification:  [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
 
 #### Query::clear
 
@@ -1466,7 +1511,9 @@ class Logger
 
 The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
 
-#### Methods  
+#### Methods 
+* [constructor](#exchangeconstructor)
+* [destructor](#exchangedestructor)
 * [start](#exchangestart)
 * [stop](#exchangestop)
 * [restart](#exchangerestart)
@@ -1475,6 +1522,46 @@ The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP
 * [set_logger](#exchangeset_logger)
 * [set_repository](#exchangeset_repository)
 * [set_ready_handler](#exchangeset_ready_handler)
+
+#### Exchange::constructor
+
+``` C++
+Exchange( void );
+```
+
+Initialise a new class instance; see also [destructor](#exchangedestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Exchange::destructor
+
+``` C++
+virtual ~Exchange( void );
+```
+
+Clean-up class instance; see also [constructor](#exchangeconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+noexcept specification:  [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
 
 #### Exchange::start
 
