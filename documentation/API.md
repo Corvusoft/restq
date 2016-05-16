@@ -5,45 +5,48 @@ This document is intented to accurately communicate the Application Programming 
 A description of the frameworks software architecture is provided by the [Design Overview](#DESIGN.md) documentation.
 
 ### Interpretation
+
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
 
-## Table of Contents  
-1. [Overview](#api-overview)
-2. [Interpretation](#interpretation)
-3. [Byte/Bytes](#bytebytes)
-4. [Resource/Resources](#resourceresources)
-5. [StatusCode](#statuscode)
-6. [String](#string)
-7. [URI](#uri)
-8. [Request](#request)
-9. [Response](#response)
-10. [Session](#session)
-11. [Query](#query)
-12. [SSLSettings](#sslsettings)
-13. [Settings](#settings)
-14. [Formatter](#formatter)
-15. [Repository](#repository)
-16. [Logger](#logger)
-17. [Logger::Level](#loggerlevel)
-18. [Exchange](#exchange)
+Table of Contents
+-----------------
+
+1.	[Overview](#api-overview)
+2.	[Interpretation](#interpretation)
+3.	[Byte/Bytes](#bytebytes)
+4.	[Resource/Resources](#resourceresources)
+5.	[StatusCode](#statuscode)
+6.	[String](#string)
+7.	[URI](#uri)
+8.	[Request](#request)
+9.	[Response](#response)
+10.	[Session](#session)
+11.	[Query](#query)
+12.	[SSLSettings](#sslsettings)
+13.	[Settings](#settings)
+14.	[Formatter](#formatter)
+15.	[Repository](#repository)
+16.	[Logger](#logger)
+17.	[Logger::Level](#loggerlevel)
+18.	[Exchange](#exchange)
 
 ### Byte/Bytes
 
-``` C++
+```C++
 using Byte = restbed::Byte;
-    
+
 using Bytes = restbed::Bytes;
 ```
 
-Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics. 
+Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics.
 
-See also [restbed::Bytes](https://github.com/corvusoft/restbed/documentation/API.md#bytebytes) for details.
+See [restbed::Bytes](https://github.com/corvusoft/restbed/documentation/API.md#bytebytes) for further details.
 
 ### Resource/Resources
 
-``` C++
+```C++
 typedef std::multimap< std::string, Bytes > Resource;
-    
+
 typedef std::list< Resource > Resources;
 ```
 
@@ -51,7 +54,7 @@ Resource represents an [associative array](http://en.cppreference.com/w/cpp/cont
 
 ### StatusCode
 
-``` C++
+```C++
 enum : int
 {
     CONTINUE = 100,
@@ -61,7 +64,7 @@ enum : int
     CREATED = 201,
     ACCEPTED = 202,
     NON_AUTHORITATIVE_INFORMATION  = 203,
-    
+
     ...
 }
 ```
@@ -72,83 +75,86 @@ enum : int
 
 Utility class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from [restbed::String](https://github.com/corvusoft/restbed/documentation/API.md#string) and will not be restated here for convenience.
 
-#### Methods  
-* [is_integer](#stringis_integer)
-* [is_fraction](#stringis_fraction)
-* [is_boolean](#stringis_boolean)
-* [trim](#stringtrim)
-* [trim_leading](#stringtrim_leading)
-* [trim_lagging](#stringtrim_lagging)
+See [restbed::String](https://github.com/corvusoft/restbed/documentation/API.md#string) for further details.
+
+#### Methods
+
+-	[is_integer](#stringis_integer)
+-	[is_fraction](#stringis_fraction)
+-	[is_boolean](#stringis_boolean)
+-	[trim](#stringtrim)
+-	[trim_leading](#stringtrim_leading)
+-	[trim_lagging](#stringtrim_lagging)
 
 #### String::is_integer
 
-``` C++
+```C++
 static bool is_integer( const std::string& value );
 ```
 
-Parses a string and attemtps to validate if it holds a representation of an integer value.
+Parses a string and attempts to validate if it holds a representation of an [integer](https://en.wikipedia.org/wiki/Integer) value.
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+| parameter | type                                                                | default value | direction |
+|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
 
 ##### Return Value
- 
-boolean true if the argument is a string representation of an integer, otherwise false.
- 
+
+boolean true if the argument is a string representation of an [integer](https://en.wikipedia.org/wiki/Integer), otherwise false.
+
 ##### Exceptions
 
 n/a
 
 #### String::is_fraction
 
-``` C++
+```C++
 static bool is_fraction( const std::string& value );
 ```
 
-Parses a string and attemtps to validate if it holds a representation of a numeric value containing a decimal point.
+Parses a string and attempts to validate if it holds a representation of a numeric value containing a [fractional component](https://en.wikipedia.org/wiki/Fraction_%28mathematics%29).
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+| parameter | type                                                                | default value | direction |
+|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
 
 ##### Return Value
- 
-boolean true if the argument is a string representation of a fraction, otherwise false.
- 
+
+boolean true if the argument is a string containing a [fractional component](https://en.wikipedia.org/wiki/Fraction_%28mathematics%29), otherwise false.
+
 ##### Exceptions
 
 n/a
 
 #### String::is_boolean
 
-``` C++
+```C++
 static bool is_boolean( const std::string& value );
 ```
 
-Parses a string ignoring case and attemtps to validate if it holds the representation of a boolean value 'true' or 'false'.
+Parses a string, ignoring case, and attempts to validate if it holds the representation of a boolean value 'true' or 'false'.
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
+| parameter | type                                                                | default value | direction |
+|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
 
 ##### Return Value
- 
-boolean true if the argument is a string or either 'true' or 'false', otherwise false.
- 
+
+boolean true if the argument is a string of either 'true' or 'false', otherwise false.
+
 ##### Exceptions
 
 n/a
 
 #### String::trim
 
-``` C++
+```C++
 static std::string trim( const std::string& value, const std::string& range = " \t\r\n" );
 ```
 
@@ -156,13 +162,13 @@ Removes matching characters from the front and rear of the supplied string value
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline | input |
+| parameter | type                                                                | default value                        | direction |
+|:---------:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
 
 ##### Return Value
- 
+
 String matching the input value with the exception of removing leading and lagging characters that match those specified in the range parameter.
 
 ##### Exceptions
@@ -171,7 +177,7 @@ n/a
 
 #### String::trim_leading
 
-``` C++
+```C++
 static std::string trim_leading( const std::string& value, const std::string& range = " \t\r\n" );
 ```
 
@@ -179,13 +185,13 @@ Removes matching characters from the front of the supplied string value.
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline | input |
+| parameter | type                                                                | default value                        | direction |
+|:---------:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
 
 ##### Return Value
- 
+
 String matching the input value with the exception of removing leading characters that match those specified in the range parameter.
 
 ##### Exceptions
@@ -194,7 +200,7 @@ n/a
 
 #### String::trim_lagging
 
-``` C++
+```C++
 static std::string trim_lagging( const std::string& value, const std::string& range = " \t\r\n" );
 ```
 
@@ -202,13 +208,13 @@ Removes matching characters from the rear of the supplied string value.
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline | input |
+| parameter | type                                                                | default value                        | direction |
+|:---------:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
+|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
 
 ##### Return Value
- 
+
 String matching the input value with the exception of removing lagging characters that match those specified in the range parameter.
 
 ##### Exceptions
@@ -217,95 +223,98 @@ n/a
 
 ### Uri
 
-``` C++
+```C++
 using Uri = restbed::Uri;
 ```
 
-Represents a Uniform Resource Identifier as specificed in RFC 3986.
+Represents a Uniform Resource Identifier as specificed in [RFC 3986](https://www.ietf.org/rfc/rfc3986.txt).
 
 > A generic URI is of the form:
 >
-> scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
+> scheme:[//[user:password@]host\[:port]][/]path[?query][#fragment]
 
-See [restbed::Uri](https://github.com/corvusoft/restbed/documentation/API.md#uri) for details.
+See [restbed::Uri](https://github.com/corvusoft/restbed/documentation/API.md#uri) for further details.
 
 ### Request
 
-``` C++
+```C++
 using Request = restbed::Request;
 ```
 
-Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
+Represents a HTTP request with additional helper methods for manipulating data, and improving code readability.
 
-See [restbed::Request](https://github.com/corvusoft/restbed/documentation/API.md#request) for details.
+See [restbed::Request](https://github.com/corvusoft/restbed/documentation/API.md#request) for further details.
 
 ### Response
 
-``` C++
+```C++
 using Response = restbed::Response;
 ```
 
-Represents a HTTP request with additional helper methods for minipulating data, and improving code readability.
+Represents a HTTP response with additional helper methods for manipulating data, and improving code readability.
 
-See [restbed::Response](https://github.com/corvusoft/restbed/documentation/API.md#response) for details.
+See [restbed::Response](https://github.com/corvusoft/restbed/documentation/API.md#response) for further details.
 
 ### Session
 
-``` C++
+```C++
 using Session = restbed::Session;
 ```
 
-Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
+Represents a conversation between a client and the service.
 
-See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md#session) for details.
+Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisition and/or sleep states, Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
+
+See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md#session) for further details.
 
 ### Query
 
-Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensiablilty during [Repository](#repository) interaction.
+Represents a data store enquire for creating, reading, updating, and/or deleting resources. This class is an implementation of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensibility during [Repository](#repository) interaction.
 
 #### Methods
-* [constructor](#queryconstructor)
-* [destructor](#querydestructor)
-* [clear](#queryclear)
-* [has_failed](#queryhas_failed)
-* [has_fields](#queryhas_fields)
-* [has_resultset](#queryhas_resultset)
-* [get_include](#queryget_include)
-* [get_error_code](#queryget_error_code)
-* [get_index](#queryget_index)
-* [get_limit](#queryget_limit)
-* [get_resultset](#queryget_resultset)
-* [get_fields](#queryget_fields)
-* [get_keys](#queryget_keys)
-* [get_session](#queryget_session)
-* [get_inclusive_filters](#queryget_inclusive_filters)
-* [get_exclusive_filters](#queryget_exclusive_filters)
-* [set_error_code](#queryset_error_code)
-* [set_index](#queryset_index)
-* [set_limit](#queryset_limit)
-* [set_resultset](#queryset_resultset)
-* [set_include](#queryset_include)
-* [set_key](#queryset_key)
-* [set_keys](#queryset_keys)
-* [set_fields](#queryset_fields)
-* [set_session](#queryset_session)
-* [set_inclusive_filters](#queryset_inclusive_filters)
-* [set_exclusive_filters](#queryset_exclusive_filters)
+
+-	[constructor](#queryconstructor)
+-	[destructor](#querydestructor)
+-	[clear](#queryclear)
+-	[has_failed](#queryhas_failed)
+-	[has_fields](#queryhas_fields)
+-	[has_resultset](#queryhas_resultset)
+-	[get_include](#queryget_include)
+-	[get_error_code](#queryget_error_code)
+-	[get_index](#queryget_index)
+-	[get_limit](#queryget_limit)
+-	[get_resultset](#queryget_resultset)
+-	[get_fields](#queryget_fields)
+-	[get_keys](#queryget_keys)
+-	[get_session](#queryget_session)
+-	[get_inclusive_filters](#queryget_inclusive_filters)
+-	[get_exclusive_filters](#queryget_exclusive_filters)
+-	[set_error_code](#queryset_error_code)
+-	[set_index](#queryset_index)
+-	[set_limit](#queryset_limit)
+-	[set_resultset](#queryset_resultset)
+-	[set_include](#queryset_include)
+-	[set_key](#queryset_key)
+-	[set_keys](#queryset_keys)
+-	[set_fields](#queryset_fields)
+-	[set_session](#queryset_session)
+-	[set_inclusive_filters](#queryset_inclusive_filters)
+-	[set_exclusive_filters](#queryset_exclusive_filters)
 
 #### Query::constructor
 
-``` C++
+```C++
 Query( void );
 Query( const std::shared_ptr< Session >& value );
 ```
 
-Initialise a new class instance, if a [Session](#session) is supplied it will be used to override the default class property values; see also [destructor](#querydestructor).
+Initialises a new class instance, if a [Session](#session) is supplied it will be used to override the default class property values; see also [destructor](#querydestructor).
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   start   | [Session](#session) | n/a | input |
+| parameter | type                | default value | direction |
+|:---------:|---------------------|:-------------:|:---------:|
+|   value   | [Session](#session) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -317,7 +326,7 @@ n/a
 
 #### Query::destructor
 
-``` C++
+```C++
 virtual ~Query( void );
 ```
 
@@ -333,11 +342,11 @@ n/a
 
 ##### Exceptions
 
-noexcept specification:  [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
+noexcept specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
 
 #### Query::clear
 
-``` C++
+```C++
 void clear( void );
 ```
 
@@ -359,7 +368,7 @@ n/a
 
 #### Query::has_failed
 
-``` C++
+```C++
 bool has_failed( void ) const;
 ```
 
@@ -370,7 +379,7 @@ Checks if the query has failed, i.e. whether the database returned an error stat
 n/a
 
 ##### Return Value
- 
+
 true if the query has failed, false otherwise.
 
 ##### Exceptions
@@ -379,7 +388,7 @@ n/a
 
 #### Query::has_fields
 
-``` C++
+```C++
 bool has_fields( void ) const;
 ```
 
@@ -390,7 +399,7 @@ Check if the query has a fields criteria specified; see also [set_fields](#set_f
 n/a
 
 ##### Return Value
- 
+
 true if the query contains a fields criteria, false otherwise.
 
 ##### Exceptions
@@ -399,7 +408,7 @@ n/a
 
 #### Query::has_resultset
 
-``` C++
+```C++
 bool has_resultset( void ) const;
 ```
 
@@ -410,7 +419,7 @@ Check if the query has returned any results; see also [set_resultset](#set_resul
 n/a
 
 ##### Return Value
- 
+
 true if the query contains results, false otherwise.
 
 ##### Exceptions
@@ -419,7 +428,7 @@ n/a
 
 #### Query::get_include
 
-``` C++
+```C++
 restq::Bytes get_include( void ) const;
 ```
 
@@ -430,16 +439,16 @@ Retrieves the contents of the include criteria; see also [set_include](#set_incl
 n/a
 
 ##### Return Value
- 
+
 [Bytes](#bytebytes) representing an entity relationship between two or more records, i.e Weather a query for a queue should also return linked subscriptions.
 
 ##### Exceptions
 
 n/a
-            
+
 #### Query::get_error_code
 
-``` C++
+```C++
 int get_error_code( void ) const;
 ```
 
@@ -452,16 +461,16 @@ The result of this method is used within the service and mapped to a HTTP error 
 n/a
 
 ##### Return Value
- 
+
 Signed integer representing an error condition.
 
 ##### Exceptions
 
 n/a
-            
+
 #### Query::get_index
 
-``` C++
+```C++
 std::size_t get_index( void ) const;
 ```
 
@@ -472,7 +481,7 @@ Retrieves the contents of the index criteria; see also [set_index](#set_index).
 n/a
 
 ##### Return Value
- 
+
 Unsigned integer representing the an offset position into the available results, 0 by default.
 
 ##### Exceptions
@@ -481,7 +490,7 @@ n/a
 
 #### Query::get_limit
 
-``` C++
+```C++
 std::size_t get_limit( void ) const;
 ```
 
@@ -492,7 +501,7 @@ Retrieves the contents of the limit criteria; see also [set_limit](#set_limit).
 n/a
 
 ##### Return Value
- 
+
 Unsigned integer representing the number of results to be returned, max( std::size_t ) by default.
 
 ##### Exceptions
@@ -501,7 +510,7 @@ n/a
 
 #### Query::get_resultset
 
-``` C++
+```C++
 restq::Resources get_resultset( void ) const;
 ```
 
@@ -512,16 +521,16 @@ Retrieves the query results; see also [set_resultset](#set_resultset).
 n/a
 
 ##### Return Value
- 
+
 Collection of [restq::Resource](#resourceresources) representing the results of a query, empty by default.
 
 ##### Exceptions
 
 n/a
-        
+
 #### Query::get_fields
 
-``` C++
+```C++
 std::set< std::string > get_fields( void ) const;
 ```
 
@@ -532,16 +541,16 @@ Retrieves the contents of the fields criteria; see also [set_fields](#set_fields
 n/a
 
 ##### Return Value
- 
+
 [std::set](http://en.cppreference.com/w/cpp/container/set) of strings representing the required fields (columns) to return, empty by default indicating to return all fields.
 
 ##### Exceptions
 
-n/a        
-           
+n/a
+
 #### Query::get_keys
 
-``` C++
+```C++
 std::vector< std::string > get_keys( void ) const;
 ```
 
@@ -552,16 +561,16 @@ Retrieves the contents of the keys criteria; see also [set_keys](#set_keys).
 n/a
 
 ##### Return Value
- 
+
 [std::vector](http://en.cppreference.com/w/cpp/container/vector) of strings representing the keys criteria for this query, empty by default indicating to return all records.
 
 ##### Exceptions
 
-n/a 
+n/a
 
 #### Query::get_session
 
-``` C++
+```C++
 std::shared_ptr< restq::Session > get_session( void ) const;
 ```
 
@@ -572,16 +581,16 @@ Retrieves a smart-pointer of the client's [session](#session) attached to this q
 n/a
 
 ##### Return Value
- 
+
 [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) reference to the client's network [session](#session), [nullptr](http://en.cppreference.com/w/cpp/types/nullptr_t) by default.
 
 ##### Exceptions
 
-n/a 
-            
+n/a
+
 #### Query::get_inclusive_filters
 
-``` C++
+```C++
 std::multimap< std::string, restq::Bytes > get_inclusive_filters( void ) const;
 ```
 
@@ -592,16 +601,16 @@ Retrieves the contents of the inclusive filters criteria; see also [set_inclusiv
 n/a
 
 ##### Return Value
- 
+
 [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing inclusive filters; empty by default.
 
 ##### Exceptions
 
-n/a             
-     
+n/a
+
 #### Query::get_exclusive_filters
 
-``` C++
+```C++
 std::multimap< std::string, restq::Bytes > get_exclusive_filters( void ) const;
 ```
 
@@ -612,16 +621,16 @@ Retrieves the contents of the exclusive filters criteria; see also [set_exclusiv
 n/a
 
 ##### Return Value
- 
+
 [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing exclusive filters; empty by default.
 
 ##### Exceptions
 
 n/a
-            
+
 #### Query::set_error_code
 
-``` C++
+```C++
 void set_error_code( const int value );
 ```
 
@@ -629,12 +638,12 @@ Replaces the contents of the query error status; see also [get_error_code](#get_
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   |     [int](http://en.cppreference.com/w/cpp/language/types)     | n/a | input |
+| parameter | type                                                   | default value | direction |
+|:---------:|--------------------------------------------------------|:-------------:|:---------:|
+|   value   | [int](http://en.cppreference.com/w/cpp/language/types) |      n/a      |   input   |
 
 ##### Return Value
- 
+
 n/a
 
 ##### Exceptions
@@ -643,7 +652,7 @@ n/a
 
 #### Query::set_index
 
-``` C++
+```C++
 void set_index( const std::size_t start );
 ```
 
@@ -653,12 +662,12 @@ The index criteria specifies an offset into the recordset to begin the query, i.
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   start   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
+| parameter | type                                                         | default value | direction |
+|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
+|   start   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
- 
+
 n/a
 
 ##### Exceptions
@@ -667,7 +676,7 @@ n/a
 
 #### Query::set_limit
 
-``` C++
+```C++
 void set_limit( const std::size_t stop );
 ```
 
@@ -677,21 +686,21 @@ The limit criteria specifies the number of records to be returned. In combinatio
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   stop    | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
+| parameter | type                                                         | default value | direction |
+|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
+|   stop    | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
- 
+
 n/a
 
 ##### Exceptions
 
 n/a
- 
+
 #### Query::set_resultset
 
-``` C++
+```C++
 void set_resultset( const restq::Resources& values );
 ```
 
@@ -699,21 +708,21 @@ Replaces the contents of the query's resultset; see also [get_resultset](#get_re
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   values   | [restq::Resources](#resourceresources) | n/a | input |
+| parameter | type                                   | default value | direction |
+|:---------:|----------------------------------------|:-------------:|:---------:|
+|  values   | [restq::Resources](#resourceresources) |      n/a      |   input   |
 
 ##### Return Value
- 
+
 n/a
 
 ##### Exceptions
 
 n/a
- 
+
 #### Query::set_include
 
-``` C++
+```C++
 void set_include( const restq::Bytes& relationship );
 ```
 
@@ -723,9 +732,9 @@ The include criteria represents a entity relationship between two or more record
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   relationship   | [restq::Bytes](#bytebytes) | n/a | input |
+| parameter    | type                       | default value | direction |
+|:------------:|----------------------------|:-------------:|:---------:|
+| relationship | [restq::Bytes](#bytebytes) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -733,11 +742,11 @@ n/a
 
 ##### Exceptions
 
-n/a  
-            
+n/a
+
 #### Query::set_keys
 
-``` C++
+```C++
 1. void set_key( const restq::Bytes& value );
 2. void set_key( const std::string& value );
 3. void set_keys( const std::vector< std::string >& values );
@@ -755,11 +764,11 @@ The key search criteria indicates that only records with these keys may be retur
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [restq::Bytes](#bytebytes) | n/a | input |
-|   -   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
-|   values   | [std::vector](http://en.cppreference.com/w/cpp/container/vector) | n/a | input |
+| parameter | type                                                                | default value | direction |
+|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [restq::Bytes](#bytebytes)                                          |      n/a      |   input   |
+|    \-     | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+|  values   | [std::vector](http://en.cppreference.com/w/cpp/container/vector)    |      n/a      |   input   |
 
 ##### Return Value
 
@@ -767,11 +776,11 @@ n/a
 
 ##### Exceptions
 
-n/a 
+n/a
 
 #### Query::set_fields
 
-``` C++
+```C++
 void set_fields( const std::set< std::string >& values );
 ```
 
@@ -781,9 +790,9 @@ The fields search criteria indicates what fields (columns) from each record shou
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------:|
-|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) | n/a | input |
+| parameter | type                                                       | default value | direction |
+|:---------:|------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -791,23 +800,23 @@ n/a
 
 ##### Exceptions
 
-n/a 
-            
+n/a
+
 #### Query::set_session
 
-``` C++
+```C++
 void set_session( const std::set< std::string >& values );
 ```
 
 Replaces the contents of the client session attached to this query; see also [set_session](#set_session).
 
-Altering the client session property outside of the exchange will lead to undefined behaviour. It's made available to the repository so as to call Session::sleep_for while waiting for query results. 
+Altering the client session property outside of the exchange will lead to undefined behaviour. It's made available to the repository so as to call Session::sleep_for while waiting for query results.
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) | n/a | input |
+| parameter | type                                                       | default value | direction |
+|:---------:|------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -815,11 +824,11 @@ n/a
 
 ##### Exceptions
 
-n/a 
+n/a
 
 #### Query::set_inclusive_filters
 
-``` C++
+```C++
 1. void set_inclusive_filter( const std::string& name, const restq::Bytes& value );
 2. void set_inclusive_filters( const std::multimap< std::string, restq::Bytes >& values );
 ```
@@ -832,7 +841,7 @@ Replaces the contents of the query's inclusive filters criteria; see also [get_i
 
 Inclusive filters represent a 'must have at least one-of' OR condition. i.e The following will return all records that have a type of 'queue' or 'subscription':
 
-``` C++
+```C++
 auto filters = multimap< string, Bytes > {
   { "type", String::to_bytes( "queue" ) },
   { "type", String::to_bytes( "subscription" ) }
@@ -846,11 +855,11 @@ m_repository->read( query, ... );
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------:|
-|   name   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
-|   value   | [restq::Bytes](#bytebytes) | n/a | input |
-|   values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) | n/a | input |
+| parameter | type                                                                 | default value | direction |
+|:---------:|----------------------------------------------------------------------|:-------------:|:---------:|
+|   name    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)  |      n/a      |   input   |
+|   value   | [restq::Bytes](#bytebytes)                                           |      n/a      |   input   |
+|  values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -858,11 +867,11 @@ n/a
 
 ##### Exceptions
 
-n/a 
+n/a
 
 #### Query::set_exclusive_filters
 
-``` C++
+```C++
 1. void set_exclusive_filter( const std::string& name, const restq::Bytes& value );
 2. void set_exclusive_filters( const std::multimap< std::string, restq::Bytes >& values );
 ```
@@ -875,7 +884,7 @@ Replaces the contents of the query's inclusive filters criteria; see also [get_e
 
 Exclusive filters represent a 'must have' AND condition. i.e The following will return all records that have a type of 'queue' and a name property of 'events':
 
-``` C++
+```C++
 auto filters = multimap< string, Bytes > {
   { "type", String::to_bytes( "queue" ) },
   { "name", String::to_bytes( "events" ) }
@@ -889,11 +898,11 @@ m_repository->read( query, ... );
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   name   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
-|   value   | [restq::Bytes](#bytebytes) | n/a | input |
-|   values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) | n/a | input |
+| parameter | type                                                                 | default value | direction |
+|:---------:|----------------------------------------------------------------------|:-------------:|:---------:|
+|   name    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)  |      n/a      |   input   |
+|   value   | [restq::Bytes](#bytebytes)                                           |      n/a      |   input   |
+|  values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -901,11 +910,11 @@ n/a
 
 ##### Exceptions
 
-n/a 
+n/a
 
 ### SSLSettings
 
-``` C++
+```C++
 using SSLSettings = restbed::SSLSettings;
 ```
 
@@ -917,7 +926,7 @@ See [restbed::SSLSettings](https://github.com/corvusoft/restbed/documentation/AP
 
 Represents the primary point of [Exchange](#exchange), [Repository](#repository), and [Logger](#logger) configuration. The mass majority of its implementation is inherited from [restbed::Settings](https://github.com/corvusoft/restbed/documentation/API.md#settings) with additional RestQ specific methods included and the following methods **removed**:
 
-``` C++
+```C++
 bool get_case_insensitive_uris( void ) const = delete;
 std::string get_property( const std::string& name ) const = delete;
 std::map< std::string, std::string > get_properties( void ) const = delete;
@@ -933,18 +942,18 @@ void set_default_header( const std::string& name, const std::string& value ) = d
 void set_default_headers( const std::multimap< std::string, std::string >& values ) = delete;
 ```
 
-#### Methods 
+#### Methods
 
-* [get_default_queue_message_limit](#settingsget_default_queue_message_limit)
-* [get_default_queue_message_size_limit](#settingsget_default_queue_message_size_limit)
-* [get_default_queue_subscription_limit](#settingsget_default_queue_subscription_limit)
-* [set_default_queue_message_limit](#settingsset_default_queue_message_limit)
-* [set_default_queue_message_size_limit](#settingsset_default_queue_message_size_limit)
-* [set_default_queue_subscription_limit](#settingsset_default_queue_subscription_limit)
+-	[get_default_queue_message_limit](#settingsget_default_queue_message_limit)
+-	[get_default_queue_message_size_limit](#settingsget_default_queue_message_size_limit)
+-	[get_default_queue_subscription_limit](#settingsget_default_queue_subscription_limit)
+-	[set_default_queue_message_limit](#settingsset_default_queue_message_limit)
+-	[set_default_queue_message_size_limit](#settingsset_default_queue_message_size_limit)
+-	[set_default_queue_subscription_limit](#settingsset_default_queue_subscription_limit)
 
 #### Settings::get_default_queue_message_limit
 
-``` C++
+```C++
 std::size_t get_default_queue_message_limit( void ) const;
 ```
 
@@ -964,7 +973,7 @@ n/a
 
 #### Settings::get_default_queue_message_size_limit
 
-``` C++
+```C++
 std::size_t get_default_queue_message_size_limit( void ) const;
 ```
 
@@ -980,11 +989,11 @@ unsigned integer representing maximum message size in number of bytes before cli
 
 ##### Exceptions
 
-n/a    
-            
+n/a
+
 #### Settings::get_default_queue_subscription_limit
 
-``` C++
+```C++
 std::size_t get_default_queue_subscription_limit( void ) const;
 ```
 
@@ -1004,7 +1013,7 @@ n/a
 
 #### Settings::set_default_queue_message_limit
 
-``` C++
+```C++
 void set_default_queue_message_limit( const std::size_t value );
 ```
 
@@ -1014,9 +1023,9 @@ Internally this value is compared with the number of pending messages awaiting d
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
+| parameter | type                                                         | default value | direction |
+|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1028,7 +1037,7 @@ n/a
 
 #### Settings::set_default_queue_message_size_limit
 
-``` C++
+```C++
 void set_default_queue_message_size_limit( const std::size_t value );
 ```
 
@@ -1038,9 +1047,9 @@ When creating a new message on a queue this vaule is consulted and if breached c
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
+| parameter | type                                                         | default value | direction |
+|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1048,23 +1057,23 @@ n/a
 
 ##### Exceptions
 
-n/a    
-            
+n/a
+
 #### Settings::set_default_queue_subscription_limit
 
-``` C++
+```C++
 void set_default_queue_subscription_limit( const std::size_t value );
 ```
 
 Replaces the default subscription limit (25) given to a freshly created queue; see also [get_default_queue_subscription_limit](#get_default_queue_subscription_limit).
 
-Internally this value is compared with the number of consumers currently subscribed to a queue, if breached clients see a  503 (Service Unavailable) error response. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
+Internally this value is compared with the number of consumers currently subscribed to a queue, if breached clients see a 503 (Service Unavailable) error response. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) | n/a | input |
+| parameter | type                                                         | default value | direction |
+|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1072,22 +1081,23 @@ n/a
 
 ##### Exceptions
 
-n/a  
+n/a
 
 ### Formatter
 
 Interface detailing the required contract for Format extensions. The concept of a format within RestQ is that of a document structure i.e JSON, XML, YAML, HTML.
 
-#### Methods  
-* [parse](#formatterparse)
-* [try_parse](#formattertry_parse)
-* [compose](#formattercompose)
-* [get_media_type](#formatterget_media_type)
-* [set_logger](#formatterset_logger)
+#### Methods
+
+-	[parse](#formatterparse)
+-	[try_parse](#formattertry_parse)
+-	[compose](#formattercompose)
+-	[get_media_type](#formatterget_media_type)
+-	[set_logger](#formatterset_logger)
 
 #### Formatter::parse
 
-``` C++
+```C++
 virtual restq::Resources parse( const restq::Bytes& document ) = 0;
 ```
 
@@ -1095,13 +1105,13 @@ Parses a [restq::Byte](#bytebytes) sequence containing a document structure; see
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:---------:|
-|   document   | [restq::Byte](#bytebytes) | n/a | input |
+| parameter | type                      | default value | direction |
+|:---------:|---------------------------|:-------------:|:---------:|
+| document  | [restq::Byte](#bytebytes) |      n/a      |   input   |
 
 ##### Return Value
 
-Collection of decoded [restq::Resource](#resourceresources) entities. 
+Collection of decoded [restq::Resource](#resourceresources) entities.
 
 ##### Exceptions
 
@@ -1109,7 +1119,7 @@ If an exception is thrown for any reason, the service will close the active clie
 
 #### Formatter::try_parse
 
-``` C++
+```C++
 virtual bool try_parse( const restq::Bytes& document, restq::Resources& values ) noexcept = 0;
 ```
 
@@ -1117,10 +1127,10 @@ Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a docu
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   document   | [restq::Byte](#bytebytes) | n/a           | input |
-|   values   | [restq::Resoures](#resourceresources) | n/a           | output |
+| parameter | type                                  | default value | direction |
+|:---------:|---------------------------------------|:-------------:|:---------:|
+| document  | [restq::Byte](#bytebytes)             |      n/a      |   input   |
+|  values   | [restq::Resoures](#resourceresources) |      n/a      |  output   |
 
 ##### Return Value
 
@@ -1128,11 +1138,11 @@ true if parsing was successful, false otherwise.
 
 ##### Exceptions
 
-noexcept specification:  [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
+noexcept specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
 
 #### Formatter::compose
 
-``` C++
+```C++
 virtual restq::Bytes compose( const restq::Resources& values, const bool styled = false ) = 0;
 ```
 
@@ -1140,10 +1150,10 @@ Convert a collection of [restq::Resource](#resourceresources) entities into a do
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   values   | [restq::Resoures](#resourceresources) | n/a | input |
-|   styled   | [bool](http://en.cppreference.com/w/cpp/language/types) | false | in |
+| parameter | type                                                    | default value | direction |
+|:---------:|---------------------------------------------------------|:-------------:|:---------:|
+|  values   | [restq::Resoures](#resourceresources)                   |      n/a      |   input   |
+|  styled   | [bool](http://en.cppreference.com/w/cpp/language/types) |     false     |    in     |
 
 ##### Return Value
 
@@ -1155,7 +1165,7 @@ If an exception is thrown for any reason, the service will close the active clie
 
 #### Formatter::get_media_type
 
-``` C++
+```C++
 virtual const std::string get_media_type( void ) const = 0;
 ```
 
@@ -1173,11 +1183,11 @@ n/a
 
 ##### Exceptions
 
-If an exception is thrown for any reason, the service will close the active client session with an appropriate HTTP error response.           
+If an exception is thrown for any reason, the service will close the active client session with an appropriate HTTP error response.
 
 #### Formatter::set_logger
 
-``` C++
+```C++
 virtual void set_logger( const std::shared_ptr< restq::Logger >& value ) = 0;
 ```
 
@@ -1185,9 +1195,9 @@ Replace the logger instance.
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [restq::Logger](#logger) | n/a | input |
+| parameter | type                     | default value | direction |
+|:---------:|--------------------------|:-------------:|:---------:|
+|   value   | [restq::Logger](#logger) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1195,7 +1205,7 @@ n/a
 
 ##### Exceptions
 
-n/a  
+n/a
 
 ### Repository
 
@@ -1203,18 +1213,19 @@ Interface detailing the required contract for repository extensions. A repositor
 
 It is encouraged that any implementation of this interface **SHOULD** be of an asynchronous nature, to reduce thread contention within the exchange. This can be achieved with [MariaDB](https://mariadb.com/kb/en/mariadb/using-the-non-blocking-library/), [PostgreSQL](http://www.postgresql.org/docs/7.3/static/libpq-async.html), and other database products.
 
-#### Methods  
-* [start](#repositorystart)
-* [stop](#repositorystop)
-* [create](#repositorycreate)
-* [read](#repositoryread)
-* [update](#repositoryupdate)
-* [destroy](#repositorystartdestroy)
-* [set_logger](#repositoryset_logger)
+#### Methods
+
+-	[start](#repositorystart)
+-	[stop](#repositorystop)
+-	[create](#repositorycreate)
+-	[read](#repositoryread)
+-	[update](#repositoryupdate)
+-	[destroy](#repositorystartdestroy)
+-	[set_logger](#repositoryset_logger)
 
 #### Repository::start
 
-``` C++
+```C++
 virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
 ```
 
@@ -1226,9 +1237,9 @@ After this method has returned the instance **MUST** be ready to start receiving
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [restq::Settings](#settings) | n/a | input |
+| parameter | type                         | default value | direction |
+|:---------:|------------------------------|:-------------:|:---------:|
+|   value   | [restq::Settings](#settings) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1240,9 +1251,10 @@ Any exceptions raised will result in the service failing to start.
 
 #### Repository::stop
 
-``` C++
+```C++
 virtual void stop( void ) = 0;
 ```
+
 Halt/Clean-up repository resources, i.e database connections; see also [start](#repositorystart).
 
 ##### Parameters
@@ -1259,7 +1271,7 @@ Exceptions raised will result in a dirty service teardown.
 
 #### Repository::create
 
-``` C++
+```C++
 virtual void create( const Resources values,
                      const std::shared_ptr< Query > query,
                      const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
@@ -1269,11 +1281,11 @@ Create one or more resources; see also [Resources](#resourceresources) and [Quer
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   values   | [restq::Resources](#resourceresources) | n/a | input |
-|   query   | [restq::Query](#query) | n/a | input |
-|   callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+| parameter | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|  values   | [restq::Resources](#resourceresources)                                        |      n/a      |   input   |
+|   query   | [restq::Query](#query)                                                        |      n/a      |   input   |
+| callback  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1285,7 +1297,7 @@ Any exceptions raised will result in the service closing the active client sessi
 
 #### Repository::read
 
-``` C++
+```C++
 virtual void read( const std::shared_ptr< Query > query,
                    const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
 ```
@@ -1294,10 +1306,10 @@ Read one or more resources; see also [Query](#query).
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   query   | [restq::Query](#query) | n/a | input |
-|   callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+| parameter | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|   query   | [restq::Query](#query)                                                        |      n/a      |   input   |
+| callback  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1309,7 +1321,7 @@ Any exceptions raised will result in the service closing the active client sessi
 
 #### Repository::update
 
-``` C++
+```C++
 virtual void update( const Resource changeset,
                      const std::shared_ptr< Query > query,
                      const std::function< void ( const std::shared_ptr< Query > ) >& callback ) = 0;
@@ -1319,11 +1331,11 @@ Update one or more resources; see also [Resource](#resourceresources) and [Query
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   changeset   | [restq::Resource](#resourceresources) | n/a | input |
-|   query   | [restq::Query](#query) | n/a | input |
-|   callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+| parameter | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| changeset | [restq::Resource](#resourceresources)                                         |      n/a      |   input   |
+|   query   | [restq::Query](#query)                                                        |      n/a      |   input   |
+| callback  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1335,19 +1347,19 @@ Any exceptions raised will result in the service closing the active client sessi
 
 #### Repository::destroy
 
-``` C++
+```C++
 virtual void destroy( const std::shared_ptr< Query > query,
                       const std::function< void ( const std::shared_ptr< Query > ) >& callback = nullptr ) = 0;
-```            
+```
 
 Delete one or more resources; see also [Query](#query).
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   query   | [restq::Query](#query) | n/a | input |
-|   callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+| parameter | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|   query   | [restq::Query](#query)                                                        |      n/a      |   input   |
+| callback  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1359,15 +1371,15 @@ Any exceptions raised will result in the service closing the active client sessi
 
 #### Repository::set_logger
 
-``` C++
+```C++
 virtual void set_logger( const std::shared_ptr< Logger >& value ) = 0;
 ```
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [restq::Logger](#logger) | n/a | input |
+| parameter | type                     | default value | direction |
+|:---------:|--------------------------|:-------------:|:---------:|
+|   value   | [restq::Logger](#logger) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1375,22 +1387,23 @@ n/a
 
 ##### Exceptions
 
-n/a 
+n/a
 
 ### Logger
 
-Interface detailing the required contract for logger extensions.  No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characterics.
+Interface detailing the required contract for logger extensions. No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characterics.
 
-#### Methods  
-* [start](#loggerstart)
-* [stop](#loggerstop)
-* [log](#loggerlog)
-* [log_if](#loggerlog_if)
-* [level](#loggerlevel)
+#### Methods
+
+-	[start](#loggerstart)
+-	[stop](#loggerstop)
+-	[log](#loggerlog)
+-	[log_if](#loggerlog_if)
+-	[level](#loggerlevel)
 
 #### Logger::start
 
-``` C++
+```C++
 virtual void start( const std::shared_ptr< const restq::Settings >& settings ) = 0;
 ```
 
@@ -1402,9 +1415,9 @@ After this method has returned the instance **MUST** be ready to start receiving
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [restq::Settings](#settings) | n/a | input |
+| parameter | type                         | default value | direction |
+|:---------:|------------------------------|:-------------:|:---------:|
+|   value   | [restq::Settings](#settings) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1416,7 +1429,7 @@ Any exceptions raised will result in the service failing to start.
 
 #### Logger::stop
 
-``` C++
+```C++
 virtual void stop( void ) = 0;
 ```
 
@@ -1436,7 +1449,7 @@ Exceptions raised will result in a dirty service teardown.
 
 #### Logger::log
 
-``` C++
+```C++
 virtual void log( const Level level, const char* format, ... ) = 0;
 ```
 
@@ -1444,16 +1457,15 @@ Commit the message specified under the control of a format string, with the spec
 
 See [printf](http://en.cppreference.com/w/cpp/io/c/fprintf) family of functions for format directives.
 
->The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream; and conversion
->specifications, each of which results in fetching zero or more subsequent arguments.  Each conversion specification is >introduced by the % character.
+> The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream; and conversion specifications, each of which results in fetching zero or more subsequent arguments. Each conversion specification is >introduced by the % character.
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   level   | [restq::Logger::Level](#loggerlevel) | n/a | input |
-|   format   | [char*](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
-|   ...   | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) | n/a | input |
+| parameter | type                                                                        | default value | direction |
+|:---------:|-----------------------------------------------------------------------------|:-------------:|:---------:|
+|   level   | [restq::Logger::Level](#loggerlevel)                                        |      n/a      |   input   |
+|  format   | [char\*](http://en.cppreference.com/w/cpp/language/types)                   |      n/a      |   input   |
+|    ...    | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1465,7 +1477,7 @@ Any exceptions raised will result in the service ignoring the fault and printing
 
 #### Logger::log_if
 
-``` C++
+```C++
 virtual void log_if( bool expression, const Level level, const char* format, ... ) = 0;
 ```
 
@@ -1473,12 +1485,12 @@ Commit the message specified under the control of a format string, with the spec
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   expresssion   | [bool](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
-|   level   | [restq::Logger::Level](#loggerlevel) | n/a | input |
-|   format   | [char*](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
-|   ...   | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) | n/a | input |
+| parameter   | type                                                                        | default value | direction |
+|:-----------:|-----------------------------------------------------------------------------|:-------------:|:---------:|
+| expresssion | [bool](http://en.cppreference.com/w/cpp/language/types)                     |      n/a      |   input   |
+|    level    | [restq::Logger::Level](#loggerlevel)                                        |      n/a      |   input   |
+|   format    | [char\*](http://en.cppreference.com/w/cpp/language/types)                   |      n/a      |   input   |
+|     ...     | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1490,7 +1502,7 @@ Any exceptions raised will result in the service ignoring the fault and printing
 
 #### Logger::Level
 
-``` C++
+```C++
 class Logger
 {
     enum Level : int
@@ -1511,21 +1523,22 @@ class Logger
 
 The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
 
-#### Methods 
-* [constructor](#exchangeconstructor)
-* [destructor](#exchangedestructor)
-* [start](#exchangestart)
-* [stop](#exchangestop)
-* [restart](#exchangerestart)
-* [add_format](#exchangeadd_format)
-* [add_signal_handler](#exchangeadd_signal_handler)
-* [set_logger](#exchangeset_logger)
-* [set_repository](#exchangeset_repository)
-* [set_ready_handler](#exchangeset_ready_handler)
+#### Methods
+
+-	[constructor](#exchangeconstructor)
+-	[destructor](#exchangedestructor)
+-	[start](#exchangestart)
+-	[stop](#exchangestop)
+-	[restart](#exchangerestart)
+-	[add_format](#exchangeadd_format)
+-	[add_signal_handler](#exchangeadd_signal_handler)
+-	[set_logger](#exchangeset_logger)
+-	[set_repository](#exchangeset_repository)
+-	[set_ready_handler](#exchangeset_ready_handler)
 
 #### Exchange::constructor
 
-``` C++
+```C++
 Exchange( void );
 ```
 
@@ -1545,7 +1558,7 @@ n/a
 
 #### Exchange::destructor
 
-``` C++
+```C++
 virtual ~Exchange( void );
 ```
 
@@ -1561,11 +1574,11 @@ n/a
 
 ##### Exceptions
 
-noexcept specification:  [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
+noexcept specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
 
 #### Exchange::start
 
-``` C++
+```C++
 void start( const std::shared_ptr< const Settings >& settings = nullptr );
 ```
 
@@ -1575,9 +1588,9 @@ When the exchange starts it publishes queue, subscription, and message resources
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [restq::Settings](#settings) | n/a | input |
+| parameter | type                         | default value | direction |
+|:---------:|------------------------------|:-------------:|:---------:|
+|   value   | [restq::Settings](#settings) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1589,7 +1602,7 @@ n/a
 
 #### Exchange::stop
 
-``` C++
+```C++
 void stop( void );
 ```
 
@@ -1609,7 +1622,7 @@ Any exceptions raised will result in a dirty service teardown.
 
 #### Exchange::restart
 
-``` C++
+```C++
 void restart( const std::shared_ptr< const Settings >& settings = nullptr );
 ```
 
@@ -1617,9 +1630,9 @@ Restart the exchange, this is equivalent to calling [stop](#exchangestop) and th
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [restq::Settings](#settings) | n/a | input |
+| parameter | type                         | default value | direction |
+|:---------:|------------------------------|:-------------:|:---------:|
+|   value   | [restq::Settings](#settings) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1631,7 +1644,7 @@ n/a
 
 #### Exchange::add_format
 
-``` C++
+```C++
 void add_format( const std::string& media_type, const std::shared_ptr< Formatter >& value );
 ```
 
@@ -1639,10 +1652,10 @@ Add a media type document formatter to the exchange; see also [Formatter](#forma
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   media_type   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | n/a | input |
-|   value   | [Formatter](#formatter) | n/a | input |
+| parameter  | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| media_type | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+|   value    | [Formatter](#formatter)                                             |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1656,7 +1669,7 @@ n/a
 
 #### Exchange::add_signal_handler
 
-``` C++
+```C++
 void add_signal_handler( const int signal, const std::function< void ( const int ) >& value );
 ```
 
@@ -1664,10 +1677,10 @@ Inform the exchange to invoke the error handler on recieving the specified syste
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   signal   | [int](http://en.cppreference.com/w/cpp/language/types) | n/a | input |
-|   value   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+| parameter | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|  signal   | [int](http://en.cppreference.com/w/cpp/language/types)                        |      n/a      |   input   |
+|   value   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1679,7 +1692,7 @@ n/a
 
 #### Exchange::set_logger
 
-``` C++
+```C++
 void set_logger( const std::shared_ptr< Logger >& value );
 ```
 
@@ -1687,9 +1700,9 @@ Replace the logger to be used by the exchange; see also [Logger](#logger).
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [Logger](#logger) | n/a | input |
+| parameter | type              | default value | direction |
+|:---------:|-------------------|:-------------:|:---------:|
+|   value   | [Logger](#logger) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1701,7 +1714,7 @@ n/a
 
 #### Exchange::set_repository
 
-``` C++
+```C++
 void set_repository( const std::shared_ptr< Repository >& value );
 ```
 
@@ -1709,9 +1722,9 @@ Replace the repository to be used by the exchange; see also [Repository](#reposi
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [Repository](#repository) | n/a | input |
+| parameter | type                      | default value | direction |
+|:---------:|---------------------------|:-------------:|:---------:|
+|   value   | [Repository](#repository) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1725,7 +1738,7 @@ n/a
 
 #### Exchange::set_ready_handler
 
-``` C++
+```C++
 void set_ready_handler( const std::function< void ( Exchange& ) >& value );
 ```
 
@@ -1735,9 +1748,9 @@ The callback specified in value will be invoked once the service is online and r
 
 ##### Parameters
 
-| parameter |    type     | default value | direction |
-|:---------:|-----------|:-------------:|:----------: |
-|   value   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) | n/a | input |
+| parameter | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|   value   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
