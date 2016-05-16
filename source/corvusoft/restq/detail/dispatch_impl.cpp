@@ -177,6 +177,7 @@ namespace restq
                         }
                         else
                         {
+                            //change.insert( make_pair( "delivery-attempts", 1 ) );
                             //status = PENDING; //need to implement circuit-breaker first. //status == FAILED, delay?
                             return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
                         }
@@ -190,7 +191,7 @@ namespace restq
                                 log( Logger::ERROR, "Failed to update transaction status to dispatched." );
                             }
                             
-                            if ( status == DISPATCHED or status == REJECTED )
+                            if ( status == DISPATCHED or status == REJECTED ) //or status == FAILED
                             {
                                 m_repository->destroy( query, [ ]( const shared_ptr< Query > )
                                 {

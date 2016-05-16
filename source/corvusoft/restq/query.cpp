@@ -38,6 +38,11 @@ namespace restq
     
     Query::Query( const shared_ptr< Session >& value ) : m_pimpl( new QueryImpl )
     {
+        if ( value == nullptr )
+        {
+            return;
+        }
+        
         if ( value->has( "paging" ) )
         {
             const pair< size_t, size_t > paging = value->get( "paging" );
