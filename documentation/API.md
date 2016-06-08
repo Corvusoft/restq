@@ -1,10 +1,12 @@
-##API Overview
+API Overview
+------------
 
-This document is intented to accurately communicate the Application Programming Interface (API) exposed by the RestQ framework for public consumption. It does not go into detail regarding the [Network API](#NETWORK-API.md).
+This document is intended to accurately communicate the Application Programming Interface (API) exposed by the RestQ framework for public consumption. It does not go into detail regarding the [Network API](#NETWORK-API.md).
 
 A description of the frameworks software architecture is provided by the [Design Overview](#DESIGN.md) documentation.
 
-### Interpretation
+Interpretation
+--------------
 
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
 
@@ -102,7 +104,7 @@ Parses a string and attempts to validate if it holds a representation of an [int
 
 ##### Return Value
 
-boolean true if the argument is a string representation of an [integer](https://en.wikipedia.org/wiki/Integer), otherwise false.
+Boolean true if the argument is a string representation of an [integer](https://en.wikipedia.org/wiki/Integer), otherwise false.
 
 ##### Exceptions
 
@@ -124,7 +126,7 @@ Parses a string and attempts to validate if it holds a representation of a numer
 
 ##### Return Value
 
-boolean true if the argument is a string containing a [fractional component](https://en.wikipedia.org/wiki/Fraction_%28mathematics%29), otherwise false.
+Boolean true if the argument is a string containing a [fractional component](https://en.wikipedia.org/wiki/Fraction_%28mathematics%29), otherwise false.
 
 ##### Exceptions
 
@@ -146,7 +148,7 @@ Parses a string, ignoring case, and attempts to validate if it holds the represe
 
 ##### Return Value
 
-boolean true if the argument is a string of either 'true' or 'false', otherwise false.
+Boolean true if the argument is a string of either 'true' or 'false', otherwise false.
 
 ##### Exceptions
 
@@ -169,7 +171,7 @@ Removes matching characters from the front and rear of the supplied string value
 
 ##### Return Value
 
-String matching the input value with the exception of removing leading and lagging characters that match those specified in the range parameter.
+String matching the input value with leading and lagging characters that match those specified in the range parameter removed.
 
 ##### Exceptions
 
@@ -192,7 +194,7 @@ Removes matching characters from the front of the supplied string value.
 
 ##### Return Value
 
-String matching the input value with the exception of removing leading characters that match those specified in the range parameter.
+String matching the input value with leading characters that match those specified in the range parameter removed.
 
 ##### Exceptions
 
@@ -215,7 +217,7 @@ Removes matching characters from the rear of the supplied string value.
 
 ##### Return Value
 
-String matching the input value with the exception of removing lagging characters that match those specified in the range parameter.
+String matching the input value with lagging characters that match those specified in the range parameter removed.
 
 ##### Exceptions
 
@@ -227,7 +229,7 @@ n/a
 using Uri = restbed::Uri;
 ```
 
-Represents a Uniform Resource Identifier as specificed in [RFC 3986](https://www.ietf.org/rfc/rfc3986.txt).
+Represents a Uniform Resource Identifier (URI) as specificed in [RFC 3986](https://www.ietf.org/rfc/rfc3986.txt).
 
 > A generic URI is of the form:
 >
@@ -263,13 +265,17 @@ using Session = restbed::Session;
 
 Represents a conversation between a client and the service.
 
-Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisition and/or sleep states, Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
+Internally this class holds the network state and exposes public functionality to interact with the exchange's runloop for asynchronous data acquisition and/or sleep states.
+
+Only [Authenticators](#authenticator) and [Repository](#repository) developers require access to this functionality.
 
 See [restbed::Session](https://github.com/corvusoft/restbed/documentation/API.md#session) for further details.
 
 ### Query
 
-Represents a data store enquire for creating, reading, updating, and/or deleting resources. This class is an implementation of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensibility during [Repository](#repository) interaction.
+Represents a data store enquire for creating, reading, updating, and/or deleting resources.
+
+This class is an implementation of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensibility during [Repository](#repository) interaction.
 
 #### Methods
 
@@ -342,7 +348,7 @@ n/a
 
 ##### Exceptions
 
-noexcept specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
 
 #### Query::clear
 
@@ -380,7 +386,7 @@ n/a
 
 ##### Return Value
 
-true if the query has failed, false otherwise.
+True if the query has failed, otherwise false.
 
 ##### Exceptions
 
@@ -400,7 +406,7 @@ n/a
 
 ##### Return Value
 
-true if the query contains a fields criteria, false otherwise.
+True if the query contains a fields criteria, otherwise false.
 
 ##### Exceptions
 
@@ -420,7 +426,7 @@ n/a
 
 ##### Return Value
 
-true if the query contains results, false otherwise.
+True if the query contains results, otherwise false.
 
 ##### Exceptions
 
@@ -462,7 +468,7 @@ n/a
 
 ##### Return Value
 
-Signed integer representing an error condition.
+Signed [integer](https://en.wikipedia.org/wiki/Integer) representing an error condition.
 
 ##### Exceptions
 
@@ -482,7 +488,7 @@ n/a
 
 ##### Return Value
 
-Unsigned integer representing the an offset position into the available results, 0 by default.
+Unsigned [integer](https://en.wikipedia.org/wiki/Integer) representing an offset position into the available results, 0 by default.
 
 ##### Exceptions
 
@@ -502,7 +508,7 @@ n/a
 
 ##### Return Value
 
-Unsigned integer representing the number of results to be returned, max( std::size_t ) by default.
+Unsigned [integer](https://en.wikipedia.org/wiki/Integer) representing the number of results to be returned, max( std::size_t ) by default.
 
 ##### Exceptions
 
@@ -658,7 +664,9 @@ void set_index( const std::size_t start );
 
 Replaces the contents of the index criteria; see also [get_index](#get_index).
 
-The index criteria specifies an offset into the recordset to begin the query, i.e row number to start query at. In combination with [set_limit](#set_limit) paging is through records is possible.
+The index criteria specifies an offset into the recordset to begin the query, i.e the row number to start the query from.
+
+In conjunction with the [set_limit](#set_limit) method, it is possible to page through a recordset.
 
 ##### Parameters
 
@@ -680,9 +688,11 @@ n/a
 void set_limit( const std::size_t stop );
 ```
 
-Replaces the contents of the limit criteria; see also [set_limit](#set_limit).
+Replaces the contents of the limit criteria; see also [get_limit](#get_limit).
 
-The limit criteria specifies the number of records to be returned. In combination with [set_index](#set_index) paging is through records is possible.
+The limit criteria specifies the number of records to be returned.
+
+In conjunction with the [set_index](#set_index) method, it is possible to page through a recordset.
 
 ##### Parameters
 
@@ -704,7 +714,7 @@ n/a
 void set_resultset( const restq::Resources& values );
 ```
 
-Replaces the contents of the query's resultset; see also [get_resultset](#get_resultset).
+Replaces the contents of the query's result set; see also [get_resultset](#get_resultset).
 
 ##### Parameters
 
@@ -726,9 +736,9 @@ n/a
 void set_include( const restq::Bytes& relationship );
 ```
 
-Replaces the contents of the include critiera; see also [get_include](#get_include).
+Replaces the contents of the include criteria; see also [get_include](#get_include).
 
-The include criteria represents a entity relationship between two or more records, i.e Weather a query for a queue should also return linked subscriptions.
+The include criteria represents an entity relationship between two or more records, i.e Weather a query for a queue should also return linked subscriptions.
 
 ##### Parameters
 
@@ -758,16 +768,16 @@ Replaces the contents of the query's key criteria; see also [get_keys](#get_keys
 
 2) Adds a key to the query's search criteria.
 
-3) Replaces the query's key search critiera with those specified in values.
+3) Replaces the query's key search criteria with those specified in values.
 
-The key search criteria indicates that only records with these keys may be returned.
+The key search criteria indicates that only records with a matching key may be returned.
 
 ##### Parameters
 
 | parameter | type                                                                | default value | direction |
 |:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
 |   value   | [restq::Bytes](#bytebytes)                                          |      n/a      |   input   |
-|    \-     | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
 |  values   | [std::vector](http://en.cppreference.com/w/cpp/container/vector)    |      n/a      |   input   |
 
 ##### Return Value
@@ -786,7 +796,7 @@ void set_fields( const std::set< std::string >& values );
 
 Replaces the contents of the query's fields criteria; see also [get_fields](#get_fields).
 
-The fields search criteria indicates what fields (columns) from each record should be returned.
+The fields search criteria indicates which fields (columns) should be returned.
 
 ##### Parameters
 
@@ -808,7 +818,7 @@ n/a
 void set_session( const std::set< std::string >& values );
 ```
 
-Replaces the contents of the client session attached to this query; see also [set_session](#set_session).
+Replaces the contents of the client session attached to this query; see also [get_session](#get_session).
 
 Altering the client session property outside of the exchange will lead to undefined behaviour. It's made available to the repository so as to call Session::sleep_for while waiting for query results.
 
@@ -835,9 +845,9 @@ n/a
 
 Replaces the contents of the query's inclusive filters criteria; see also [get_inclusive_filters](#get_inclusive_filters).
 
-1) Add an inclusive filter to the query's search critiera.
+1) Add an inclusive filter to the query's search criteria.
 
-2) Replace the contents of the query's inclusive filters criteria with that specifed by values.
+2) Replace the contents of the query's inclusive filters criteria with that specified by values.
 
 Inclusive filters represent a 'must have at least one-of' OR condition. i.e The following will return all records that have a type of 'queue' or 'subscription':
 
@@ -878,9 +888,9 @@ n/a
 
 Replaces the contents of the query's inclusive filters criteria; see also [get_exclusive_filters](#get_exclusive_filters).
 
-1) Add an exclusive filter to the query's search critiera.
+1) Add an exclusive filter to the query's search criteria.
 
-2) Replace the contents of the query's exclusive filters criteria with that specifed by values.
+2) Replace the contents of the query's exclusive filters criteria with that specified by values.
 
 Exclusive filters represent a 'must have' AND condition. i.e The following will return all records that have a type of 'queue' and a name property of 'events':
 
@@ -918,7 +928,7 @@ n/a
 using SSLSettings = restbed::SSLSettings;
 ```
 
-Represents Secure Socket Layer service configuration.
+Represents a Secure Socket Layer service configuration.
 
 See [restbed::SSLSettings](https://github.com/corvusoft/restbed/documentation/API.md#sslsettings) for details.
 
@@ -965,7 +975,7 @@ n/a
 
 ##### Return Value
 
-unsigned integer representing maximum number of messages allowed on a queue before client rejection.
+Unsigned integer representing maximum number of messages allowed on a queue before client rejection.
 
 ##### Exceptions
 
@@ -985,7 +995,7 @@ n/a
 
 ##### Return Value
 
-unsigned integer representing maximum message size in number of bytes before client rejection.
+Unsigned integer representing maximum message size in number of bytes before client rejection.
 
 ##### Exceptions
 
@@ -1005,7 +1015,7 @@ n/a
 
 ##### Return Value
 
-unsigned integer representing maximum number of subscriptions allowed on a queue before client rejection.
+Unsigned integer representing maximum number of subscriptions allowed on a queue before client rejection.
 
 ##### Exceptions
 
@@ -1019,7 +1029,7 @@ void set_default_queue_message_limit( const std::size_t value );
 
 Replaces the default message limit (100) given to a freshly created queue; see also [get_default_queue_message_limit](#get_default_queue_message_limit).
 
-Internally this value is compared with the number of pending messages awaiting delivery for a particular queue. If this watermark is breached clients begin to receive the 503 (Service Unavailable) error status until messages have been successful dispatched. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
+Internally this value is compared with the number of pending messages awaiting delivery for a particular queue. If this watermark is breached clients begin to receive the 503 (Service Unavailable) error status until messages have been successful dispatched. The default value can be overridden on an individual queue-by-queue basis using the [network API](NETWORK-API.md).
 
 ##### Parameters
 
@@ -1043,7 +1053,7 @@ void set_default_queue_message_size_limit( const std::size_t value );
 
 Replaces the default message size limit (1024 bytes) given to a freshly created queue; see also [get_default_queue_message_size_limit](#get_default_queue_message_size_limit).
 
-When creating a new message on a queue this vaule is consulted and if breached clients will receive 413 (Request Entity Too Large) error response. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
+When creating a new message on a queue this value is consulted and if breached clients will receive 413 (Request Entity Too Large) error response. The default value can be overridden on an individual queue-by-queue basis using the [network API](NETWORK-API.md).
 
 ##### Parameters
 
@@ -1067,7 +1077,7 @@ void set_default_queue_subscription_limit( const std::size_t value );
 
 Replaces the default subscription limit (25) given to a freshly created queue; see also [get_default_queue_subscription_limit](#get_default_queue_subscription_limit).
 
-Internally this value is compared with the number of consumers currently subscribed to a queue, if breached clients see a 503 (Service Unavailable) error response. The default value can be overriden on an individual queue basis using the [network API](NETWORK-API.md).
+Internally this value is compared with the number of consumers currently subscribed to a queue, if breached clients see a 503 (Service Unavailable) error response. The default value can be overridden on an individual queue-by-queue basis using the [network API](NETWORK-API.md).
 
 ##### Parameters
 
@@ -1101,7 +1111,7 @@ Interface detailing the required contract for Format extensions. The concept of 
 virtual restq::Resources parse( const restq::Bytes& document ) = 0;
 ```
 
-Parses a [restq::Byte](#bytebytes) sequence containing a document structure; see also [parse](#formattertry_parse).
+Parses a [restq::Byte](#bytebytes) sequence containing a document structure; see also [try_parse](#formattertry_parse).
 
 ##### Parameters
 
@@ -1134,11 +1144,11 @@ Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a docu
 
 ##### Return Value
 
-true if parsing was successful, false otherwise.
+True if parsing was successful, otherwise false.
 
 ##### Exceptions
 
-noexcept specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
 
 #### Formatter::compose
 
@@ -1146,14 +1156,16 @@ noexcept specification: [noexcept](http://en.cppreference.com/w/cpp/language/noe
 virtual restq::Bytes compose( const restq::Resources& values, const bool styled = false ) = 0;
 ```
 
-Convert a collection of [restq::Resource](#resourceresources) entities into a document structure. With an optional argument switch to allow styling documents into a more human consumable output, i.e JSON with whitespace included.
+Convert a collection of [restq::Resource](#resourceresources) entities into a document structure.
+
+An optional argument switch is provided to allow styling documents into more human consumable content, i.e JSON with whitespace included.
 
 ##### Parameters
 
 | parameter | type                                                    | default value | direction |
 |:---------:|---------------------------------------------------------|:-------------:|:---------:|
 |  values   | [restq::Resoures](#resourceresources)                   |      n/a      |   input   |
-|  styled   | [bool](http://en.cppreference.com/w/cpp/language/types) |     false     |    in     |
+|  styled   | [bool](http://en.cppreference.com/w/cpp/language/types) |     false     |   input   |
 
 ##### Return Value
 
@@ -1169,7 +1181,7 @@ If an exception is thrown for any reason, the service will close the active clie
 virtual const std::string get_media_type( void ) const = 0;
 ```
 
-Retreive the supported media type, i.e application/json.
+Retrieve the supported media type, i.e 'application/json'.
 
 This value is compared against the [Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2) and [Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5) headers to determine if it is capable of parsing the HTTP request/response body.
 
@@ -1209,7 +1221,7 @@ n/a
 
 ### Repository
 
-Interface detailing the required contract for repository extensions. A repository represents a data-store for the long term persistence of dynamically created resources via the [Network API](#NETWORK-API.md).
+Interface detailing the required contract for repository extensions. A repository represents a data-store for the long term persistence of dynamically created resources via the [network API](#NETWORK-API.md).
 
 It is encouraged that any implementation of this interface **SHOULD** be of an asynchronous nature, to reduce thread contention within the exchange. This can be achieved with [MariaDB](https://mariadb.com/kb/en/mariadb/using-the-non-blocking-library/), [PostgreSQL](http://www.postgresql.org/docs/7.3/static/libpq-async.html), and other database products.
 
@@ -1391,7 +1403,9 @@ n/a
 
 ### Logger
 
-Interface detailing the required contract for logger extensions. No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characterics.
+Interface detailing the required contract for logger extensions.
+
+No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired behaviour.
 
 #### Methods
 
@@ -1517,11 +1531,11 @@ class Logger
 }
 ```
 
-[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjunction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
 
 ### Exchange
 
-The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
+The exchange is responsible for managing the [network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
 
 #### Methods
 
@@ -1574,7 +1588,7 @@ n/a
 
 ##### Exceptions
 
-noexcept specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec)
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
 
 #### Exchange::start
 
@@ -1584,7 +1598,7 @@ void start( const std::shared_ptr< const Settings >& settings = nullptr );
 
 Bring the message service online for public consumption; see also [stop](#exchangestop).
 
-When the exchange starts it publishes queue, subscription, and message resources with their associated collections, see [Network API(#NETWORK-API.md) for details.
+When the exchange starts it publishes queue, subscription, and message resources with their associated collections, see [network API](#NETWORK-API.md) for details.
 
 ##### Parameters
 
@@ -1663,7 +1677,7 @@ n/a
 
 ##### Exceptions
 
-[std::invalid_argument](http://en.cppreference.com/w/cpp/error/invalid_argument) is thrown when settings value as a [nullptr](http://en.cppreference.com/w/cpp/types/nullptr_t).
+[std::invalid_argument](http://en.cppreference.com/w/cpp/error/invalid_argument) is thrown when setting a value to a [nullptr](http://en.cppreference.com/w/cpp/types/nullptr_t).
 
 [std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown when attempting to modify a service that is currently active, i.e [start](#exchangestart) has already been called.
 
@@ -1673,7 +1687,7 @@ n/a
 void add_signal_handler( const int signal, const std::function< void ( const int ) >& value );
 ```
 
-Inform the exchange to invoke the error handler on recieving the specified system [signal](http://en.cppreference.com/w/cpp/utility/program/signal).
+Inform the exchange to invoke the signal handler on receiving the specified system [signal](http://en.cppreference.com/w/cpp/utility/program/signal).
 
 ##### Parameters
 
@@ -1732,7 +1746,7 @@ n/a
 
 ##### Exceptions
 
-[std::invalid_argument](http://en.cppreference.com/w/cpp/error/invalid_argument) is thrown when settings value as a [nullptr](http://en.cppreference.com/w/cpp/types/nullptr_t).
+[std::invalid_argument](http://en.cppreference.com/w/cpp/error/invalid_argument) is thrown when setting a value to a [nullptr](http://en.cppreference.com/w/cpp/types/nullptr_t).
 
 [std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown when attempting to modify a service that is currently active, i.e [start](#exchangestart) has been called.
 
