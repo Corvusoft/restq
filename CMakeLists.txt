@@ -25,11 +25,11 @@ message( "   ${Blue}Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.${Re
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
 
 find_package( md5 REQUIRED )
-find_package( loadis REQUIRED )
+find_package( load REQUIRED )
 find_package( restbed REQUIRED )
 find_package( kashmir REQUIRED )
 
-include_directories( SYSTEM ${md5_INCLUDE} ${loadis_INCLUDE} ${restbed_INCLUDE} ${kashmir_INCLUDE} )
+include_directories( SYSTEM ${md5_INCLUDE} ${load_INCLUDE} ${restbed_INCLUDE} ${kashmir_INCLUDE} )
 
 if ( BUILD_SSL )
     find_package( openssl REQUIRED )
@@ -43,7 +43,7 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_manifest.cmake" )
 
 include_directories( ${INCLUDE_DIR} )
 
-add_library( ${PROJECT_NAME} ${BUILD_MANIFEST} )
+add_library( ${PROJECT_NAME} ${BUILD_MANIFEST} ${load_SOURCE} )
 
 if ( BUILD_SSL )
     target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${restbed_LIBRARY} ${ssl_LIBRARY} ${crypto_LIBRARY} )

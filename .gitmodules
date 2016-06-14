@@ -13,6 +13,6 @@
 [submodule "dependency/json"]
 	path = dependency/json
 	url = https://github.com/Corvusoft/json-dependency
-[submodule "dependency/loadis"]
-	path = dependency/loadis
-	url = https://github.com/corvusoft/loadis.git
+[submodule "dependency/load"]
+	path = dependency/load
+	url = https://github.com/Corvusoft/mem-cpu-load-dependency

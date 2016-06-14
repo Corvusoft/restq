@@ -23,6 +23,8 @@
 #include "corvusoft/restq/detail/error_handler_impl.hpp"
 
 //External Includes
+#include <cpu.h>
+#include <memory.h>
 #include <corvusoft/restbed/resource.hpp>
 
 //System Namespaces
@@ -43,7 +45,6 @@ using std::chrono::system_clock;
 //Project Namespaces
 
 //External Namespaces
-using loadis::System;
 using restbed::Service;
 using restbed::Resource;
 
@@ -53,7 +54,6 @@ namespace restq
     {
         ExchangeImpl::ExchangeImpl( void ) : m_boot_time( 0 ),
             m_logger( nullptr ),
-            m_system( make_shared< System >( ) ),
             m_repository( nullptr ),
             m_settings( nullptr ),
             m_service( make_shared< restbed::Service >( ) ),
@@ -646,6 +646,13 @@ namespace restq
         
         void ExchangeImpl::asterisk_resource_handler( const shared_ptr< Session > session )
         {
+            static const unsigned cpu_usage_delay = 990000;
+            const float cpu_usage = cpu_percentage( cpu_usage_delay );
+            
+            MemoryStatus memory_status;
+            mem_status( memory_status );
+            const float memory_usage = memory_status.used_mem / memory_status.total_mem * 100;
+            
             const auto boot_time = system_clock::to_time_t( system_clock::now( ) ) - m_boot_time;
             
             multimap< string, string > headers
@@ -654,8 +661,8 @@ namespace restq
                 { "Date", Date::make( ) },
                 { "Uptime", ::to_string( boot_time ) },
                 { "Workers", ::to_string( m_settings->get_worker_limit( ) ) },
-                { "CPU", String::format( "%.1f%%", m_system->get_cpu_load( ) ) },
-                { "Memory", String::format( "%.1f%%", m_system->get_memory_load( ) ) }
+                { "CPU", String::format( "%.1f%%", cpu_usage ) },
+                { "Memory", String::format( "%.1f%%", memory_usage ) }
             };
             
             if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )

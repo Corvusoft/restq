@@ -23,7 +23,7 @@ Table of Contents
 URI Map
 -------
 
-Below is a table of available network [endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier). Requesting any other path will result in 404 (Not Found) response status code. If you perform a [Method](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) on an [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) that lacks support, yet is available elsewhere in the exchange, you will recieve a 405 (Method Not Allowed) status, otherwise a 501 (Method Not Implemented) status code is returned.
+Below is a table of available network [endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier). Requesting any other path will result in 404 (Not Found) response status code. If you perform a [Method](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) on an [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) that lacks support, yet is available elsewhere in the exchange, you will receive a 405 (Method Not Allowed) status, otherwise a 501 (Method Not Implemented) status code is returned.
 
 | Path                           | Type       | Methods                                                                                                       |
 |--------------------------------|------------|---------------------------------------------------------------------------------------------------------------|
