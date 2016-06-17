@@ -23,6 +23,12 @@ if ( load_INCLUDE )
       message( FATAL_ERROR "${Red}Failed to build Load dependency.${Reset}" )
     endif ( )
 
+    if( ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC )
+        set_source_files_properties( ${load_SOURCE} PROPERTIES COMPILE_FLAGS "/w" )
+    else ( )
+        set_source_files_properties( ${load_SOURCE} PROPERTIES COMPILE_FLAGS "-w" )
+    endif ( )
+
     message( STATUS "${Green}Found Load include at: ${load_INCLUDE}${Reset}" )
 else ( )
     message( FATAL_ERROR "${Red}Failed to locate Load dependency.${Reset}" )

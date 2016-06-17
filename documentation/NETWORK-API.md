@@ -1,9 +1,9 @@
 Network API Overview
 --------------------
 
-RestQ provides an open Hyper Text Transfer Protocol (HTTP) API for technology agnostic and language neutral message broking services. It is the intention to maintain a standards compliant interface as outlined in [RFC 7230](https://tools.ietf.org/html/rfc7230).
+RestQ provides an open Hyper Text Transfer Protocol (HTTP) API for technology agnostic and language neutral message broking services. It is the intention to maintain a standards compliant interface as outlined in [RFC 7230](https://tools.ietf.org/html/rfc7230) and friends; see [Further Reading](#further-reading).
 
-This document will describe the available [network endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) for [queue](#queue-resource), [subscription](#subscription-resource), and [message](#message-resource) management. For detailed examples of interacting with the network interface please see the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
+This document will describe the available [network endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) for [queue](#queue-resource), [subscription](#subscription-resource), and [message](#message-resource) management. For detailed examples of interacting with the network interface, please see the [acceptance test suite](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features).
 
 Interpretation
 --------------
@@ -46,7 +46,7 @@ The framework implements [CRUD](https://en.wikipedia.org/wiki/Create,_read,_upda
 
 All resources, with the exception of Message and Collection entities, may hold any number of generic properties presented to the exchange in a supported document format (see [add_format](API.md#exchangeadd_format)). These properties are persisted in the repository and can then be used with the filter functionality to discover data-sources (Queues) of interest.
 
-Within the exchange a select number of property names are reserved for internal use and/or Queue/Subscription configuration. Altering these properties with invalid content will result in a 400 (Bad Request) error response status code.
+The exchange reserves a select number of property names for internal use and/or Queue/Subscription configuration. Altering these properties with invalid content will result in a 400 (Bad Request) error response status code.
 
 ### Resources
 
@@ -83,9 +83,11 @@ The queue resource represents the desired configuration for a message chain.
 |---------|------------|---------------------------------------------------------------------------------------------------------------|
 | /queues | Collection | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e queues, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e queues, offer collection semantics via [paging](#paging), [keys](#keys), and [filters](#filters) query parameters.
 
-Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a queue). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+Collection resources have no associated data fields, and represent a collection of non-trival entities.
+
+Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned; unless query parameters have been applied altering the default behaviour.
 
 #### Subscription Resource
 
@@ -95,14 +97,14 @@ Collection resources have no associated data fields, and merely represent a coll
 
 The subscription resource represents the desired configuration for a message consumer.
 
-| Property | Type    | Description                                                                   | Restriction | Default Value | Access     |
-|----------|:-------:|-------------------------------------------------------------------------------|:-----------:|:-------------:|:----------:|
-| type     |  bytes  | Identifies the resource category.                                             |  Internal   | subscription  | Read-Only  |
-| created  | numeric | Unix epoch holding creation timestamp.                                        |  Internal   |      n/a      | Read-Only  |
-| modified | numeric | Unix epoch maintaining modification timestamp.                                |  Internal   |      n/a      | Read-Only  |
-| revision |  bytes  | Hash uniquely identifing this edition of the resource.                        |  Internal   |      n/a      | Read-Only  |
-| origin   | string  | Originating address of the client responsible for creation.                   |  Internal   |      n/a      | Read-Only  |
-| endpoint |   uri   | Uniform Resource Identifier detailing how to reach the subscription consumer. |  Mandatory  |      n/a      | Read/Write |
+| Property | Type    | Description                                                         | Restriction | Default Value | Access     |
+|----------|:-------:|---------------------------------------------------------------------|:-----------:|:-------------:|:----------:|
+| type     |  bytes  | Identifies the resource category.                                   |  Internal   | subscription  | Read-Only  |
+| created  | numeric | Unix epoch holding creation timestamp.                              |  Internal   |      n/a      | Read-Only  |
+| modified | numeric | Unix epoch maintaining modification timestamp.                      |  Internal   |      n/a      | Read-Only  |
+| revision |  bytes  | Hash uniquely identifing this edition of the resource.              |  Internal   |      n/a      | Read-Only  |
+| origin   | string  | Originating address of the client responsible for creation.         |  Internal   |      n/a      | Read-Only  |
+| endpoint |   uri   | Uniform Resource Identifier describing how to contact the consumer. |  Mandatory  |      n/a      | Read/Write |
 
 #### Subscriptions Collection
 
@@ -110,9 +112,11 @@ The subscription resource represents the desired configuration for a message con
 |----------------|------------|---------------------------------------------------------------------------------------------------------------|
 | /subscriptions | Collection | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e subscriptions, offer collection semantics via [paging](#paging), [keys](#keys), and [filters](#filters) query parameters.
 
-Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+Collection resources have no associated data fields, and represent a collection of non-trival entities.
+
+Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned; unless query parameters have been applied altering the default behaviour.
 
 #### Message Resource
 
@@ -130,13 +134,13 @@ The HTTP Request body of a Message is not interpreted by the exchange and is for
 | /messages               | Collection | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 | /queues/{uuid}/messages | Collection | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by a pluralised resource name, i.e subscriptions, offer collection semantics via the network interface's [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e messages, offer collection semantics via [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
-Collection resources have no associated data fields, and merely represent a collection of other non-trival objects (e.g a subscription). Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned, unless query parameters have been set to alter the default behaviour.
+Collection resources have no associated data fields, and represent a collection of non-trival entities.
 
 #### Asterisk Resource
 
-The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays hardware load covering CPU, RAM, Threads, and Runtime via HTTP headers CPU, Memory, Workers, and Uptime respectively.
+The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) is to help aid monitoring of an exchange. This resource only accommodates the HTTP OPTIONS method. When probed it displays load information covering CPU, RAM, Threads, and Uptime via HTTP headers CPU, Memory, Workers, and Uptime respectively.
 
 ```
 > OPTIONS /* HTTP/1.1
@@ -219,3 +223,26 @@ Supported HTTP Headers
 | Last-Modified]   | string(s) |    no     |   n/a   |
 | Location         | string(s) |    no     |   n/a   |
 | Range            | string(s) |    no     |   n/a   |
+
+Further Reading
+---------------
+
+Original HTTP / 1.1 [RFC](https://www.w3.org/Protocols/rfc2616/rfc2616.html) is replaced by multipile RFCs (7230-7237):
+
+[RFC7230](https://tools.ietf.org/html/rfc7230) - Message Syntax and Routing. An overview of HTTP architecture and its associated terminology, defines the "http" and "https" Uniform Resource Identifier (URI) schemes, defines the HTTP/1.1 message syntax and parsing requirements, and describes related security concerns for implementations.
+
+[RFC7231](https://tools.ietf.org/html/rfc7231) - Semantics and Content. Defines the semantics of HTTP/1.1 messages, as expressed by request methods, request header fields, response status codes, and response header fields, along with the payload of messages (metadata and body content) and mechanisms for content negotiation.
+
+[RFC7232](https://tools.ietf.org/html/rfc7232) - Conditional Requests. Defines HTTP/1.1 conditional requests, including metadata header fields for indicating state changes, request header fields for making preconditions on such state, and rules for constructing the responses to a conditional request when one or more preconditions evaluate to false.
+
+[RFC7233](https://tools.ietf.org/html/rfc7233) - Range Requests. Defines range requests and the rules for constructing and combining responses to those requests.
+
+[RFC7234](https://tools.ietf.org/html/rfc7234) - Caching. Defines HTTP caches and the associated header fields that control cache behavior or indicate cacheable response messages.
+
+[RFC7235](https://tools.ietf.org/html/rfc7235) - Authentication. Defines the HTTP Authentication framework.
+
+[RFC7236](https://tools.ietf.org/html/rfc7236) - Authentication Scheme Registrations. Registers Hypertext Transfer Protocol (HTTP) authentication schemes that have been defined in RFCs before the IANA HTTP Authentication Scheme Registry was established.
+
+[RFC7237](https://tools.ietf.org/html/rfc7237) - Method Registrations. Registers those Hypertext Transfer Protocol (HTTP) methods that have been defined in RFCs before the IANA HTTP Method Registry was established.
+
+[RFC6265](https://tools.ietf.org/html/rfc6265) - HTTP State Management Mechanism.
