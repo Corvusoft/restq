@@ -204,25 +204,23 @@ Supported Query Parameters
 Supported HTTP Headers
 ----------------------
 
-| header           | syntax    | mandatory | default |
-|------------------|:---------:|:---------:|:-------:|
-| Accept-Charset   |  pair(s)  |    no     |   n/a   |
-| Accept-Encoding  | string(s) |    no     |   n/a   |
-| Accept-Language  |  numeric  |    no     |   n/a   |
-| Accept-Ranges    |  numeric  |    no     |   n/a   |
-| Accept           |  boolean  |    no     |   n/a   |
-| Content-Encoding |  boolean  |    no     |   n/a   |
-| Content-Language | string(s) |    no     |   n/a   |
-| Content-Length   | string(s) |    no     |   n/a   |
-| Content-MD5      | string(s) |    no     |   n/a   |
-| Content-Type     | string(s) |    no     |   n/a   |
-| Date             | string(s) |    no     |   n/a   |
-| ETag             | string(s) |    no     |   n/a   |
-| Expect           | string(s) |    no     |   n/a   |
-| Host             | string(s) |    no     |   n/a   |
-| Last-Modified]   | string(s) |    no     |   n/a   |
-| Location         | string(s) |    no     |   n/a   |
-| Range            | string(s) |    no     |   n/a   |
+-	[Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+-	[Accept-Charset](https://tools.ietf.org/html/rfc7231#section-5.3.3)
+-	[Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+-	[Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+-	[Accept-Ranges](https://tools.ietf.org/html/rfc7233#section-2.3)
+-	[Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+-	[Content-Language](https://tools.ietf.org/html/rfc7231#section-3.1.3.2)
+-	[Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+-	[Content-MD5](https://tools.ietf.org/html/rfc1864)
+-	[Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+-	[Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+-	[ETag](https://tools.ietf.org/html/rfc7232#section-2.3)
+-	[Expect](https://tools.ietf.org/html/rfc7231#section-5.1.1)
+-	[Host](https://tools.ietf.org/html/rfc7230#section-5.4)
+-	[Last-Modified](https://tools.ietf.org/html/rfc7232#section-2.2)
+-	[Location](https://tools.ietf.org/html/rfc7231#section-7.1.2)
+-	[Range](https://tools.ietf.org/html/rfc7233#section-3.1)
 
 Further Reading
 ---------------
