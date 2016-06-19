@@ -168,8 +168,6 @@ The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Ident
 Supported Query Parameters
 --------------------------
 
-### Parameters
-
 -	[Fields](#fields)
 -	[Index](#index)
 -	[Limit](#limit)
@@ -265,39 +263,91 @@ https://exchange/queues?tags=rain,weather
 Supported HTTP Headers
 ----------------------
 
-[Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2) - The "Accept" header field can be used by user agents to specify response media types that are acceptable. Accept header fields can be used to indicate that the request is specifically limited to a small set of desired types, as in the case of a request for an in-line image.
+-	[Accept](#accept)
+-	[Accept-Charset](#acceptcharset)
+-	[Accept-Encoding](#acceptencoding)
+-	[Accept-Language](#acceptlanguage)
+-	[Accept-Ranges](#acceptranges)
+-	[Content-Encoding](#contentencoding)
+-	[Content-Language](#contentlanguage)
+-	[Content-Length](#contentlength)
+-	[Content-MD5](#contentmd5)
+-	[Content-Type](#contenttype)
+-	[Date](#date)
+-	[ETag](#etag)
+-	[Expect](#expect)
+-	[Host](#host)
+-	[Last-Modified](#lastmodified)
+-	[Location](#location)
+-	[Range](#range)
 
-[Accept-Charset](https://tools.ietf.org/html/rfc7231#section-5.3.3) - The "Accept-Charset" header field can be sent by a user agent to indicate what charsets are acceptable in textual response content. This field allows user agents capable of understanding more comprehensive or special-purpose charsets to signal that capability to an origin server that is capable of representing information in those charsets.
+#### Accept
 
-[Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4) - The "Accept-Encoding" header field can be used by user agents to indicate what response content-codings (Section 3.1.2.1) are acceptable in the response. An "identity" token is used as a synonym for "no encoding" in order to communicate when no encoding is preferred.
+The "[Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)" header field can be used by user agents to specify response media types that are acceptable. Accept header fields can be used to indicate that the request is specifically limited to a small set of desired types, as in the case of a request for an in-line image.
 
-[Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5) - The "Accept-Language" header field can be used by user agents to indicate the set of natural languages that are preferred in the response.
+#### Accept-Charset
 
-[Accept-Ranges](https://tools.ietf.org/html/rfc7233#section-2.3) - The "Accept-Ranges" header field allows a server to indicate that it supports range requests for the target resource.
+The "[Accept-Charset](https://tools.ietf.org/html/rfc7231#section-5.3.3)" header field can be sent by a user agent to indicate what charsets are acceptable in textual response content. This field allows user agents capable of understanding more comprehensive or special-purpose charsets to signal that capability to an origin server that is capable of representing information in those charsets.
 
-[Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2) - The "Content-Encoding" header field indicates what content codings have been applied to the representation, beyond those inherent in the media type, and thus what decoding mechanisms have to be applied in order to obtain data in the media type referenced by the Content-Type header field. Content-Encoding is primarily used to allow a representation's data to be compressed without losing the identity of its underlying media type.
+#### Accept-Encoding
 
-[Content-Language](https://tools.ietf.org/html/rfc7231#section-3.1.3.2) - The "Content-Language" header field describes the natural language(s) of the intended audience for the representation. Note that this might not be equivalent to all the languages used within the representation.
+The "[Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)" header field can be used by user agents to indicate what response content-codings (Section 3.1.2.1) are acceptable in the response. An "identity" token is used as a synonym for "no encoding" in order to communicate when no encoding is preferred.
 
-[Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2) - When a message does not have a Transfer-Encoding header field, a Content-Length header field can provide the anticipated size, as a decimal number of octets, for a potential payload body. For messages that do include a payload body, the Content-Length field-value provides the framing information necessary for determining where the body (and message) ends. For messages that do not include a payload body, the Content-Length indicates the size of the selected representation.
+#### Accept-Language
 
-[Content-MD5](https://tools.ietf.org/html/rfc1864) - The Content-MD5 entity-header field, as defined in RFC 1864, is an MD5 digest of the entity-body for the purpose of providing an end-to-end message integrity check (MIC) of the entity-body. (Note: a MIC is good for detecting accidental modification of the entity-body in transit, but is not proof against malicious attacks.)
+The "[Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)" header field can be used by user agents to indicate the set of natural languages that are preferred in the response.
 
-[Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5) - The "Content-Type" header field indicates the media type of the associated representation: either the representation enclosed in the message payload or the selected representation, as determined by the message semantics. The indicated media type defines both the data format and how that data is intended to be processed by a recipient, within the scope of the received message semantics, after any content codings indicated by Content-Encoding are decoded.
+#### Accept-Ranges
 
-[Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2) - The "Date" header field represents the date and time at which the message was originated, having the same semantics as the Origination Date Field (orig-date) defined in Section 3.6.1 of [RFC5322]. The field value is an HTTP-date, as defined in Section 7.1.1.1.
+The "[Accept-Ranges](https://tools.ietf.org/html/rfc7233#section-2.3)" header field allows a server to indicate that it supports range requests for the target resource.
 
-[ETag](https://tools.ietf.org/html/rfc7232#section-2.3) - The "ETag" header field in a response provides the current entity-tag for the selected representation, as determined at the conclusion of handling the request. An entity-tag is an opaque validator for differentiating between multiple representations of the same resource, regardless of whether those multiple representations are due to resource state changes over time, content negotiation resulting in multiple representations being valid at the same time, or both. An entity-tag consists of an opaque quoted string, possibly prefixed by a weakness indicator.
+#### Content-Encoding
 
-[Expect](https://tools.ietf.org/html/rfc7231#section-5.1.1) - The "Expect" header field in a request indicates a certain set of behaviors (expectations) that need to be supported by the server in order to properly handle this request. The only such expectation defined by this specification is 100-continue.
+The "[Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)" header field indicates what content codings have been applied to the representation, beyond those inherent in the media type, and thus what decoding mechanisms have to be applied in order to obtain data in the media type referenced by the Content-Type header field. Content-Encoding is primarily used to allow a representation's data to be compressed without losing the identity of its underlying media type.
 
-[Host](https://tools.ietf.org/html/rfc7230#section-5.4) - The "Host" header field in a request provides the host and port information from the target URI, enabling the origin server to distinguish among resources while servicing requests for multiple host names on a single IP address.
+#### Content-Language
 
-[Last-Modified](https://tools.ietf.org/html/rfc7232#section-2.2) - The "Last-Modified" header field in a response provides a timestamp indicating the date and time at which the origin server believes the selected representation was last modified, as determined at the conclusion of handling the request.
+The "[Content-Language](https://tools.ietf.org/html/rfc7231#section-3.1.3.2)" header field describes the natural language(s) of the intended audience for the representation. Note that this might not be equivalent to all the languages used within the representation.
 
-[Location](https://tools.ietf.org/html/rfc7231#section-7.1.2) - The "Location" header field is used in some responses to refer to a specific resource in relation to the response. The type of relationship is defined by the combination of request method and status code semantics.
+#### Content-Length
 
-[Range](https://tools.ietf.org/html/rfc7233#section-3.1) - The "Range" header field on a GET request modifies the method semantics to request transfer of only one or more subranges of the selected representation data, rather than the entire selected representation data.
+When a message does not have a Transfer-Encoding header field, a [Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2) header field can provide the anticipated size, as a decimal number of octets, for a potential payload body. For messages that do include a payload body, the Content-Length field-value provides the framing information necessary for determining where the body (and message) ends. For messages that do not include a payload body, the Content-Length indicates the size of the selected representation.
+
+#### Content-MD5
+
+The [Content-MD5](https://tools.ietf.org/html/rfc1864) entity-header field, as defined in RFC 1864, is an MD5 digest of the entity-body for the purpose of providing an end-to-end message integrity check (MIC) of the entity-body. (Note: a MIC is good for detecting accidental modification of the entity-body in transit, but is not proof against malicious attacks.)
+
+#### Content-Type
+
+The "[Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)" header field indicates the media type of the associated representation: either the representation enclosed in the message payload or the selected representation, as determined by the message semantics. The indicated media type defines both the data format and how that data is intended to be processed by a recipient, within the scope of the received message semantics, after any content codings indicated by Content-Encoding are decoded.
+
+#### Date
+
+The "[Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)" header field represents the date and time at which the message was originated, having the same semantics as the Origination Date Field (orig-date) defined in Section 3.6.1 of [RFC5322]. The field value is an HTTP-date, as defined in Section 7.1.1.1.
+
+#### ETag
+
+The "[ETag](https://tools.ietf.org/html/rfc7232#section-2.3)" header field in a response provides the current entity-tag for the selected representation, as determined at the conclusion of handling the request. An entity-tag is an opaque validator for differentiating between multiple representations of the same resource, regardless of whether those multiple representations are due to resource state changes over time, content negotiation resulting in multiple representations being valid at the same time, or both. An entity-tag consists of an opaque quoted string, possibly prefixed by a weakness indicator.
+
+#### Expect
+
+The "[Expect](https://tools.ietf.org/html/rfc7231#section-5.1.1)" header field in a request indicates a certain set of behaviors (expectations) that need to be supported by the server in order to properly handle this request. The only such expectation defined by this specification is 100-continue.
+
+#### Host
+
+The "[Host](https://tools.ietf.org/html/rfc7230#section-5.4)" header field in a request provides the host and port information from the target URI, enabling the origin server to distinguish among resources while servicing requests for multiple host names on a single IP address.
+
+#### Last-Modified
+
+The "[Last-Modified](https://tools.ietf.org/html/rfc7232#section-2.2)" header field in a response provides a timestamp indicating the date and time at which the origin server believes the selected representation was last modified, as determined at the conclusion of handling the request.
+
+#### Location
+
+The "[Location](https://tools.ietf.org/html/rfc7231#section-7.1.2)" header field is used in some responses to refer to a specific resource in relation to the response. The type of relationship is defined by the combination of request method and status code semantics.
+
+#### Range
+
+The "[Range](https://tools.ietf.org/html/rfc7233#section-3.1)" header field on a GET request modifies the method semantics to request transfer of only one or more subranges of the selected representation data, rather than the entire selected representation data.
 
 Further Reading
 ---------------

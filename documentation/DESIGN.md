@@ -634,14 +634,12 @@ Ruleset
 Further Reading
 ---------------
 
-[Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer)
+[Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) - In computer programming, an opaque pointer is a special case of an opaque data type, a datatype declared to be a pointer to a record or data structure of some unspecified type.
 
-[Message Queue](https://en.wikipedia.org/wiki/Message_queue)
+[Message Queue](https://en.wikipedia.org/wiki/Message_queue) - In computer science, message queues and mailboxes are software-engineering components used for inter-process communication (IPC), or for inter-thread communication within the same process. They use a queue for messaging – the passing of control or of content. Group communication systems provide similar kinds of functionality.
 
-[Publish–subscribe pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern)
+[Publish–subscribe pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) - In software architecture, publish–subscribe is a messaging pattern where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers, but instead characterize published messages into classes without knowledge of which subscribers, if any, there may be. Similarly, subscribers express interest in one or more classes and only receive messages that are of interest, without knowledge of which publishers, if any, there are.
 
-[Uniform Resource Identifier (URI): Generic Syntax](https://tools.ietf.org/html/rfc3986).
+[Uniform Resource Identifier (URI): Generic Syntax](https://tools.ietf.org/html/rfc3986) - A Uniform Resource Identifier (URI) is a compact sequence of characters that identifies an abstract or physical resource. This specification defines the generic URI syntax and a process for resolving URI references that might be in relative form, along with guidelines and security considerations for the use of URIs on the Internet. The URI syntax defines a grammar that is a superset of all valid URIs, allowing an implementation to parse the common components of a URI reference without knowing the scheme-specific requirements of every possible identifier. This specification does not define a generative grammar for URIs; that task is performed by the individual specifications of each URI scheme.
 
-[Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231).
-
-[A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
+[A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122) - This specification defines a Uniform Resource Name namespace for UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally Unique IDentifier). A UUID is 128 bits long, and can guarantee uniqueness across space and time. UUIDs were originally used in the Apollo Network Computing System and later in the Open Software Foundation's (OSF) Distributed Computing Environment (DCE), and then in Microsoft Windows platforms.
