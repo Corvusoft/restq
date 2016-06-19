@@ -1,5 +1,5 @@
-Network API Overview
---------------------
+Overview
+--------
 
 RestQ provides an open Hyper Text Transfer Protocol (HTTP) API for technology agnostic and language neutral message broking services. It is the intention to maintain a standards compliant interface as outlined in [RFC 7230](https://tools.ietf.org/html/rfc7230) and friends; see [Further Reading](#further-reading).
 
@@ -13,12 +13,13 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 Table of Contents
 -----------------
 
-1.	[Overview](#network-api-overview)
+1.	[Overview](#overview)
 2.	[Interpretation](#interpretation)
 3.	[URI Map](#uri-map)
 4.	[Restful Resources](#restful-resources)
 5.	[Supported Query Parameters](#supported-query-parameters)
 6.	[Supported HTTP Headers](#supported-http-headers)
+7.	[Further Reading](#further-reading)
 
 URI Map
 -------
@@ -71,7 +72,7 @@ The queue resource represents the desired configuration for a message chain.
 | type               |      bytes       | Identifies the resource category.                                                              |  Internal   |     queue     | Read-Only  |
 | created            |     numeric      | Unix epoch holding creation timestamp.                                                         |  Internal   |      n/a      | Read-Only  |
 | modified           |     numeric      | Unix epoch maintaining modification timestamp.                                                 |  Internal   |      n/a      | Read-Only  |
-| revision           |      bytes       | Hash uniquely identifing this edition of the resource.                                         |  Internal   |      n/a      | Read-Only  |
+| revision           |      bytes       | Hash uniquely identifying this edition of the resource.                                        |  Internal   |      n/a      | Read-Only  |
 | origin             |      string      | Originating address of the client responsible for creation.                                    |  Internal   |      n/a      | Read-Only  |
 | message-limit      | unsigned integer | Maximum number of messages allowed on a Queue before rejection (Bad Request).                  |  Optional   |      100      | Read/Write |
 | message-size-limit | unsigned integer | Maximum allowed size in bytes of the message body before rejection (Request Entity Too Large). |  Optional   |     1024      | Read/Write |
@@ -102,7 +103,7 @@ The subscription resource represents the desired configuration for a message con
 | type     |  bytes  | Identifies the resource category.                                   |  Internal   | subscription  | Read-Only  |
 | created  | numeric | Unix epoch holding creation timestamp.                              |  Internal   |      n/a      | Read-Only  |
 | modified | numeric | Unix epoch maintaining modification timestamp.                      |  Internal   |      n/a      | Read-Only  |
-| revision |  bytes  | Hash uniquely identifing this edition of the resource.              |  Internal   |      n/a      | Read-Only  |
+| revision |  bytes  | Hash uniquely identifying this edition of the resource.             |  Internal   |      n/a      | Read-Only  |
 | origin   | string  | Originating address of the client responsible for creation.         |  Internal   |      n/a      | Read-Only  |
 | endpoint |   uri   | Uniform Resource Identifier describing how to contact the consumer. |  Mandatory  |      n/a      | Read/Write |
 

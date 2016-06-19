@@ -1,5 +1,5 @@
-API Overview
-------------
+Overview
+--------
 
 This document is intended to accurately communicate the Application Programming Interface (API) exposed by the RestQ framework for public consumption. It does not go into detail regarding the [Network API](#NETWORK-API.md).
 
@@ -13,7 +13,7 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 Table of Contents
 -----------------
 
-1.	[Overview](#api-overview)
+1.	[Overview](#overview)
 2.	[Interpretation](#interpretation)
 3.	[Byte/Bytes](#bytebytes)
 4.	[Resource/Resources](#resourceresources)

@@ -1,45 +1,57 @@
-##Design Overview
+Overview
+--------
 
-Mention exchange, logger, format, etc.. [Dependency inject](https://en.wikipedia.org/wiki/Dependency_injection) the logger instance to be used, if at all, during parsing.
+This document is intended to communicate core architectural decisions within the system. For this reason alone accuracy has suffered. It does not concern itself with interface specifics and primarily focuses on architectural decisions made during the design and development phase, see [Network API](NETWORK-API.md) and [API](API.md) for contract details.
 
-### Document Scope
-
-This document is intented to communicate core architectural decisions within the system. For this reason alone accuracy has suffered. It does not concern itself with interface specifics and primarly focuses on architectrual decisions made during the design/development phase, see [Network API](NETWORK-API.md) and [API](API.md) for entity contract details.
-
-All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the follow suite of class diagrams is ommited for clarity; along with pointers, references and other background noise.
+All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the follow suite of class diagrams is omitted for clarity; along with pointers, references and other background noise.
 
 Unless otherwise specified all primary data-types originate within the Standard Template Library (STL). Including but not limited to string, map, list, multimap, set, any, and friends.
 
-RestQ relies heavily on the [Restbed](https://github.com/corvusoft/restbed) framework for it's data structures and they will not be redocumented here for convenience.
+RestQ relies heavily on the [Restbed](https://github.com/corvusoft/restbed) framework for it's data structures and they will not be re-documented here for convenience.
 
-## Interpretation
+Interpretation
+--------------
+
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/pdf/rfc2119.pdf).
 
-## Terminology
+Table of Contents
+-----------------
 
-| Term            |  Definition   |
-| --------------- | ------------- |
-| Consumer        |   |
-| Producer        |     |
-| Exchange        |  |
-| Subscription    |   |
-| Queue           |     |
-| Message         |             |
-| Resource        |             |
-| Formatter       |             |
-| Repository      |             |
-| Logger          |             |
-| Encoder         |             |
-| URI         |             |
-| UUID         |             |
-| Key         |             |
-| Dispatch         |             |
+1.	[Overview](#overview)
+2.	[Interpretation](#interpretation)
+3.	[Terminology](#terminology)
+4.	[System Entities](#system-entities)
+5.	[Entity Interactions](#entity-interactions)
+6.	[Ruleset](#ruleset)
+7.	[Further Reading](#further-reading)
 
-## System Entities
+Terminology
+-----------
+
+| Term         | Definition |
+|--------------|------------|
+| Consumer     |            |
+| Producer     |            |
+| Exchange     |            |
+| Subscription |            |
+| Queue        |            |
+| Message      |            |
+| Resource     |            |
+| Formatter    |            |
+| Repository   |            |
+| Logger       |            |
+| Encoder      |            |
+| URI          |            |
+| UUID         |            |
+| Key          |            |
+| Dispatch     |            |
+
+System Entities
+---------------
 
 ### Byte/Bytes
 
-Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with STL [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics. 
+Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with STL [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics.
 
 ```
 +----------------+
@@ -62,6 +74,7 @@ Byte represents an unsigned 8-bit wide data-type, Bytes provides container funct
 ### Resource/Resources
 
 Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
+
 ```
 +-----------------------+
 |      <<typedef>>      |
@@ -82,7 +95,8 @@ Resource represents an [associative array](http://en.cppreference.com/w/cpp/cont
 
 ### Callback
 
-Represents a functor with variable parameters and return; this is used to help illustrate the design without introducing unnecassary complexity.
+Represents a functor with variable parameters and return; this is used to help illustrate the design without introducing unnecessary complexity.
+
 ```
 +-----------------+
 |   <<typedef>>   |
@@ -94,7 +108,8 @@ Represents a functor with variable parameters and return; this is used to help i
 
 ### Logger::Level
 
-[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjuction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjunction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
+
 ```
 +---------------+
 |   <<enum>>    |
@@ -112,6 +127,7 @@ Represents a functor with variable parameters and return; this is used to help i
 ### StatusCode
 
 [Enumeration](http://en.cppreference.com/w/cpp/language/enum) of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1).
+
 ```
 +---------------------------+
 |         <<enum>>          |
@@ -124,6 +140,7 @@ Represents a functor with variable parameters and return; this is used to help i
 ### String
 
 Utility class with static scope offering a common suite of string manipulation routines. Additional methods are inherited from restbed::String and will not be restated here for convenience.
+
 ```
 +---------------------------------------+
 |              <<static>>               |
@@ -140,15 +157,15 @@ Utility class with static scope offering a common suite of string manipulation r
 
 ### URI
 
-Represents a Uniform Resource Identifier as specificed in RFC 3986.
+Represents a Uniform Resource Identifier as specified in RFC 3986.
 
 > A generic URI is of the form:
 >
-> scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
+> scheme:[//[user:password@]host\[:port]][/]path[?query][#fragment]
 
 ```
- +------------------------------------+ 
- |             <<class>>              | 
+ +------------------------------------+
+ |             <<class>>              |
  |                Uri                 |
  +------------------------------------+
  | See restbed::Uri for details.      |
@@ -157,11 +174,11 @@ Represents a Uniform Resource Identifier as specificed in RFC 3986.
 
 ### Request
 
-Represents a HTTP request with additional helper methods for minipulating data, and code readability.
+Represents a HTTP request with additional helper methods for manipulating data, and code readability.
 
 ```
- +------------------------------------+ 
- |             <<class>>              | 
+ +------------------------------------+
+ |             <<class>>              |
  |              Response              |
  +------------------------------------+
  | See restbed::Response for details. |
@@ -170,11 +187,11 @@ Represents a HTTP request with additional helper methods for minipulating data, 
 
 ### Response
 
-Represents a HTTP response with additional helper methods for minipulating data, and improving code readability.
+Represents a HTTP response with additional helper methods for manipulating data, and improving code readability.
 
 ```
- +------------------------------------+ 
- |             <<class>>              | 
+ +------------------------------------+
+ |             <<class>>              |
  |              Response              |
  +------------------------------------+
  | See restbed::Response for details. |
@@ -183,7 +200,7 @@ Represents a HTTP response with additional helper methods for minipulating data,
 
 ### Session
 
-Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisation and/or sleep states, Only Authenticators and Repository developers require access to this functionality.
+Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the exchanges runloop for asynchronous data acquisition and/or sleep states, Only Authenticators and Repository developers require access to this functionality.
 
 ```
                      +-----------------------------------+
@@ -196,10 +213,10 @@ Represents a conversation between a client and the service. Internally this clas
                                        |
                     +------------------+-------------------+
                     |                                      |
-                    |                                      | 
+                    |                                      |
                   1 |                                      | 1
- +------------------+----------------+  +------------------+-----------------+ 
- |             <<class>>             |  |             <<class>>              | 
+ +------------------+----------------+  +------------------+-----------------+
+ |             <<class>>             |  |             <<class>>              |
  |              Request              |  |              Response              |
  +-----------------------------------+  +------------------------------------+
  | See restbed::Request for details. |  | See restbed::Response for details. |
@@ -208,7 +225,7 @@ Represents a conversation between a client and the service. Internally this clas
 
 ### Query
 
-Represents a data store enquire for creating, reading, updating, and/or deleting resources.  This class is an implemention of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensiablilty during Repository interaction.
+Represents a data store enquire for creating, reading, updating, and/or deleting resources. This class is an implementation of the [Parameter Object](http://c2.com/cgi/wiki?ParameterObject) pattern allowing for greater extensibility during Repository interaction.
 
 ```
  +------------------------------------------------------------------------+
@@ -251,8 +268,8 @@ Represents a data store enquire for creating, reading, updating, and/or deleting
 Represents Secure Socket Layer service configuration.
 
 ```
- +---------------------------------------+ 
- |               <<class>>               | 
+ +---------------------------------------+
+ |               <<class>>               |
  |              SSLSettings              |
  +---------------------------------------+
  | See restbed::SSLSettings for details. |
@@ -262,6 +279,7 @@ Represents Secure Socket Layer service configuration.
 ### Settings
 
 Represents the primary point of service, repository, and logger configuration. The mass majority of its implementation is inherited from restbed::Settings with a additional RestQ specific methods included and alterations of scope as detailed below.
+
 ```
  +----------------------------------------------------------------------------------+
  |                                     <<class>>                                    |
@@ -272,7 +290,7 @@ Represents the primary point of service, repository, and logger configuration. T
  | + get_default_queue_subscription_limit(void)             unsigned integer        |
  | + set_default_queue_message_limit(unsigned integer)      void                    |
  | + set_default_queue_message_size_limit(unsigned integer) void                    |
- | + set_default_queue_subscription_limit(unsigned integer) void                    | 
+ | + set_default_queue_subscription_limit(unsigned integer) void                    |
  | - get_case_insensitive_uris(void)                        boolean                 |
  | - get_property(string)                                   string                  |
  | - get_properties(void)                                   map<string,string>      |
@@ -290,8 +308,8 @@ Represents the primary point of service, repository, and logger configuration. T
                                            |
                                            |
                                            |
-                       +-------------------+-------------------+ 
-                       |               <<class>>               | 
+                       +-------------------+-------------------+
+                       |               <<class>>               |
                        |              SSLSettings              |
                        +---------------------------------------+
                        | See restbed::SSLSettings for details. |
@@ -305,8 +323,8 @@ Interface detailing the required contract for Format extensions. The concept of 
 ```
  +------------------+---------------------+  
  |            <<interface>>               |
- |              Formatter                 | 
- +----------------------------------------+ 
+ |              Formatter                 |
+ +----------------------------------------+
  | + parse(Bytes)               Resources |
  | + try_parse(Bytes,Resources) boolean   |
  | + compose(Resources,boolean) Bytes     |
@@ -320,10 +338,11 @@ Interface detailing the required contract for Format extensions. The concept of 
 Interface detailing the required contract for repository extensions. A repository represents a data-store for the long term persistence of dynamically created resources via the [Network API](#NETWORK-API.md).
 
 It is encouraged that any implementation of this interface **SHOULD** be of an asynchronous nature, to reduce thread contention within the exchange. This can be achieved with [MariaDB](https://mariadb.com/kb/en/mariadb/using-the-non-blocking-library/), [PostgreSQL](http://www.postgresql.org/docs/7.3/static/libpq-async.html), and other database products.
+
 ```
  +-----------------------------------------+
  |             <<interface>>               |
- |               Repository                | 
+ |               Repository                |
  +-----------------------------------------+
  | + stop(void)                       void |
  | + start(Settings)                  void |
@@ -337,7 +356,7 @@ It is encouraged that any implementation of this interface **SHOULD** be of an a
 
 ### Logger
 
-Interface detailing the required contract for logger extensions.  No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characterics.
+Interface detailing the required contract for logger extensions. No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characteristics.
 
 ```
  +-----------------------------------------------+
@@ -353,7 +372,7 @@ Interface detailing the required contract for logger extensions.  No default log
 
 ### Exchange
 
-The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
+The exchange is responsible for managing the [Network API](#NETWORK-API.md), HTTP compliance, scheduling of the message dispatch logic and insuring incoming requests are persisted into the [Repository](#repository).
 
 ```
                                            +-----------------------------------------+
@@ -389,20 +408,21 @@ The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP
  +----------------------------------------+  +-----------------------------------------+  +-----------------------------------------------+
 ```
 
-## Entity Interactions
+Entity Interactions
+-------------------
 
 ### Resource Creation
 
 ```
  [client]                                [exchange]            [formatter]         [repository]
-    |                                         |                     '                    | 
+    |                                         |                     '                    |
     |         Create (POST) resource          |                     '                    |
     |---------------------------------------->|                     '                    |
     |                                      +--|                     '                    |
     | Find formatter (Content-Type header) |  |                     '                    |
     |                                      +->|     Parse bytes     |                    |
     |                                         |-------------------->|                    |
-    |                                         |      Resources      |                    | 
+    |                                         |      Resources      |                    |
     |                                         |<--------------------|                    |
     |                                      +--|                     |                    |
     |           Validate & setup resource  |  |                     '                    |
@@ -414,17 +434,17 @@ The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP
     |      Find formatter (Accept header)  |  |                     '                    |
     |                                      +->|  Compose Document   |                    |
     |                                         |-------------------->|                    |
-    |                                         |        Bytes        |                    | 
-    |           201 Created status            |<--------------------|                    | 
-    |<----------------------------------------|                     '                    | 
-    |                                         |                     '                    | 
+    |                                         |        Bytes        |                    |
+    |           201 Created status            |<--------------------|                    |
+    |<----------------------------------------|                     '                    |
+    |                                         |                     '                    |
 ```
 
 ### Resource Retrieval
 
 ```
  [client]                             [exchange]            [formatter]         [repository]
-    |                                      |                     '                    | 
+    |                                      |                     '                    |
     |          Read (GET) resource         |                     '                    |
     |------------------------------------->|                     '                    |
     |                                      |----------------------------------------->|
@@ -434,24 +454,24 @@ The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP
     |   Find formatter (Accept header)  |  |                     '                    |
     |                                   +->|   Compose Document  |                    |
     |                                      |-------------------->|                    |
-    |                                      |        Bytes        |                    | 
+    |                                      |        Bytes        |                    |
     |           200 OK status              |<--------------------|                    |
-    |<-------------------------------------|                     '                    | 
-    |                                      |                     '                    | 
+    |<-------------------------------------|                     '                    |
+    |                                      |                     '                    |
 ```
 
 ### Resource Modification
 
 ```
  [client]                                [exchange]            [formatter]         [repository]
-    |                                         |                     '                    | 
+    |                                         |                     '                    |
     |         Update (PUT) resource           |                     '                    |
     |---------------------------------------->|                     '                    |
     |                                      +--|                     '                    |
     | Find formatter (Content-Type header) |  |                     '                    |
     |                                      +->|     Parse bytes     |                    |
     |                                         |-------------------->|                    |
-    |                                         |      Resources      |                    | 
+    |                                         |      Resources      |                    |
     |                                         |<--------------------|                    |
     |                                      +--|                     |                    |
     |           Validate & setup resource  |  |                     '                    |
@@ -463,29 +483,29 @@ The exchange is reponsible for managing the [Network API](#NETWORK-API.md), HTTP
     |      Find formatter (Accept header)  |  |                     '                    |
     |                                      +->|   Compose Document  |                    |
     |                                         |-------------------->|                    |
-    |                                         |        Bytes        |                    | 
+    |                                         |        Bytes        |                    |
     |           201 Created status            |<--------------------|                    |
-    |<----------------------------------------|                     '                    | 
-    |                                         |                     '                    | 
+    |<----------------------------------------|                     '                    |
+    |                                         |                     '                    |
 ```
 
 ### Resource Destruction
 
 ```
  [client]                                [exchange]            [formatter]         [repository]
-    |                                         |                     '                    | 
+    |                                         |                     '                    |
     |        Destroy (DELETE) resource        |                     '                    |
     |---------------------------------------->|                     '                    |
     |                                         |----------------------------------------->|
     |                                         |           Destroy resource records       |
-    |           204 No Cotent status          |<-----------------------------------------|
+    |           204 No Content status         |<-----------------------------------------|
     |<----------------------------------------|                     '                    |
-    |                                         |                     '                    | 
+    |                                         |                     '                    |
 ```
 
 ### Exchange Setup, Message Dispatch and Successful Reciept
 
-The following diagram details the sequence of events for configuring an exchange (pub-sub), message dispatch and successful reciept.
+The following diagram details the sequence of events for configuring an exchange (pub-sub), message dispatch and successful receipt.
 
 ```
 [producer]            [consumer]                [exchange]                  [repository]
@@ -581,40 +601,38 @@ The following diagram details the sequence of events for configuring an exchange
     |                     |                          |                            |
 ```
 
-## Message Delivery
+Message Delivery
+----------------
 
-When a new message is delivered to the exchange it must be persisted with a range of information regarding the current state of the system. This approach avoids situations where one or more Queue/Subscription configurations are modified before the system has the oppurtunity to forward the message; which if left unchecked would produce erratic behaviour on behalf of the dispatch logic.
+When a new message is delivered to the exchange it must be persisted with a range of information regarding the current state of the system. This approach avoids situations where one or more Queue/Subscription configurations are modified before the system has the opportunity to forward the message; which if left unchecked would produce erratic behaviour on behalf of the dispatch logic.
 
 To achieve this the exchange persists a single copy of the message record within the repository and a collection of internal data-structures known as message-states. Each state record holds a reference to the message and duplicates the queue, and subscription configuration at time of message creation.
 
 For example: A message delivered to a queue with 2x subscriptions will force the exchange to instantiate 2x state objects snapshotting each subscription and associated queue configuration.
 
-While this approach duplicates data with respect to Queue and Subscription properties it has been deemed farless complicated and therefore prone to error than tracking changes between message creation and dispatch; disk is cheap.
+While this approach duplicates data with respect to Queue and Subscription properties it has been deemed far less complicated and therefore prone to error than tracking changes between message creation and dispatch; disk is cheap.
 
 Message state structures can hold one of the following conditions.
 
-| Condition  |  Description                                               |
-| ---------- | ---------------------------------------------------------- |
-| pending    |  Message is awaiting delivery, that is exchange attention. |
-| in-flight  |  Message is currently being processed by the exchange.     |    
-| dispatched |  Message has been accepted by the consumer.                |
-| rejected   |  Message was rejected by the consumer.                     |
+| Condition  | Description                                               |
+|------------|-----------------------------------------------------------|
+| pending    | Message is awaiting delivery, that is exchange attention. |
+| in-flight  | Message is currently being processed by the exchange.     |
+| dispatched | Message has been accepted by the consumer.                |
+| rejected   | Message was rejected by the consumer.                     |
 
-A message and its associated states are not purged from the exchange until all state entites have recorded a dispatched or rejected condition.
+A message and its associated states are not purged from the exchange until all state entities have recorded a dispatched or rejected condition.
 
 ```
 [producer]            [consumer]                [exchange]               [repository]
     |                     '                          |                         |
 ```
 
-## Ruleset
+Ruleset
+-------
 
-
-## Dependencies
-
-
-
-## Further Reading
+Further Reading
+---------------
 
 [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer)
 
@@ -624,6 +642,6 @@ A message and its associated states are not purged from the exchange until all s
 
 [Uniform Resource Identifier (URI): Generic Syntax](https://tools.ietf.org/html/rfc3986).
 
-[Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231). 
+[Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231).
 
 [A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
