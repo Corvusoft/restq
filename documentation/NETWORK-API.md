@@ -167,16 +167,6 @@ The Asterisk (*) [endpoint](https://en.wikipedia.org/wiki/Uniform_Resource_Ident
 Supported Query Parameters
 --------------------------
 
-| parameter | type      | range                                                                                    | Default               |
-|-----------|:---------:|:----------------------------------------------------------------------------------------:|:---------------------:|
-| filter    |  pair(s)  |                              one or more name=value pairs.                               |         null          |
-| fields    | string(s) |                                   one or more strings.                                   | all available fields  |
-| index     |  numeric  |                                0 - max(unsigned integer)                                 |           0           |
-| limit     |  numeric  |                                0 - max(unsigned integer)                                 | max(unsigned integer) |
-| echo      |  boolean  |                                 yes/no, true/false, 1/0                                  |         true          |
-| style     |  boolean  |                                 yes/no, true/false, 1/0                                  |         false         |
-| keys      | string(s) | one or more [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier) strings. |         null          |
-
 ### Parameters
 
 -	[Fields](#fields)
@@ -189,17 +179,87 @@ Supported Query Parameters
 
 #### Fields
 
+| name   | type      | range                | Default              |
+|--------|:---------:|:--------------------:|:--------------------:|
+| fields | string(s) | one or more strings. | all available fields |
+
+The fields query parameter helps reduce network load by allowing the client to return only the required properties from one or more entities.
+
+```
+https://exchange/queues/123e4567-e89b-12d3-a456-426655440000?fields=name,tags
+```
+
 #### Index
+
+| name  | type    | range                     | Default |
+|-------|:-------:|:-------------------------:|:-------:|
+| index | numeric | 0 - max(unsigned integer) |    0    |
+
+The index query parameter allows for accessing into a collection and fetching only the desired entities, helping reduce redundant data processing and transmission.
+
+```
+https://exchange/queues?index=3
+```
 
 #### Limit
 
+| name  | type    | range                     | Default               |
+|-------|:-------:|:-------------------------:|:---------------------:|
+| limit | numeric | 0 - max(unsigned integer) | max(unsigned integer) |
+
+If you need only a specified number of entities from a collection, use the limit query parameter, rather than fetching the whole collection and throwing away the redundant data.
+
+```
+https://exchange/queues?limit=10
+```
+
 #### Echo
+
+| name | type    | range                   | Default |
+|------|:-------:|:-----------------------:|:-------:|
+| echo | boolean | yes/no, true/false, 1/0 |  true   |
+
+In scenarios where you're not interested in the result of an operation you may supply the echo query parameter to remove the response body; reducing redundant data transmission.
+
+```
+https://exchange/queues?echo=false
+```
 
 #### Style
 
+| name  | type    | range                   | Default |
+|-------|:-------:|:-----------------------:|:-------:|
+| style | boolean | yes/no, true/false, 1/0 |  false  |
+
+During debugging its handy to present a human friendly response format. Providing a style query parameter allows formatters (JSON, XML, YAML) to present a response body that is easily consumed by humans.
+
+```
+https://exchange/queues?style=true
+```
+
 #### Keys
 
+| name | type      | range                                                                                    | Default |
+|------|:---------:|:----------------------------------------------------------------------------------------:|:-------:|
+| keys | string(s) | one or more [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier) strings. |  null   |
+
+To select specific entities from a collection you may set the keys query parameter.
+
+```
+https://exchange/queues?keys=e287ab8c-2537-4fca-8a78-bd632853ae96,abd244fe-e974-49a3-b2f8-1fda83b215c6
+```
+
 #### Filters
+
+| name   | type    | range                         | Default |
+|--------|:-------:|:-----------------------------:|:-------:|
+| filter | pair(s) | one or more name=value pairs. |  null   |
+
+If you desire to discover entities with specific field values, filters may be set to weed out irrelevant data.
+
+```
+https://exchange/queues?tags=rain,weather
+```
 
 Supported HTTP Headers
 ----------------------
