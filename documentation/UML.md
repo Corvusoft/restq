@@ -18,8 +18,11 @@ Table of Contents
 1.	[Overview](#overview)
 2.	[Interpretation](#interpretation)
 3.	[Class Diagrams](#class-diagrams)
+4.	[Sequence Diagrams](#sequence-diagrams)
 
 ### Class Diagrams
+
+In software engineering, a class diagram in the Unified Modeling Language (UML) is a type of static structure diagram that describes the structure of a system by showing the system's classes, their attributes, operations (or methods), and the relationships among objects.
 
 -	[Relationships](#relationships)
 -	[Association](#association)
@@ -119,3 +122,7 @@ The following diagram shows that a Session class is composed and in a one-to-one
 |    Request   |             |   Response   |
 +--------------+             +--------------+
 ```
+
+### Sequence Diagrams
+
+A Sequence diagram is an interaction diagram that shows how objects operate with one another and in what order. It is a construct of a Message Sequence Chart. A sequence diagram shows object interactions arranged in time sequence.

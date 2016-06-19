@@ -31,6 +31,7 @@ Table of Contents
 16.	[Logger](#logger)
 17.	[Logger::Level](#loggerlevel)
 18.	[Exchange](#exchange)
+19.	[Further Reading](#further-reading)
 
 ### Byte/Bytes
 
@@ -1773,3 +1774,13 @@ n/a
 ##### Exceptions
 
 [std::runtime_error](http://en.cppreference.com/w/cpp/error/runtime_error) is thrown when attempting to modify a service that is currently active, i.e [start](#exchangestart) has already been called.
+
+### Further Reading
+
+[C++ Standard](https://isocpp.org/std/the-standard) - The current ISO C++ standard is officially known as ISO International Standard ISO/IEC 14882:2014(E) – Programming Language C++. Want to read the ISO C++ standard, or working drafts of the standard? You have several options, most of them free.
+
+[C++ Reference](en.cppreference.com/) - Comprehensive C++ and Standard Template Library (STL) reference.
+
+[Effective STL](https://www.amazon.com/Effective-STL-Specific-Standard-Template/dp/0201749629) - Written for the intermediate or advanced C++ programmer, renowned C++ expert Scott Meyers provides essential techniques for getting more out of the Standard Template Library in Effective STL, a tutorial for doing more with this powerful library.
+
+[Effective C++](https://www.amazon.com/Effective-Specific-Improve-Programs-Designs/dp/0321334876) - “Every C++ professional needs a copy of Effective C++. It is an absolute must-read for anyone thinking of doing serious C++ development. If you’ve never read Effective C++ and you think you know everything about C++, think again.” — Steve Schirripa, Software Engineer, Google
