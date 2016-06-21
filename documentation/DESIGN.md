@@ -28,26 +28,44 @@ Table of Contents
 Terminology
 -----------
 
-| Term         | Definition |
-|--------------|------------|
-| Consumer     |            |
-| Producer     |            |
-| Exchange     |            |
-| Subscription |            |
-| Queue        |            |
-| Message      |            |
-| Resource     |            |
-| Formatter    |            |
-| Repository   |            |
-| Logger       |            |
-| Encoder      |            |
-| URI          |            |
-| UUID         |            |
-| Key          |            |
-| Dispatch     |            |
+| Term         | Definition                                                                                                                  |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Consumer     | An actor that devours messages.                                                                                             |
+| Producer     | An actor that creates messages.                                                                                             |
+| Subscription | A contract with the exchange describing which messages should be delivered to a consumer, including the method of delivery. |
+| Queue        | A sequence of messages awaiting their turn to be delivered.                                                                 |
+| Message      | A recorded communication sent to or left for a recipient who cannot be contacted directly.                                  |
+| Resource     | A network addressable entity i.e Queue.                                                                                     |
+| Exchange     | A service responsible for routing messages.                                                                                 |
+| Dispatch     | A component tasked with the transmission of messages to consumers.                                                          |
+| Repository   | Storage mechanism for the long-term persistence of Resources.                                                               |
+| Logger       | A component making a systematic recording of events, observations, or measurements.                                         |
+| Encoder      | A component for the conversion of low-level data representations i.e GZIP.                                                  |
+| Formatter    | A component for the handling of document structures i.e JSON.                                                               |
+| Charset      | A Character Set is used to represent a repertoire of characters i.e UTF-8.                                                  |
+| URI          | Uniform Resource Identifier.                                                                                                |
+| UUID         | Universally Unique IDentifier.                                                                                              |
+| Key          | String identifier uniquely addressing a resource.                                                                           |
 
 System Entities
 ---------------
+
+-	[Byte/Bytes](#bytebytes)
+-	[Resource/Resources](#resourceresources)
+-	[StatusCode](#statuscode)
+-	[String](#string)
+-	[URI](#uri)
+-	[Request](#request)
+-	[Response](#response)
+-	[Session](#session)
+-	[Query](#query)
+-	[SSLSettings](#sslsettings)
+-	[Settings](#settings)
+-	[Formatter](#formatter)
+-	[Repository](#repository)
+-	[Logger](#logger)
+-	[Logger::Level](#loggerlevel)
+-	[Exchange](#exchange)
 
 ### Byte/Bytes
 
