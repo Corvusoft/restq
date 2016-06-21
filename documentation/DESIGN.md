@@ -3,9 +3,9 @@ Overview
 
 This document is intended to communicate core architectural decisions within the system. For this reason alone accuracy has suffered. It does not concern itself with interface specifics and primarily focuses on architectural decisions made during the design and development phase, see [Network API](NETWORK-API.md) and [API](API.md) for contract details.
 
-All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the follow suite of class diagrams is omitted for clarity; along with pointers, references and other background noise.
+All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the following suite of class diagrams is omitted for clarity; along with pointers, references and other background noise.
 
-Unless otherwise specified all primary data-types originate within the Standard Template Library (STL). Including but not limited to string, map, list, multimap, set, any, and friends.
+Unless otherwise specified all primary data-types originate within the Standard Template Library (STL).
 
 RestQ relies heavily on the [Restbed](https://github.com/corvusoft/restbed) framework for it's data structures and they will not be re-documented here for convenience.
 
@@ -38,11 +38,11 @@ Terminology
 | Resource     | A network addressable entity i.e Queue.                                                                                     |
 | Exchange     | A service responsible for routing messages.                                                                                 |
 | Dispatch     | A component tasked with the transmission of messages to consumers.                                                          |
-| Repository   | Storage mechanism for the long-term persistence of Resources.                                                               |
+| Repository   | A storage mechanism for the long-term persistence of Resources.                                                             |
 | Logger       | A component making a systematic recording of events, observations, or measurements.                                         |
 | Encoder      | A component for the conversion of low-level data representations i.e GZIP.                                                  |
 | Formatter    | A component for the handling of document structures i.e JSON.                                                               |
-| Charset      | A Character Set is used to represent a repertoire of characters i.e UTF-8.                                                  |
+| Charset      | A CHARacter SET is used to represent a repertoire of symbols i.e UTF-8.                                                     |
 | URI          | Uniform Resource Identifier.                                                                                                |
 | UUID         | Universally Unique IDentifier.                                                                                              |
 | Key          | String identifier uniquely addressing a resource.                                                                           |
@@ -643,11 +643,36 @@ A message and its associated states are not purged from the exchange until all s
 
 ```
 [producer]            [consumer]                [exchange]               [repository]
-    |                     '                          |                         |
+    |                     '                         |                          |
 ```
 
 Ruleset
 -------
+
+RestQ heavily utilises [Restbeds](https://github.com/Corvusoft/restbed/tree/master/example/rules_engine/source) rule-engine API for all HTTP header and query parameter processing. This has created a readable codebase that lends itself well to reuse, and extensibility.
+
+```
+                                 [                                          server internals                                   ]
+[producer]                       [ruleset]                        [exchange]                        [repository]      [dispatch]          [consumer]
+    |        HTTP Request            |                                 |                                  |                |                   |
+    |------------------------------->|                                 |                                  |                |                   |
+    |                            +---|                                 |                                  |                |                   |
+    |     HTTP Header Processing |   |                                 |                                  |                |                   |
+    |                            +-->|                                 |                                  |                |                   |
+    |                            +---|                                 |                                  |                |                   |
+    |  HTTP Parameter Processing |   |                                 |                                  |                |                   |
+    |                            +-->| Pass Request to method handler  |                                  |                |                   |
+    |                                |-------------------------------->|          Persist Request         |                |                   |
+    |                                |                                 |--------------------------------->|                |                   |
+    |                                |                                 |                                  |                |                   |
+    |                                |                                 | Inform dispatch of a new message |                |                   |
+    |                                |                                 |-------------------------------------------------->|                   |
+    |                                |                                 |                                  |  Read Message  |                   |
+    |                                |                                 |                                  |<---------------|                   |    
+    |                                |                                 |                                  |                |  Deliver Message  |
+    |                                |                                 |                                  |                |------------------>|
+    |                                |                                 |                                  |                |                   |
+```
 
 Further Reading
 ---------------
