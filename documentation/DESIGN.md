@@ -624,27 +624,22 @@ Message Delivery
 
 When a new message is delivered to the exchange it must be persisted with a range of information regarding the current state of the system. This approach avoids situations where one or more Queue/Subscription configurations are modified before the system has the opportunity to forward the message; which if left unchecked would produce erratic behaviour on behalf of the dispatch logic.
 
-To achieve this the exchange persists a single copy of the message record within the repository and a collection of internal data-structures known as message-states. Each state record holds a reference to the message and duplicates the queue, and subscription configuration at time of message creation.
+To achieve this the exchange persists a single copy of the message record within the repository and a collection of internal data-structures known as message-states. During message creation each state record holds a reference to the message and duplicates the queue/subscription configurations.
 
 For example: A message delivered to a queue with 2x subscriptions will force the exchange to instantiate 2x state objects snapshotting each subscription and associated queue configuration.
 
-While this approach duplicates data with respect to Queue and Subscription properties it has been deemed far less complicated and therefore prone to error than tracking changes between message creation and dispatch; disk is cheap.
+While this approach duplicates data with respect to queue and subscription properties, it halts the introduction of complicated logic for tracking changes between message creation and dispatch; disk is cheap.
 
 Message state structures can hold one of the following conditions.
 
-| Condition  | Description                                               |
-|------------|-----------------------------------------------------------|
-| pending    | Message is awaiting delivery, that is exchange attention. |
-| in-flight  | Message is currently being processed by the exchange.     |
-| dispatched | Message has been accepted by the consumer.                |
-| rejected   | Message was rejected by the consumer.                     |
+| Condition  | Description                                           |
+|------------|-------------------------------------------------------|
+| pending    | Message is awaiting delivery.                         |
+| in-flight  | Message is currently being processed by the exchange. |
+| dispatched | Message has been accepted by the consumer.            |
+| rejected   | Message was rejected by the consumer.                 |
 
 A message and its associated states are not purged from the exchange until all state entities have recorded a dispatched or rejected condition.
-
-```
-[producer]            [consumer]                [exchange]               [repository]
-    |                     '                         |                          |
-```
 
 Ruleset
 -------
@@ -684,5 +679,7 @@ Further Reading
 [Publish–subscribe pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) - In software architecture, publish–subscribe is a messaging pattern where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers, but instead characterize published messages into classes without knowledge of which subscribers, if any, there may be. Similarly, subscribers express interest in one or more classes and only receive messages that are of interest, without knowledge of which publishers, if any, there are.
 
 [Uniform Resource Identifier (URI): Generic Syntax](https://tools.ietf.org/html/rfc3986) - A Uniform Resource Identifier (URI) is a compact sequence of characters that identifies an abstract or physical resource. This specification defines the generic URI syntax and a process for resolving URI references that might be in relative form, along with guidelines and security considerations for the use of URIs on the Internet. The URI syntax defines a grammar that is a superset of all valid URIs, allowing an implementation to parse the common components of a URI reference without knowing the scheme-specific requirements of every possible identifier. This specification does not define a generative grammar for URIs; that task is performed by the individual specifications of each URI scheme.
+
+[Inter-Process Communication](https://en.wikipedia.org/wiki/Inter-process_communication) - Inter-process communication or interprocess communication (IPC) refers specifically to the mechanisms an operating system provides to allow processes it manages to share data.
 
 [A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122) - This specification defines a Uniform Resource Name namespace for UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally Unique IDentifier). A UUID is 128 bits long, and can guarantee uniqueness across space and time. UUIDs were originally used in the Apollo Network Computing System and later in the Open Software Foundation's (OSF) Distributed Computing Environment (DCE), and then in Microsoft Windows platforms.
