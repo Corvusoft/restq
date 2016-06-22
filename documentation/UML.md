@@ -125,4 +125,18 @@ The following diagram shows that a Session class is composed and in a one-to-one
 
 ### Sequence Diagrams
 
-A Sequence diagram is an interaction diagram that shows how objects operate with one another and in what order. It is a construct of a Message Sequence Chart. A sequence diagram shows object interactions arranged in time sequence.
+A [Sequence Diagram](https://en.wikipedia.org/wiki/Sequence_diagram) is an interaction diagram that shows how objects operate with one another and in what order. It is a construct of a [Message Sequence Chart](https://en.wikipedia.org/wiki/Message_sequence_chart). A sequence diagram shows object interactions arranged in time sequence.
+
+##### Example
+
+```
+ [client]                                [exchange]            [formatter]         [repository]
+    |                                         |                     '                    |
+    |        Destroy (DELETE) resource        |                     '                    |
+    |---------------------------------------->|                     '                    |
+    |                                         |----------------------------------------->|
+    |                                         |           Destroy resource records       |
+    |           204 No Content status         |<-----------------------------------------|
+    |<----------------------------------------|                     '                    |
+    |                                         |                     '                    |
+```
