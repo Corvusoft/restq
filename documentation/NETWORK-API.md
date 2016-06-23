@@ -268,7 +268,7 @@ The following should be read as: Read all queues that contain both the 'rain' *A
 https://exchange/queues?tags=rain,weather
 ```
 
-Another example: Read all queues that a tag of 'weather' and a supplier of 'MET Office'.
+Another example: Read all queues with a tag of 'weather' and a supplier of 'MET Office'.
 
 ```
 https://exchange/queues?tags=weather&supplier=MET%20Office
@@ -278,20 +278,20 @@ Supported HTTP Headers
 ----------------------
 
 -	[Accept](#accept)
--	[Accept-Charset](#acceptcharset)
--	[Accept-Encoding](#acceptencoding)
--	[Accept-Language](#acceptlanguage)
--	[Accept-Ranges](#acceptranges)
--	[Content-Encoding](#contentencoding)
--	[Content-Language](#contentlanguage)
--	[Content-Length](#contentlength)
--	[Content-MD5](#contentmd5)
--	[Content-Type](#contenttype)
+-	[Accept-Charset](#accept-charset)
+-	[Accept-Encoding](#accept-encoding)
+-	[Accept-Language](#accept-language)
+-	[Accept-Ranges](#accept-ranges)
+-	[Content-Encoding](#content-encoding)
+-	[Content-Language](#content-language)
+-	[Content-Length](#content-length)
+-	[Content-MD5](#content-md5)
+-	[Content-Type](#content-type)
 -	[Date](#date)
 -	[ETag](#etag)
 -	[Expect](#expect)
 -	[Host](#host)
--	[Last-Modified](#lastmodified)
+-	[Last-Modified](#last-modified)
 -	[Location](#location)
 -	[Range](#range)
 
