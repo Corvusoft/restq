@@ -84,9 +84,9 @@ The queue resource represents the desired configuration for a message chain.
 |---------|------------|---------------------------------------------------------------------------------------------------------------|
 | /queues | Collection | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e queues, offer collection semantics via [paging](#paging), [keys](#keys), and [filters](#filters) query parameters.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e queues, offer collection semantics via [paging](#paging), [keys](#keys), and [filter](#filters) query parameters.
 
-Collection resources have no associated data fields, and represent a collection of non-trival entities.
+Collection resources have no associated data fields, and represent a grouping of non-trival entities.
 
 Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned; unless query parameters have been applied altering the default behaviour.
 
@@ -113,9 +113,9 @@ The subscription resource represents the desired configuration for a message con
 |----------------|------------|---------------------------------------------------------------------------------------------------------------|
 | /subscriptions | Collection | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e subscriptions, offer collection semantics via [paging](#paging), [keys](#keys), and [filters](#filters) query parameters.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e subscriptions, offer collection semantics via [paging](#paging), [keys](#keys), and [filter](#filters) query parameters.
 
-Collection resources have no associated data fields, and represent a collection of non-trival entities.
+Collection resources have no associated data fields, and represent a grouping of non-trival entities.
 
 Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned; unless query parameters have been applied altering the default behaviour.
 
@@ -137,7 +137,7 @@ The HTTP Request body of a Message is not interpreted by the exchange and is for
 
 [Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e messages, offer collection semantics via [paging](#paging), [keys](#keys), and [filters](#filters) query options.
 
-Collection resources have no associated data fields, and represent a collection of non-trival entities.
+Collection resources have no associated data fields, and represent a grouping of non-trival entities.
 
 #### Asterisk Resource
 
