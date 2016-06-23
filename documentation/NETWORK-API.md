@@ -84,11 +84,11 @@ The queue resource represents the desired configuration for a message chain.
 |---------|------------|---------------------------------------------------------------------------------------------------------------|
 | /queues | Collection | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e queues, offer collection semantics via [paging](#paging), [keys](#keys), and [filter](#filters) query parameters.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e queues, offer collection semantics via [paging](#paging), [keys](#keys), [index](#index), [limit](#limit) and [filter](#filters) query parameters.
 
 Collection resources have no associated data fields, and represent a grouping of non-trival entities.
 
-Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned; unless query parameters have been applied altering the default behaviour.
+Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned; unless query parameters have been applied, altering the default behaviour.
 
 #### Subscription Resource
 
@@ -113,11 +113,11 @@ The subscription resource represents the desired configuration for a message con
 |----------------|------------|---------------------------------------------------------------------------------------------------------------|
 | /subscriptions | Collection | [GET, POST, HEAD, DELETE, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e subscriptions, offer collection semantics via [paging](#paging), [keys](#keys), and [filter](#filters) query parameters.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e subscriptions, offer collection semantics via [paging](#paging), [keys](#keys), [index](#index), [limit](#limit) and [filter](#filters) query parameters.
 
 Collection resources have no associated data fields, and represent a grouping of non-trival entities.
 
-Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned; unless query parameters have been applied altering the default behaviour.
+Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)) a collection will result in all available resources being returned; unless query parameters have been applied, altering the default behaviour.
 
 #### Message Resource
 
@@ -126,7 +126,7 @@ Reading ([HTTP GET](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Re
 | /messages/{uuid}               | Resource | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 | /queues/{uuid}/messages/{uuid} | Resource | [OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-The HTTP Request body of a Message is not interpreted by the exchange and is forwarded without modification to subscribed consumers. This allows any form for data to be sent across the wire e.g Text, Image, Binary.
+The HTTP Request body of a Message is not interpreted by the exchange and is forwarded without modification to subscribed consumers. This allows any form of data to be sent across the wire e.g Text, Image, Binary.
 
 #### Messages Collection
 
@@ -135,7 +135,7 @@ The HTTP Request body of a Message is not interpreted by the exchange and is for
 | /messages               | Collection | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 | /queues/{uuid}/messages | Collection | [POST, OPTIONS](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) |
 
-[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e messages, offer collection semantics via [paging](#paging), [keys](#keys), and [filters](#filters) query options.
+[Endpoints](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) identified by pluralised resource names, i.e messages, offer collection semantics via [paging](#paging), [keys](#keys), [index](#index), [limit](#limit) and [filter](#filters) query parameters.
 
 Collection resources have no associated data fields, and represent a grouping of non-trival entities.
 
@@ -248,6 +248,12 @@ To select specific entities from a collection you may set the keys query paramet
 https://exchange/queues?keys=e287ab8c-2537-4fca-8a78-bd632853ae96,abd244fe-e974-49a3-b2f8-1fda83b215c6
 ```
 
+This approach allows for the creation of Virtual Collections. Whereby all other query parameters are applied on top of the keys specified.
+
+```
+https://exchange/queues?keys=e287ab8c-2537-4fca-8a78-bd632853ae96,abd244fe-e974-49a3-b2f8-1fda83b215c6&tags=disk-usage&index=0&limit=2
+```
+
 #### Filters
 
 | name   | type    | range                         | Default |
@@ -256,8 +262,16 @@ https://exchange/queues?keys=e287ab8c-2537-4fca-8a78-bd632853ae96,abd244fe-e974-
 
 If you desire to discover entities with specific field values, filters may be set to weed out irrelevant data.
 
+The following should be read as: Read all queues that contain both the 'rain' *AND* 'weather' tag.
+
 ```
 https://exchange/queues?tags=rain,weather
+```
+
+Another example: Read all queues that a tag of 'weather' and a supplier of 'MET Office'.
+
+```
+https://exchange/queues?tags=weather&supplier=MET%20Office
 ```
 
 Supported HTTP Headers
