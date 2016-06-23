@@ -91,7 +91,7 @@ Byte represents an unsigned 8-bit wide data-type, Bytes provides container funct
 
 ### Resource/Resources
 
-Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
+Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources collection exporting STL [list](http://en.cppreference.com/w/cpp/container/list) semantics.
 
 ```
 +-----------------------+
@@ -186,7 +186,7 @@ Represents a Uniform Resource Identifier as specified in RFC 3986.
  |             <<class>>              |
  |                Uri                 |
  +------------------------------------+
- | See restbed::Uri for details.      |
+ |    See restbed::Uri for details.   |
  +------------------------------------+
 ```
 
@@ -197,9 +197,9 @@ Represents a HTTP request with additional helper methods for manipulating data, 
 ```
  +------------------------------------+
  |             <<class>>              |
- |              Response              |
+ |              Request               |
  +------------------------------------+
- | See restbed::Response for details. |
+ | See restbed::Request for details.  |
  +------------------------------------+
 ```
 
@@ -626,7 +626,7 @@ When a new message is delivered to the exchange it must be persisted with a rang
 
 To achieve this the exchange persists a single copy of the message record within the repository and a collection of internal data-structures known as message-states. During message creation each state record holds a reference to the message and duplicates the queue/subscription configurations.
 
-For example: A message delivered to a queue with 2x subscriptions will force the exchange to instantiate 2x state objects snapshotting each subscription and associated queue configuration.
+For example: A message delivered to a queue with 2x subscriptions will force the exchange to instantiate 2x state objects snapshotting each subscription and the associated queue configuration.
 
 While this approach duplicates data with respect to queue and subscription properties, it halts the introduction of complicated logic for tracking changes between message creation and dispatch; disk is cheap.
 
@@ -644,7 +644,7 @@ A message and its associated states are not purged from the exchange until all s
 Ruleset
 -------
 
-RestQ heavily utilises [Restbeds](https://github.com/Corvusoft/restbed/tree/master/example/rules_engine/source) rule-engine API for all HTTP header and query parameter processing. This has created a readable codebase that lends itself well to reuse, and extensibility.
+RestQ heavily relies on [Restbeds](https://github.com/Corvusoft/restbed/tree/master/example/rules_engine/source) rule-engine API for all HTTP header and query parameter processing. This has created a readable codebase that lends itself well to reuse, and extensibility.
 
 ```
                                  [                                          server internals                                   ]
@@ -662,8 +662,10 @@ RestQ heavily utilises [Restbeds](https://github.com/Corvusoft/restbed/tree/mast
     |                                |                                 |                                  |                |                   |
     |                                |                                 | Inform dispatch of a new message |                |                   |
     |                                |                                 |-------------------------------------------------->|                   |
-    |                                |                                 |                                  |  Read Message  |                   |
-    |                                |                                 |                                  |<---------------|                   |    
+    |                                |                                 |                                  |                |                   |
+    |                                |                                 |                                  |<---------------|                   |
+    |                                |                                 |                                  |  Read Message  |                   |    
+    |                                |                                 |                                  |--------------->|                   |
     |                                |                                 |                                  |                |  Deliver Message  |
     |                                |                                 |                                  |                |------------------>|
     |                                |                                 |                                  |                |                   |
