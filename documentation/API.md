@@ -301,7 +301,7 @@ This class is an implementation of the [Parameter Object](http://c2.com/cgi/wiki
 -	[set_limit](#queryset_limit)
 -	[set_resultset](#queryset_resultset)
 -	[set_include](#queryset_include)
--	[set_key](#queryset_key)
+-	[set_key](#queryset_keys)
 -	[set_keys](#queryset_keys)
 -	[set_fields](#queryset_fields)
 -	[set_session](#queryset_session)
@@ -1233,7 +1233,7 @@ It is encouraged that any implementation of this interface **SHOULD** be of an a
 -	[create](#repositorycreate)
 -	[read](#repositoryread)
 -	[update](#repositoryupdate)
--	[destroy](#repositorystartdestroy)
+-	[destroy](#repositorydestroy)
 -	[set_logger](#repositoryset_logger)
 
 #### Repository::start
@@ -1779,7 +1779,7 @@ n/a
 
 [C++ Standard](https://isocpp.org/std/the-standard) - The current ISO C++ standard is officially known as ISO International Standard ISO/IEC 14882:2014(E) – Programming Language C++. Want to read the ISO C++ standard, or working drafts of the standard? You have several options, most of them free.
 
-[C++ Reference](en.cppreference.com/) - Comprehensive C++ and Standard Template Library (STL) reference.
+[C++ Reference](http://en.cppreference.com/) - Comprehensive C++ and Standard Template Library (STL) reference.
 
 [Effective STL](https://www.amazon.com/Effective-STL-Specific-Standard-Template/dp/0201749629) - Written for the intermediate or advanced C++ programmer, renowned C++ expert Scott Meyers provides essential techniques for getting more out of the Standard Template Library in Effective STL, a tutorial for doing more with this powerful library.
 
