@@ -1,7 +1,15 @@
 Overview
 --------
 
-This document sets out the expected coding style from those who work on this project. With this standard we will maintain a readable codebase that can be easily cannibalised by new and old developers alike.
+This document sets out the expected coding style from who wish to participate in this project. With this standard we will maintain a readable codebase that can be easily cannibalised by new and old developers alike.
+
+To ensure the codebase meets this standard please install the supplied [GIT pre-commit](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) hook into your local copy. You're also required to install the [Artistic Style](http://astyle.sourceforge.net/) tool on your system for this hook to be successful.
+
+```
+cd restq/
+cp tool/git/pre-commit .git/hooks
+chmod +x .git/hooks/pre-commit
+```
 
 **most importantly:** "know when to be inconsistent -- sometimes the style guide just doesn't apply. When in doubt, use your best judgment. Look at other examples and decide what looks best. And don't hesitate to ask!" -- Guido van Rossum, Barry Warsaw, Nick Coghlan.
 
