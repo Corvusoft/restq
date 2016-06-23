@@ -45,9 +45,9 @@ RestQ exports a REpresentational State Transfer (REST) API which relies on a sta
 
 The framework implements [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations to present a clean consistent experience for the configuration of interrelated entities.
 
-All resources, with the exception of Message and Collection entities, may hold any number of generic properties presented to the exchange in a supported document format (see [add_format](API.md#exchangeadd_format)). These properties are persisted in the repository and can then be used with the filter functionality to discover data-sources (Queues) of interest.
+All resources, with the exception of Message and Collection entities, may hold any number of generic properties presented to the exchange in a supported document format (see [add_format](API.md#exchangeadd_format)). These properties are persisted in the repository and can then be used with the [filters](#filters) functionality to discover entities of interest.
 
-The exchange reserves a select number of property names for internal use and/or Queue/Subscription configuration. Altering these properties with invalid content will result in a 400 (Bad Request) error response status code.
+The exchange reserves a select number of property names for internal use and Queue/Subscription configuration. Altering these properties with invalid content will result in a 400 (Bad Request) error response status code.
 
 ### Resources
 
@@ -69,11 +69,11 @@ The queue resource represents the desired configuration for a message chain.
 
 | Property           | Type             | Description                                                                                    | Restriction | Default Value | Access     |
 |--------------------|:----------------:|------------------------------------------------------------------------------------------------|:-----------:|:-------------:|:----------:|
-| type               |      bytes       | Identifies the resource category.                                                              |  Internal   |     queue     | Read-Only  |
-| created            |     numeric      | Unix epoch holding creation timestamp.                                                         |  Internal   |      n/a      | Read-Only  |
-| modified           |     numeric      | Unix epoch maintaining modification timestamp.                                                 |  Internal   |      n/a      | Read-Only  |
-| revision           |      bytes       | Hash uniquely identifying this edition of the resource.                                        |  Internal   |      n/a      | Read-Only  |
-| origin             |      string      | Originating address of the client responsible for creation.                                    |  Internal   |      n/a      | Read-Only  |
+| type               |      bytes       | Identifies the resource category.                                                              |  Reserved   |     queue     | Read-Only  |
+| created            |     numeric      | Unix epoch holding creation timestamp.                                                         |  Reserved   |      n/a      | Read-Only  |
+| modified           |     numeric      | Unix epoch maintaining modification timestamp.                                                 |  Reserved   |      n/a      | Read-Only  |
+| revision           |      bytes       | Hash uniquely identifying this edition of the resource.                                        |  Reserved   |      n/a      | Read-Only  |
+| origin             |      string      | Originating address of the client responsible for creation.                                    |  Reserved   |      n/a      | Read-Only  |
 | message-limit      | unsigned integer | Maximum number of messages allowed on a Queue before rejection (Bad Request).                  |  Optional   |      100      | Read/Write |
 | message-size-limit | unsigned integer | Maximum allowed size in bytes of the message body before rejection (Request Entity Too Large). |  Optional   |     1024      | Read/Write |
 | subscription-limit | unsigned integer | Maximum number of subscriptions allowed on a Queue before rejection (Bad Request).             |  Optional   |      25       | Read/Write |
@@ -100,11 +100,11 @@ The subscription resource represents the desired configuration for a message con
 
 | Property | Type    | Description                                                         | Restriction | Default Value | Access     |
 |----------|:-------:|---------------------------------------------------------------------|:-----------:|:-------------:|:----------:|
-| type     |  bytes  | Identifies the resource category.                                   |  Internal   | subscription  | Read-Only  |
-| created  | numeric | Unix epoch holding creation timestamp.                              |  Internal   |      n/a      | Read-Only  |
-| modified | numeric | Unix epoch maintaining modification timestamp.                      |  Internal   |      n/a      | Read-Only  |
-| revision |  bytes  | Hash uniquely identifying this edition of the resource.             |  Internal   |      n/a      | Read-Only  |
-| origin   | string  | Originating address of the client responsible for creation.         |  Internal   |      n/a      | Read-Only  |
+| type     |  bytes  | Identifies the resource category.                                   |  Reserved   | subscription  | Read-Only  |
+| created  | numeric | Unix epoch holding creation timestamp.                              |  Reserved   |      n/a      | Read-Only  |
+| modified | numeric | Unix epoch maintaining modification timestamp.                      |  Reserved   |      n/a      | Read-Only  |
+| revision |  bytes  | Hash uniquely identifying this edition of the resource.             |  Reserved   |      n/a      | Read-Only  |
+| origin   | string  | Originating address of the client responsible for creation.         |  Reserved   |      n/a      | Read-Only  |
 | endpoint |   uri   | Uniform Resource Identifier describing how to contact the consumer. |  Mandatory  |      n/a      | Read/Write |
 
 #### Subscriptions Collection

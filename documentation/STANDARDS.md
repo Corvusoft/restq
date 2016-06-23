@@ -106,7 +106,7 @@ string name = String::empty;
 -	Class getter/setter accessor methods **must not** return non-const pointers/references.
 -	There **must** be **no** using namespace declarations in class header files.
 -	Forward declarations are favoured over `#include` within class header files; with the exception of the standard template library.
--	Empty method bodies (when unavoidable) shall be marked with a single return.
+-	Empty method bodies (when unavoidable) *shall* be marked with a single return.
 -	Public classes **must** implement an [opaque pointer](http://en.wikipedia.org/wiki/Opaque_pointer).
 -	Class names **must** start each word boundary with an UPPERCASED letter.
 
@@ -177,7 +177,7 @@ struct HttpRequest
 -	Functions and Methods **must** use the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
 -	Functions and Methods **should** perform one mental operation which is reflected in their name.
 -	Function and Method declarations **should** avoid similar argument types.
--	It is recommended that Functions and Methods are no greater than 70 lines of code. If you find that the LOC exceed this limit, it may be an indication that it is performing more than one mental operation; see rule 2.
+-	It is recommended that Functions and Methods are no greater than 70 lines of code. If you find that the [LOC](https://en.wikipedia.org/wiki/Source_lines_of_code) exceed this limit, it may be an indication that it is performing more than one mental operation; see rule 2.
 
 ```C++
 int ping( Hostname hostname, Interface interface, int16_t port )
