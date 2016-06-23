@@ -1,7 +1,7 @@
 Overview
 --------
 
-This document is intended to accurately communicate the Application Programming Interface (API) exposed by the RestQ framework for public consumption. It does not go into detail regarding the [Network API](#NETWORK-API.md).
+This document is intended to accurately communicate the [Application Programming Interface (API)](https://en.wikipedia.org/wiki/Application_programming_interface) exposed by the RestQ framework for public consumption. It does not go into detail regarding the [Network API](#NETWORK-API.md).
 
 A description of the frameworks software architecture is provided by the [Design Overview](#DESIGN.md) documentation.
 
@@ -53,7 +53,7 @@ typedef std::multimap< std::string, Bytes > Resource;
 typedef std::list< Resource > Resources;
 ```
 
-Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources container having STL [list](http://en.cppreference.com/w/cpp/container/list) collection semantics.
+Resource represents an [associative array](http://en.cppreference.com/w/cpp/container/multimap) allowing multiple duplicate key-value pairs. This type definition is the primary data-structure used throughout to represent RESTful resources. Container functionality is provided via the Resources collection exporting STL [list](http://en.cppreference.com/w/cpp/container/list) semantics.
 
 ### StatusCode
 
@@ -99,9 +99,9 @@ Parses a string and attempts to validate if it holds a representation of an [int
 
 ##### Parameters
 
-| parameter | type                                                                | default value | direction |
-|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -121,9 +121,9 @@ Parses a string and attempts to validate if it holds a representation of a numer
 
 ##### Parameters
 
-| parameter | type                                                                | default value | direction |
-|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -143,9 +143,9 @@ Parses a string, ignoring case, and attempts to validate if it holds the represe
 
 ##### Parameters
 
-| parameter | type                                                                | default value | direction |
-|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -165,10 +165,10 @@ Removes matching characters from the front and rear of the supplied string value
 
 ##### Parameters
 
-| parameter | type                                                                | default value                        | direction |
-|:---------:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
+| name  | type                                                                | default value                        | direction |
+|:-----:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
+| range | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
 
 ##### Return Value
 
@@ -188,10 +188,10 @@ Removes matching characters from the front of the supplied string value.
 
 ##### Parameters
 
-| parameter | type                                                                | default value                        | direction |
-|:---------:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
+| name  | type                                                                | default value                        | direction |
+|:-----:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
+| range | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
 
 ##### Return Value
 
@@ -211,10 +211,10 @@ Removes matching characters from the rear of the supplied string value.
 
 ##### Parameters
 
-| parameter | type                                                                | default value                        | direction |
-|:---------:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
-|   range   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
+| name  | type                                                                | default value                        | direction |
+|:-----:|---------------------------------------------------------------------|:------------------------------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |                 n/a                  |   input   |
+| range | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) | space, tab, carriage return, newline |   input   |
 
 ##### Return Value
 
@@ -319,9 +319,9 @@ Initialises a new class instance, if a [Session](#session) is supplied it will b
 
 ##### Parameters
 
-| parameter | type                | default value | direction |
-|:---------:|---------------------|:-------------:|:---------:|
-|   value   | [Session](#session) |      n/a      |   input   |
+| name  | type                | default value | direction |
+|:-----:|---------------------|:-------------:|:---------:|
+| value | [Session](#session) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -645,9 +645,9 @@ Replaces the contents of the query error status; see also [get_error_code](#get_
 
 ##### Parameters
 
-| parameter | type                                                   | default value | direction |
-|:---------:|--------------------------------------------------------|:-------------:|:---------:|
-|   value   | [int](http://en.cppreference.com/w/cpp/language/types) |      n/a      |   input   |
+| name  | type                                                   | default value | direction |
+|:-----:|--------------------------------------------------------|:-------------:|:---------:|
+| value | [int](http://en.cppreference.com/w/cpp/language/types) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -671,9 +671,9 @@ In conjunction with the [set_limit](#set_limit) method, it is possible to page t
 
 ##### Parameters
 
-| parameter | type                                                         | default value | direction |
-|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
-|   start   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
+| name  | type                                                         | default value | direction |
+|:-----:|--------------------------------------------------------------|:-------------:|:---------:|
+| start | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -697,9 +697,9 @@ In conjunction with the [set_index](#set_index) method, it is possible to page t
 
 ##### Parameters
 
-| parameter | type                                                         | default value | direction |
-|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
-|   stop    | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
+| name | type                                                         | default value | direction |
+|:----:|--------------------------------------------------------------|:-------------:|:---------:|
+| stop | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -719,9 +719,9 @@ Replaces the contents of the query's result set; see also [get_resultset](#get_r
 
 ##### Parameters
 
-| parameter | type                                   | default value | direction |
-|:---------:|----------------------------------------|:-------------:|:---------:|
-|  values   | [restq::Resources](#resourceresources) |      n/a      |   input   |
+| name   | type                                   | default value | direction |
+|:------:|----------------------------------------|:-------------:|:---------:|
+| values | [restq::Resources](#resourceresources) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -775,11 +775,11 @@ The key search criteria indicates that only records with a matching key may be r
 
 ##### Parameters
 
-| parameter | type                                                                | default value | direction |
-|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [restq::Bytes](#bytebytes)                                          |      n/a      |   input   |
-|   value   | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
-|  values   | [std::vector](http://en.cppreference.com/w/cpp/container/vector)    |      n/a      |   input   |
+| name   | type                                                                | default value | direction |
+|:------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value  | [restq::Bytes](#bytebytes)                                          |      n/a      |   input   |
+| value  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| values | [std::vector](http://en.cppreference.com/w/cpp/container/vector)    |      n/a      |   input   |
 
 ##### Return Value
 
@@ -801,9 +801,9 @@ The fields search criteria indicates which fields (columns) should be returned.
 
 ##### Parameters
 
-| parameter | type                                                       | default value | direction |
-|:---------:|------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) |      n/a      |   input   |
+| name  | type                                                       | default value | direction |
+|:-----:|------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::set](http://en.cppreference.com/w/cpp/container/set) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -825,9 +825,9 @@ Altering the client session property outside of the exchange will lead to undefi
 
 ##### Parameters
 
-| parameter | type                                                       | default value | direction |
-|:---------:|------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::set](http://en.cppreference.com/w/cpp/container/set) |      n/a      |   input   |
+| name  | type                                                       | default value | direction |
+|:-----:|------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::set](http://en.cppreference.com/w/cpp/container/set) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -866,11 +866,11 @@ m_repository->read( query, ... );
 
 ##### Parameters
 
-| parameter | type                                                                 | default value | direction |
-|:---------:|----------------------------------------------------------------------|:-------------:|:---------:|
-|   name    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)  |      n/a      |   input   |
-|   value   | [restq::Bytes](#bytebytes)                                           |      n/a      |   input   |
-|  values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
+| name   | type                                                                 | default value | direction |
+|:------:|----------------------------------------------------------------------|:-------------:|:---------:|
+|  name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)  |      n/a      |   input   |
+| value  | [restq::Bytes](#bytebytes)                                           |      n/a      |   input   |
+| values | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -909,11 +909,11 @@ m_repository->read( query, ... );
 
 ##### Parameters
 
-| parameter | type                                                                 | default value | direction |
-|:---------:|----------------------------------------------------------------------|:-------------:|:---------:|
-|   name    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)  |      n/a      |   input   |
-|   value   | [restq::Bytes](#bytebytes)                                           |      n/a      |   input   |
-|  values   | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
+| name   | type                                                                 | default value | direction |
+|:------:|----------------------------------------------------------------------|:-------------:|:---------:|
+|  name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)  |      n/a      |   input   |
+| value  | [restq::Bytes](#bytebytes)                                           |      n/a      |   input   |
+| values | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1034,9 +1034,9 @@ Internally this value is compared with the number of pending messages awaiting d
 
 ##### Parameters
 
-| parameter | type                                                         | default value | direction |
-|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
+| name  | type                                                         | default value | direction |
+|:-----:|--------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1058,9 +1058,9 @@ When creating a new message on a queue this value is consulted and if breached c
 
 ##### Parameters
 
-| parameter | type                                                         | default value | direction |
-|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
+| name  | type                                                         | default value | direction |
+|:-----:|--------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1082,9 +1082,9 @@ Internally this value is compared with the number of consumers currently subscri
 
 ##### Parameters
 
-| parameter | type                                                         | default value | direction |
-|:---------:|--------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
+| name  | type                                                         | default value | direction |
+|:-----:|--------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1116,9 +1116,9 @@ Parses a [restq::Byte](#bytebytes) sequence containing a document structure; see
 
 ##### Parameters
 
-| parameter | type                      | default value | direction |
-|:---------:|---------------------------|:-------------:|:---------:|
-| document  | [restq::Byte](#bytebytes) |      n/a      |   input   |
+| name     | type                      | default value | direction |
+|:--------:|---------------------------|:-------------:|:---------:|
+| document | [restq::Byte](#bytebytes) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1138,10 +1138,10 @@ Exception safe parsing of a [restq::Byte](#bytebytes) sequence containing a docu
 
 ##### Parameters
 
-| parameter | type                                  | default value | direction |
-|:---------:|---------------------------------------|:-------------:|:---------:|
-| document  | [restq::Byte](#bytebytes)             |      n/a      |   input   |
-|  values   | [restq::Resoures](#resourceresources) |      n/a      |  output   |
+| name     | type                                  | default value | direction |
+|:--------:|---------------------------------------|:-------------:|:---------:|
+| document | [restq::Byte](#bytebytes)             |      n/a      |   input   |
+|  values  | [restq::Resoures](#resourceresources) |      n/a      |  output   |
 
 ##### Return Value
 
@@ -1163,10 +1163,10 @@ An optional argument switch is provided to allow styling documents into more hum
 
 ##### Parameters
 
-| parameter | type                                                    | default value | direction |
-|:---------:|---------------------------------------------------------|:-------------:|:---------:|
-|  values   | [restq::Resoures](#resourceresources)                   |      n/a      |   input   |
-|  styled   | [bool](http://en.cppreference.com/w/cpp/language/types) |     false     |   input   |
+| name   | type                                                    | default value | direction |
+|:------:|---------------------------------------------------------|:-------------:|:---------:|
+| values | [restq::Resoures](#resourceresources)                   |      n/a      |   input   |
+| styled | [bool](http://en.cppreference.com/w/cpp/language/types) |     false     |   input   |
 
 ##### Return Value
 
@@ -1208,9 +1208,9 @@ Replace the logger instance.
 
 ##### Parameters
 
-| parameter | type                     | default value | direction |
-|:---------:|--------------------------|:-------------:|:---------:|
-|   value   | [restq::Logger](#logger) |      n/a      |   input   |
+| name  | type                     | default value | direction |
+|:-----:|--------------------------|:-------------:|:---------:|
+| value | [restq::Logger](#logger) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1250,9 +1250,9 @@ After this method has returned the instance **MUST** be ready to start receiving
 
 ##### Parameters
 
-| parameter | type                         | default value | direction |
-|:---------:|------------------------------|:-------------:|:---------:|
-|   value   | [restq::Settings](#settings) |      n/a      |   input   |
+| name  | type                         | default value | direction |
+|:-----:|------------------------------|:-------------:|:---------:|
+| value | [restq::Settings](#settings) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1294,11 +1294,11 @@ Create one or more resources; see also [Resources](#resourceresources) and [Quer
 
 ##### Parameters
 
-| parameter | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-|  values   | [restq::Resources](#resourceresources)                                        |      n/a      |   input   |
-|   query   | [restq::Query](#query)                                                        |      n/a      |   input   |
-| callback  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| name     | type                                                                          | default value | direction |
+|:--------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|  values  | [restq::Resources](#resourceresources)                                        |      n/a      |   input   |
+|  query   | [restq::Query](#query)                                                        |      n/a      |   input   |
+| callback | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1319,10 +1319,10 @@ Read one or more resources; see also [Query](#query).
 
 ##### Parameters
 
-| parameter | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-|   query   | [restq::Query](#query)                                                        |      n/a      |   input   |
-| callback  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| name     | type                                                                          | default value | direction |
+|:--------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|  query   | [restq::Query](#query)                                                        |      n/a      |   input   |
+| callback | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1344,7 +1344,7 @@ Update one or more resources; see also [Resource](#resourceresources) and [Query
 
 ##### Parameters
 
-| parameter | type                                                                          | default value | direction |
+| name      | type                                                                          | default value | direction |
 |:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
 | changeset | [restq::Resource](#resourceresources)                                         |      n/a      |   input   |
 |   query   | [restq::Query](#query)                                                        |      n/a      |   input   |
@@ -1369,10 +1369,10 @@ Delete one or more resources; see also [Query](#query).
 
 ##### Parameters
 
-| parameter | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-|   query   | [restq::Query](#query)                                                        |      n/a      |   input   |
-| callback  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| name     | type                                                                          | default value | direction |
+|:--------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|  query   | [restq::Query](#query)                                                        |      n/a      |   input   |
+| callback | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1390,9 +1390,9 @@ virtual void set_logger( const std::shared_ptr< Logger >& value ) = 0;
 
 ##### Parameters
 
-| parameter | type                     | default value | direction |
-|:---------:|--------------------------|:-------------:|:---------:|
-|   value   | [restq::Logger](#logger) |      n/a      |   input   |
+| name  | type                     | default value | direction |
+|:-----:|--------------------------|:-------------:|:---------:|
+| value | [restq::Logger](#logger) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1430,9 +1430,9 @@ After this method has returned the instance **MUST** be ready to start receiving
 
 ##### Parameters
 
-| parameter | type                         | default value | direction |
-|:---------:|------------------------------|:-------------:|:---------:|
-|   value   | [restq::Settings](#settings) |      n/a      |   input   |
+| name  | type                         | default value | direction |
+|:-----:|------------------------------|:-------------:|:---------:|
+| value | [restq::Settings](#settings) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1476,11 +1476,11 @@ See [printf](http://en.cppreference.com/w/cpp/io/c/fprintf) family of functions 
 
 ##### Parameters
 
-| parameter | type                                                                        | default value | direction |
-|:---------:|-----------------------------------------------------------------------------|:-------------:|:---------:|
-|   level   | [restq::Logger::Level](#loggerlevel)                                        |      n/a      |   input   |
-|  format   | [char\*](http://en.cppreference.com/w/cpp/language/types)                   |      n/a      |   input   |
-|    ...    | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) |      n/a      |   input   |
+| name   | type                                                                        | default value | direction |
+|:------:|-----------------------------------------------------------------------------|:-------------:|:---------:|
+| level  | [restq::Logger::Level](#loggerlevel)                                        |      n/a      |   input   |
+| format | [char\*](http://en.cppreference.com/w/cpp/language/types)                   |      n/a      |   input   |
+|  ...   | [variadic argument list](http://en.cppreference.com/w/cpp/utility/variadic) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1603,9 +1603,9 @@ When the exchange starts it publishes queue, subscription, and message resources
 
 ##### Parameters
 
-| parameter | type                         | default value | direction |
-|:---------:|------------------------------|:-------------:|:---------:|
-|   value   | [restq::Settings](#settings) |      n/a      |   input   |
+| name  | type                         | default value | direction |
+|:-----:|------------------------------|:-------------:|:---------:|
+| value | [restq::Settings](#settings) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1645,9 +1645,9 @@ Restart the exchange, this is equivalent to calling [stop](#exchangestop) and th
 
 ##### Parameters
 
-| parameter | type                         | default value | direction |
-|:---------:|------------------------------|:-------------:|:---------:|
-|   value   | [restq::Settings](#settings) |      n/a      |   input   |
+| name  | type                         | default value | direction |
+|:-----:|------------------------------|:-------------:|:---------:|
+| value | [restq::Settings](#settings) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1692,10 +1692,10 @@ Inform the exchange to invoke the signal handler on receiving the specified syst
 
 ##### Parameters
 
-| parameter | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-|  signal   | [int](http://en.cppreference.com/w/cpp/language/types)                        |      n/a      |   input   |
-|   value   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| name   | type                                                                          | default value | direction |
+|:------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| signal | [int](http://en.cppreference.com/w/cpp/language/types)                        |      n/a      |   input   |
+| value  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1715,9 +1715,9 @@ Replace the logger to be used by the exchange; see also [Logger](#logger).
 
 ##### Parameters
 
-| parameter | type              | default value | direction |
-|:---------:|-------------------|:-------------:|:---------:|
-|   value   | [Logger](#logger) |      n/a      |   input   |
+| name  | type              | default value | direction |
+|:-----:|-------------------|:-------------:|:---------:|
+| value | [Logger](#logger) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1737,9 +1737,9 @@ Replace the repository to be used by the exchange; see also [Repository](#reposi
 
 ##### Parameters
 
-| parameter | type                      | default value | direction |
-|:---------:|---------------------------|:-------------:|:---------:|
-|   value   | [Repository](#repository) |      n/a      |   input   |
+| name  | type                      | default value | direction |
+|:-----:|---------------------------|:-------------:|:---------:|
+| value | [Repository](#repository) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1763,9 +1763,9 @@ The callback specified in value will be invoked once the service is online and r
 
 ##### Parameters
 
-| parameter | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-|   value   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| name  | type                                                                          | default value | direction |
+|:-----:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
