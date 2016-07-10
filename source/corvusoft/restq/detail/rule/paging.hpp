@@ -55,11 +55,8 @@ namespace restq
                 {
                     const auto request = session->get_request( );
                     
-                    size_t index = 0;
-                    request->get_query_parameter( "index", index, numeric_limits< size_t >::min( ) );
-                    
-                    size_t limit = 0;
-                    request->get_query_parameter( "limit", limit, numeric_limits< size_t >::max( ) );
+                    size_t index = request->get_query_parameter( "index", numeric_limits< size_t >::min( ) );
+                    size_t limit = request->get_query_parameter( "limit", numeric_limits< size_t >::max( ) );
                     
                     session->set( "paging", make_pair( index, limit ) );
                     callback( session );

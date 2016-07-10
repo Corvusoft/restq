@@ -341,6 +341,7 @@ namespace restq
         {
             const auto request = session->get_request( );
             
+            //not request->has_header( "Content-Type" );
             if ( request->get_header( "Content-Type" ).empty( ) )
             {
                 return ErrorHandlerImpl::unsupported_media_type( "The exchange is only capable of processing request entities which have content characteristics not supported according to the content-type header sent in the request.", session );
@@ -897,8 +898,7 @@ namespace restq
             }
             
             const auto request = session->get_request( );
-            auto message_size_limit = numeric_limits< unsigned long >::min( );
-            request->get_header( "Content-Length", message_size_limit );
+            auto message_size_limit = request->get_header( "Content-Length", numeric_limits< unsigned long >::min( ) );
             
             query->clear( );
             query->set_session( session );
