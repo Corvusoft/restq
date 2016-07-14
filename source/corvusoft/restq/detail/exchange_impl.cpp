@@ -40,7 +40,6 @@ using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
 using std::placeholders::_1;
-using std::chrono::system_clock;
 
 //Project Namespaces
 
@@ -52,8 +51,7 @@ namespace restq
 {
     namespace detail
     {
-        ExchangeImpl::ExchangeImpl( void ) : m_boot_time( 0 ),
-            m_logger( nullptr ),
+        ExchangeImpl::ExchangeImpl( void ) : m_logger( nullptr ),
             m_repository( nullptr ),
             m_settings( nullptr ),
             m_service( make_shared< restbed::Service >( ) ),
@@ -117,7 +115,6 @@ namespace restq
             DispatchImpl::set_service( m_service );
             DispatchImpl::set_repository( m_repository );
             
-            m_boot_time = system_clock::to_time_t( system_clock::now( ) );
             m_service->schedule( DispatchImpl::route );
             m_service->start( settings );
         }
@@ -654,13 +651,11 @@ namespace restq
             mem_status( memory_status );
             const float memory_usage = memory_status.used_mem / memory_status.total_mem * 100;
             
-            const auto boot_time = system_clock::to_time_t( system_clock::now( ) ) - m_boot_time;
-            
             multimap< string, string > headers
             {
                 { "Allow", "OPTIONS" },
                 { "Date", Date::make( ) },
-                { "Uptime", ::to_string( boot_time ) },
+                { "Uptime", ::to_string( m_service->get_uptime( ).count( ) ) },
                 { "Workers", ::to_string( m_settings->get_worker_limit( ) ) },
                 { "CPU", String::format( "%.1f%%", cpu_usage ) },
                 { "Memory", String::format( "%.1f%%", memory_usage ) }

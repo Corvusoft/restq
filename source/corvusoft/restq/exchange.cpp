@@ -60,8 +60,6 @@ namespace restq
     
     void Exchange::stop( void )
     {
-        m_pimpl->m_boot_time = 0;
-        
         if ( m_pimpl->m_service not_eq nullptr )
         {
             m_pimpl->m_service->stop( );
@@ -124,7 +122,7 @@ namespace restq
     
     void Exchange::add_format( const string& media_type, const shared_ptr< Formatter >& value )
     {
-        if ( m_pimpl->m_boot_time )
+        if ( m_pimpl->m_service->is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the exchange are prohibited." );
         }
@@ -139,7 +137,7 @@ namespace restq
     
     void Exchange::add_signal_handler( const int signal, const function< void ( const int ) >& value )
     {
-        if ( m_pimpl->m_boot_time )
+        if ( m_pimpl->m_service->is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the exchange are prohibited." );
         }
@@ -152,7 +150,7 @@ namespace restq
     
     void Exchange::set_logger( const shared_ptr< Logger >& value )
     {
-        if ( m_pimpl->m_boot_time )
+        if ( m_pimpl->m_service->is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the exchange are prohibited." );
         }
@@ -162,7 +160,7 @@ namespace restq
     
     void Exchange::set_repository( const shared_ptr< Repository >& value )
     {
-        if ( m_pimpl->m_boot_time )
+        if ( m_pimpl->m_service->is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the exchange are prohibited." );
         }
@@ -177,7 +175,7 @@ namespace restq
     
     void Exchange::set_ready_handler( const function< void ( Exchange& ) >& value )
     {
-        if ( m_pimpl->m_boot_time )
+        if ( m_pimpl->m_service->is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the exchange are prohibited." );
         }

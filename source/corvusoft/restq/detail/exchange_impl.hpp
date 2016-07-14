@@ -7,7 +7,6 @@
 
 //System Includes
 #include <map>
-#include <ctime>
 #include <string>
 #include <memory>
 #include <utility>
@@ -65,8 +64,6 @@ namespace restq
                 //Operators
                 
                 //Properties
-                std::time_t m_boot_time;
-                
                 std::shared_ptr< Logger > m_logger;
                 
                 std::shared_ptr< Repository > m_repository;
