@@ -632,14 +632,15 @@ While this approach duplicates data with respect to queue and subscription prope
 
 Message state structures can hold one of the following conditions.
 
-| Condition  | Description                                           |
-|------------|-------------------------------------------------------|
-| pending    | Message is awaiting delivery.                         |
-| in-flight  | Message is currently being processed by the exchange. |
-| dispatched | Message has been accepted by the consumer.            |
-| rejected   | Message was rejected by the consumer.                 |
+| Condition     | Description                                           |
+|---------------|-------------------------------------------------------|
+| pending       | Message is awaiting delivery.                         |
+| in-flight     | Message is currently being processed by the exchange. |
+| dispatched    | Message has been accepted by the consumer.            |
+| rejected      | Message was rejected by the consumer.                 |
+| unreachable   | Message consumer could not be contacted.              |
 
-A message and its associated states are not purged from the exchange until all state entities have recorded a dispatched or rejected condition.
+A message and its associated states are not purged from the exchange until all state entities have recorded a dispatched, rejected or unreachable condition. The unreachable condition is set when the queues max-delivery-attempts is exceeded.
 
 Ruleset
 -------
