@@ -398,7 +398,7 @@ void STLRepository::filter( Resources& resources, const multimap< string, Bytes 
         
         if ( failed and not exclusive_filters.empty( ) )
         {
-            resources.erase( resource );
+            resource = resources.erase( resource );
             continue;
         }
         
@@ -448,7 +448,7 @@ void STLRepository::filter( Resources& resources, const multimap< string, Bytes 
         
         if ( failed )
         {
-            resources.erase( resource );
+            resource = resources.erase( resource );
         }
     }
 }
