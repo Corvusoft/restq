@@ -74,6 +74,7 @@ The queue resource represents the desired configuration for a message chain.
 | modified              |     numeric      | Unix epoch maintaining modification timestamp.                                                              |  Reserved   |      n/a      | Read-Only  |
 | revision              |      bytes       | Hash uniquely identifying this edition of the resource.                                                     |  Reserved   |      n/a      | Read-Only  |
 | origin                |      string      | Originating address of the client responsible for creation.                                                 |  Reserved   |      n/a      | Read-Only  |
+| pattern               |      string      | Indicates the Queues message paradigm.                                                                      |  Reserved   |    pub-sub    | Read-Only  |
 | message-limit         | unsigned integer | Maximum number of messages allowed on a Queue before rejection (Bad Request).                               |  Optional   |      100      | Read/Write |
 | message-size-limit    | unsigned integer | Maximum allowed size in bytes of the message body before rejection (Request Entity Too Large).              |  Optional   |     1024      | Read/Write |
 | subscription-limit    | unsigned integer | Maximum number of subscriptions allowed on a Queue before rejection (Bad Request).                          |  Optional   |      25       | Read/Write |
