@@ -151,7 +151,7 @@ namespace restq
             
             if ( type == QUEUE )
             {
-                //value.insert( make_pair( "pattern", "pub-sub" ) );
+                value.insert( make_pair( "pattern", String::to_bytes( "pub-sub" ) ) );
                 
                 const auto message_limit = String::to_bytes( ::to_string( m_settings->get_default_queue_message_limit( ) ) );
                 

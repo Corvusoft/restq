@@ -114,14 +114,19 @@ namespace restq
                     {
                         stoul( String::to_string( value.lower_bound( "subscription-limit" )->second ) );
                     }
+
+                    if ( value.count( "pattern" ) and "pub-sub" not_eq String::to_string( value.lower_bound( "pattern" )->second ) )
+                    {
+                       return true;
+                    }
                 }
                 catch ( const invalid_argument& ia )
                 {
-                    return false;
+                    return true;
                 }
                 catch ( const out_of_range& ofr )
                 {
-                    return false;
+                    return true;
                 }
             }
             

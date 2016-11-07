@@ -177,8 +177,10 @@ namespace restq
                         }
                         else
                         {
-                            //change.insert( make_pair( "delivery-attempts", 1 ) );
+                            //get current delivery-attempts, if attempts greater or equal-to max-delivery-attempts ditch, else deliver
+                            //change.insert( make_pair( "delivery-attempts", 1+ ) );
                             //status = PENDING; //need to implement circuit-breaker first. //status == FAILED, delay?
+                            //deactive subscription. Subscription::state = UNREACHABLE?????
                             return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
                         }
                         
