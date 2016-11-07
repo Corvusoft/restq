@@ -151,7 +151,7 @@ namespace restq
             
             if ( type == QUEUE )
             {
-                // value.insert( make_pair( "pattern", "pub-sub" ) );
+                //value.insert( make_pair( "pattern", "pub-sub" ) );
                 
                 const auto message_limit = String::to_bytes( ::to_string( m_settings->get_default_queue_message_limit( ) ) );
                 
@@ -211,7 +211,7 @@ namespace restq
             
             for ( const auto parameter : parameters )
             {
-                query += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
+                query += String::format( "%s=%.*s&", parameter.first.data( ), parameter.second.size( ), parameter.second.data( ) );
             }
             
             query = String::trim_lagging( query, "&" );
