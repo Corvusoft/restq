@@ -371,7 +371,7 @@ Resources STLRepository::fields( const Resources& values, const shared_ptr< Quer
 
 void STLRepository::filter( Resources& resources, const multimap< string, Bytes >& inclusive_filters, const multimap< string, Bytes >& exclusive_filters ) const
 {
-    for ( auto resource = resources.begin( ); resource not_eq resources.end( ); resource++ )
+    for ( auto resource = resources.begin( ); resource not_eq resources.end( ); )
     {
         bool failed = true;
         
@@ -406,6 +406,7 @@ void STLRepository::filter( Resources& resources, const multimap< string, Bytes 
         
         if ( inclusive_filters.empty( ) )
         {
+            resource++;
             continue;
         }
         
@@ -449,6 +450,10 @@ void STLRepository::filter( Resources& resources, const multimap< string, Bytes 
         if ( failed )
         {
             resource = resources.erase( resource );
+        }
+        else
+        {
+            resource++;
         }
     }
 }
