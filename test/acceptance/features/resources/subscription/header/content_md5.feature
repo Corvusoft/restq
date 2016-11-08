@@ -44,7 +44,7 @@ Feature: Content-MD5 entity-header field
         And I should see a "Date" header value
         And I should see a "Content-MD5" header value
         And I should see a "Server" header value "corvusoft/restq"
-        And I should see a "Content-Length" header value "210"
+        And I should see a "Content-Length" header value "230"
         And I should see a "Connection" header value "close"
         And I should see a "Allow" header value "GET,PUT,HEAD,DELETE,OPTIONS"
         And I should see a "Accept-Ranges" header value "none"
@@ -100,7 +100,7 @@ Feature: Content-MD5 entity-header field
         And I should see a "Date" header value
         And I should see a "Content-MD5" header value
         And I should see a "Server" header value "corvusoft/restq"
-        And I should see a "Content-Length" header value "210"
+        And I should see a "Content-Length" header value "230"
         And I should see a "Connection" header value "close"
         And I should see a "Allow" header value "GET,PUT,HEAD,DELETE,OPTIONS"
         And I should see a "Accept-Ranges" header value "none"
@@ -156,7 +156,7 @@ Feature: Content-MD5 entity-header field
         And I should see a "Date" header value
         And I should see a "Content-MD5" header value
         And I should see a "Server" header value "corvusoft/restq"
-        And I should see a "Content-Length" header value "210"
+        And I should see a "Content-Length" header value "230"
         And I should see a "Connection" header value "close"
         And I should see a "Allow" header value "GET,PUT,HEAD,DELETE,OPTIONS"
         And I should see a "Accept-Ranges" header value "none"

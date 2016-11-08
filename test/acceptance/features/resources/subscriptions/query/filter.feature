@@ -20,7 +20,7 @@ Feature: Filter Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "212"
+        And I should see a "Content-Length" header value "232"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -71,7 +71,7 @@ Feature: Filter Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "222"
+        And I should see a "Content-Length" header value "242"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -123,7 +123,7 @@ Feature: Filter Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "237"
+        And I should see a "Content-Length" header value "257"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -313,7 +313,7 @@ Feature: Filter Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "212"
+        And I should see a "Content-Length" header value "232"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -364,7 +364,7 @@ Feature: Filter Query
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "222"
+        And I should see a "Content-Length" header value "242"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value

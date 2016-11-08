@@ -95,6 +95,16 @@ namespace restq
                 {
                     return true;
                 }
+                
+                if ( value.count( "state" ) )
+                {
+                    const auto state = String::lowercase( String::to_string( value.lower_bound( "state" )->second ) );
+                    
+                    if ( state not_eq "reachable" or state not_eq "unreachable" )
+                    {
+                        return true;
+                    }
+                }
             }
             else if ( type == QUEUE )
             {
@@ -114,10 +124,10 @@ namespace restq
                     {
                         stoul( String::to_string( value.lower_bound( "subscription-limit" )->second ) );
                     }
-
-                    if ( value.count( "pattern" ) and "pub-sub" not_eq String::to_string( value.lower_bound( "pattern" )->second ) )
+                    
+                    if ( value.count( "pattern" ) and "pub-sub" not_eq String::lowercase( String::to_string( value.lower_bound( "pattern" )->second ) ) )
                     {
-                       return true;
+                        return true;
                     }
                 }
                 catch ( const invalid_argument& ia )

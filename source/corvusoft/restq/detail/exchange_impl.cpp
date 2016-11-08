@@ -174,6 +174,13 @@ namespace restq
                     value.insert( make_pair( "subscription-limit", subscription_limit ) );
                 }
             }
+            else if ( type == SUBSCRIPTION )
+            {
+                if ( not value.count( "state" ) )
+                {
+                    value.insert( make_pair( "state", String::to_bytes( "reachable" ) ) );
+                }
+            }
         }
         
         Resource ExchangeImpl::make_message( const shared_ptr< Session >& session ) const
