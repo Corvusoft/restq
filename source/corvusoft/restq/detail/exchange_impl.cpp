@@ -916,6 +916,7 @@ namespace restq
             query->clear( );
             query->set_session( session );
             query->set_exclusive_filter( "type", SUBSCRIPTION );
+            query->set_exclusive_filter( "state", String::to_bytes( "reachable" ) );
             
             for ( const auto& queue : queues )
             {
