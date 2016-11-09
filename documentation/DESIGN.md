@@ -357,6 +357,8 @@ Interface detailing the required contract for repository extensions. A repositor
 
 It is encouraged that any implementation of this interface **SHOULD** be of an asynchronous nature, to reduce thread contention within the exchange. This can be achieved with [MariaDB](https://mariadb.com/kb/en/mariadb/using-the-non-blocking-library/), [PostgreSQL](http://www.postgresql.org/docs/7.3/static/libpq-async.html), and other database products.
 
+It is also highly recommended that implementers put in place resource and query caching. Only probing the abstracted database when required during start-up and resource creation/modification.
+
 ```
  +-----------------------------------------+
  |             <<interface>>               |
