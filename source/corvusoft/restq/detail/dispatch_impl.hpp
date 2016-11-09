@@ -43,6 +43,8 @@ namespace restq
                 
                 static const Bytes INFLIGHT;
                 
+                static const Bytes SUSPENDED;
+                
                 static const Bytes DISPATCHED;
                 
                 static const Bytes UNREACHABLE;
@@ -50,7 +52,7 @@ namespace restq
                 //Constructors
                 
                 //Functionality
-                static void route( void );
+                static void route( const Bytes state );
                 
                 //Getters
                 
@@ -95,6 +97,8 @@ namespace restq
                 DispatchImpl( const DispatchImpl& original ) = delete;
                 
                 //Functionality
+                static void router( const std::shared_ptr< Query > query );
+                
                 static void log( const Logger::Level level, const std::string& message );
                 
                 //Getters

@@ -90,21 +90,23 @@ namespace restq
             
             void set_include( const Bytes& relationship );
             
-            void set_key( const Bytes& value );
+            void set_key( const Bytes& value ); //add_key
             
-            void set_key( const std::string& value );
+            void set_key( const std::string& value ); //add_key
             
             void set_keys( const std::vector< std::string >& values );
+            
+            //void add_field( const std::string& value );
             
             void set_fields( const std::set< std::string >& values );
             
             void set_session( const std::shared_ptr< Session >& value );
             
-            void set_inclusive_filter( const std::string& name, const Bytes& value );
+            void set_inclusive_filter( const std::string& name, const Bytes& value ); //add_inclusive_filter
             
             void set_inclusive_filters( const std::multimap< std::string, Bytes >& values );
             
-            void set_exclusive_filter( const std::string& name, const Bytes& value );
+            void set_exclusive_filter( const std::string& name, const Bytes& value ); //add_exclusive_filter
             
             void set_exclusive_filters( const std::multimap< std::string, Bytes >& values );
             

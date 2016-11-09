@@ -39,6 +39,7 @@ using std::to_string;
 using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
+using std::chrono::seconds;
 using std::placeholders::_1;
 
 //Project Namespaces
@@ -115,7 +116,8 @@ namespace restq
             DispatchImpl::set_service( m_service );
             DispatchImpl::set_repository( m_repository );
             
-            m_service->schedule( DispatchImpl::route );
+            m_service->schedule( bind( DispatchImpl::route, DispatchImpl::PENDING ) );
+            m_service->schedule( bind( DispatchImpl::route, DispatchImpl::SUSPENDED ), seconds( 1 ) );
             m_service->start( settings );
         }
         
@@ -864,7 +866,7 @@ namespace restq
                 }
                 
                 session->close( ACCEPTED, headers );
-                m_service->schedule( DispatchImpl::route );
+                m_service->schedule( bind( DispatchImpl::route, DispatchImpl::PENDING ) );
             } );
         }
         
