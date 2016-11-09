@@ -45,6 +45,8 @@ namespace restq
                 
                 static const Bytes DISPATCHED;
                 
+                static const Bytes UNREACHABLE;
+                
                 //Constructors
                 
                 //Functionality

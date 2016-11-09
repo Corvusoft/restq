@@ -4,7 +4,7 @@ Feature: Queue Message Limit
     In order to restrict the maximum allowed number of messages on a queue
     As a Queue owner
     I want support for limiting a queue's message capacity
-
+@wip
     Scenario Outline: Exceed message limit.
         Given I have started a message exchange
         And I perform a HTTP "POST" request to "/queues" with headers "Content-Type: application/json, Accept: application/json, Host: localhost:1984":

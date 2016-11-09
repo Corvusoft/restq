@@ -40,6 +40,7 @@ namespace restq
         const Bytes DispatchImpl::REJECTED = String::to_bytes( "rejected" );
         const Bytes DispatchImpl::INFLIGHT = String::to_bytes( "in-flight" );
         const Bytes DispatchImpl::DISPATCHED = String::to_bytes( "dispatched" );
+        const Bytes DispatchImpl::UNREACHABLE = String::to_bytes( "unreachable" );
         
         std::shared_ptr< Logger > DispatchImpl::m_logger = nullptr;
         
@@ -177,11 +178,35 @@ namespace restq
                         }
                         else
                         {
-                            //get current delivery-attempts, if attempts greater or equal-to max-delivery-attempts ditch, else deliver
-                            //change.insert( make_pair( "delivery-attempts", 1+ ) );
-                            //status = PENDING; //need to implement circuit-breaker first. //status == FAILED, delay?
-                            //deactive subscription. Subscription::state = UNREACHABLE?????
-                            return log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
+                            auto max_delivery_attempts = stoul( String::to_string( states.back( ).lower_bound( "max-delivery-attempts" )->second ) );
+                            
+                            if ( max_delivery_attempts > 1 )
+                            {
+                                change.insert( make_pair( "max-delivery-attempts", String::to_bytes( ::to_string( --max_delivery_attempts ) ) ) );
+                                status = PENDING;
+                                
+                                log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s', will redelivery at a later date.", message_key.data( ), subscription_key.data( ) ) );
+                            }
+                            else
+                            {
+                                log( Logger::WARNING, String::format( "Failed to dispatch message '%s' to subscription '%s'.", message_key.data( ), subscription_key.data( ) ) );
+                                
+                                auto subscription_query = make_shared< Query >( );
+                                subscription_query->set_key( subscription_key );
+                                subscription_query->set_exclusive_filter( "type", SUBSCRIPTION );
+                                
+                                static const Resource subscription_change = { { "state", String::to_bytes( "unreachable" ) } };
+                                
+                                m_repository->update( subscription_change, subscription_query, [ subscription_key ]( const shared_ptr< Query > query )
+                                {
+                                    if ( query->has_failed( ) )
+                                    {
+                                        log( Logger::WARNING, String::format( "Failed to update subscription '%s' state to 'unreachable'.", subscription_key.data( ) ) );
+                                    }
+                                } );
+                                
+                                status = UNREACHABLE;
+                            }
                         }
                         
                         change.insert( make_pair( "status", status ) );
@@ -193,7 +218,7 @@ namespace restq
                                 log( Logger::ERROR, "Failed to update transaction status to dispatched." );
                             }
                             
-                            if ( status == DISPATCHED or status == REJECTED ) //or status == FAILED
+                            if ( status == DISPATCHED or status == REJECTED or status == UNREACHABLE )
                             {
                                 m_repository->destroy( query, [ ]( const shared_ptr< Query > )
                                 {

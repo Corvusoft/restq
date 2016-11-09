@@ -371,7 +371,7 @@ namespace restq
             }
             
             query->set_include( STATE );
-            query->set_exclusive_filter( "type", QUEUE );
+            query->set_exclusive_filter( "type", QUEUE ); //set exclusive but include state? confusing no?
             
             m_repository->read( query, bind( &ExchangeImpl::create_message_and_read_queues_callback, this, _1 ) );
         }
@@ -892,7 +892,8 @@ namespace restq
                 else if ( type == STATE )
                 {
                     const auto key = String::lowercase( String::to_string( resource.lower_bound( "key" )->second ) );
-                    
+                    //we get the states back just to COUNT their number!!!! see count_if below.
+                    //this must go! m_repository->count( Query );
                     auto state = find_if( states.begin( ), states.end( ), [ &key ]( const Resource & state )
                     {
                         return key == String::lowercase( String::to_string( state.lower_bound( "key" )->second ) );
@@ -968,6 +969,8 @@ namespace restq
                 for ( const auto& queue : queues )
                 {
                     const auto queue_key = queue.lower_bound( "key" )->second;
+                    const auto redelivery_interval = queue.lower_bound( "redelivery-interval" )->second;
+                    const auto max_delivery_attempts = queue.lower_bound( "max-delivery-attempts" )->second;
                     
                     for ( auto property = properties.first; property not_eq properties.second; property++ )
                     {
@@ -978,6 +981,8 @@ namespace restq
                             state.insert( make_pair( "key", Key::make( ) ) );
                             state.insert( make_pair( "status", DispatchImpl::PENDING ) );
                             state.insert( make_pair( "queue-key", queue_key ) );
+                            state.insert( make_pair( "redelivery-interval", redelivery_interval ) );
+                            state.insert( make_pair( "max-delivery-attempts", max_delivery_attempts ) );
                             state.insert( message_key );
                             state.insert( subscription_key );
                             state.insert( subscription_endpoint );
