@@ -173,6 +173,16 @@ namespace restq
                 {
                     value.insert( make_pair( "subscription-limit", subscription_limit ) );
                 }
+                
+                if ( not value.count( "max-delivery-attempts" ) )
+                {
+                    value.insert( make_pair( "max-delivery-attempts", String::to_bytes( ::to_string( m_settings->get_default_queue_max_delivery_attempts( ) ) ) ) );
+                }
+                
+                if ( not value.count( "redelivery-interval" ) )
+                {
+                    value.insert( make_pair( "redelivery-interval", String::to_bytes( ::to_string( m_settings->get_default_queue_redelivery_interval( ).count( ) ) ) ) );
+                }
             }
             else if ( type == SUBSCRIPTION )
             {

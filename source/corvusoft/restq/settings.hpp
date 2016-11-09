@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <chrono>
 #include <string>
 #include <cstddef>
 
@@ -46,12 +47,20 @@ namespace restq
             
             std::size_t get_default_queue_subscription_limit( void ) const;
             
+            std::size_t get_default_queue_max_delivery_attempts( void ) const;
+            
+            std::chrono::seconds get_default_queue_redelivery_interval( void ) const;
+            
             //Setters
             void set_default_queue_message_limit( const std::size_t value );
             
             void set_default_queue_message_size_limit( const std::size_t value );
             
             void set_default_queue_subscription_limit( const std::size_t value );
+            
+            void set_default_queue_max_delivery_attempts( const std::size_t value );
+            
+            void set_default_queue_redelivery_interval( const std::chrono::seconds value );
             
             //Operators
             

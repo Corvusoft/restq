@@ -19,7 +19,7 @@ Feature: Supported Data-Types
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "319"
+        And I should see a "Content-Length" header value "370"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -69,7 +69,7 @@ Feature: Supported Data-Types
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "306"
+        And I should see a "Content-Length" header value "357"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -120,7 +120,7 @@ Feature: Supported Data-Types
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "291"
+        And I should see a "Content-Length" header value "342"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -172,7 +172,7 @@ Feature: Supported Data-Types
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "297"
+        And I should see a "Content-Length" header value "348"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value
@@ -223,7 +223,7 @@ Feature: Supported Data-Types
         Then I should see a response status code of "200" "OK"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "275"
+        And I should see a "Content-Length" header value "326"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "Date" header value

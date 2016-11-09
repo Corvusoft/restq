@@ -14,6 +14,7 @@
 
 //System Namespaces
 using std::string;
+using std::chrono::seconds;
 using std::chrono::milliseconds;
 
 //Project Namespaces
@@ -34,6 +35,8 @@ TEST_CASE( "validate default instance values", "[settings]" )
     REQUIRE( settings.get_default_queue_message_limit( ) == 100 );
     REQUIRE( settings.get_default_queue_message_size_limit( ) == 1024 );
     REQUIRE( settings.get_default_queue_subscription_limit( ) == 25 );
+    REQUIRE( settings.get_default_queue_max_delivery_attempts( ) == 3 );
+    REQUIRE( settings.get_default_queue_redelivery_interval( ) == seconds( 30 ) );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[settings]" )
@@ -55,6 +58,8 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_default_queue_message_limit( 1001 );
     settings.set_default_queue_message_size_limit( 19 );
     settings.set_default_queue_subscription_limit( 2 );
+    settings.set_default_queue_max_delivery_attempts( 20 );
+    settings.set_default_queue_redelivery_interval( seconds( 5 ) );
     
     REQUIRE( settings.get_port( ) == 1984 );
     REQUIRE( settings.get_root( ) == "/resources" );
@@ -65,4 +70,6 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_default_queue_message_limit( ) == 1001 );
     REQUIRE( settings.get_default_queue_message_size_limit( ) == 19 );
     REQUIRE( settings.get_default_queue_subscription_limit( ) == 2 );
+    REQUIRE( settings.get_default_queue_max_delivery_attempts( ) == 20 );
+    REQUIRE( settings.get_default_queue_redelivery_interval( ) == seconds( 5 ) );
 }

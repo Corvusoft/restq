@@ -67,19 +67,19 @@ The exchange reserves a select number of property names for internal use and Que
 
 The queue resource represents the desired configuration for a message chain.
 
-| Property              | Type             | Description                                                                                                 | Restriction | Default Value | Access     |
-|-----------------------|:----------------:|-------------------------------------------------------------------------------------------------------------|:-----------:|:-------------:|:----------:|
-| type                  |      bytes       | Identifies the resource category.                                                                           |  Reserved   |     queue     | Read-Only  |
-| created               |     numeric      | Unix epoch holding creation timestamp.                                                                      |  Reserved   |      n/a      | Read-Only  |
-| modified              |     numeric      | Unix epoch maintaining modification timestamp.                                                              |  Reserved   |      n/a      | Read-Only  |
-| revision              |      bytes       | Hash uniquely identifying this edition of the resource.                                                     |  Reserved   |      n/a      | Read-Only  |
-| origin                |      string      | Originating address of the client responsible for creation.                                                 |  Reserved   |      n/a      | Read-Only  |
-| pattern               |      string      | Indicates the Queues message paradigm.                                                                      |  Reserved   |    pub-sub    | Read-Only  |
-| message-limit         | unsigned integer | Maximum number of messages allowed on a Queue before rejection (Bad Request).                               |  Optional   |      100      | Read/Write |
-| message-size-limit    | unsigned integer | Maximum allowed size in bytes of the message body before rejection (Request Entity Too Large).              |  Optional   |     1024      | Read/Write |
-| subscription-limit    | unsigned integer | Maximum number of subscriptions allowed on a Queue before rejection (Bad Request).                          |  Optional   |      25       | Read/Write |
-| max-delivery-attempts | unsigned integer | Maximum number of delivery attempts the exchange will make before setting the message state to UNREACHABLE. |  Optional   |       3       | Read/Write |
-
+| Property              | Type             | Description                                                                                                            | Restriction | Default Value | Access     |
+|-----------------------|:----------------:|------------------------------------------------------------------------------------------------------------------------|:-----------:|:-------------:|:----------:|
+| type                  |      bytes       | Identifies the resource category.                                                                                      |  Reserved   |     queue     | Read-Only  |
+| created               |     numeric      | Unix epoch holding creation timestamp.                                                                                 |  Reserved   |      n/a      | Read-Only  |
+| modified              |     numeric      | Unix epoch maintaining modification timestamp.                                                                         |  Reserved   |      n/a      | Read-Only  |
+| revision              |      bytes       | Hash uniquely identifying this edition of the resource.                                                                |  Reserved   |      n/a      | Read-Only  |
+| origin                |      string      | Originating address of the client responsible for creation.                                                            |  Reserved   |      n/a      | Read-Only  |
+| pattern               |      string      | Indicates the Queues message paradigm.                                                                                 |  Reserved   |    pub-sub    | Read-Only  |
+| message-limit         | unsigned integer | Maximum number of messages allowed on a Queue before rejection (Bad Request).                                          |  Optional   |      100      | Read/Write |
+| message-size-limit    | unsigned integer | Maximum allowed size in bytes of the message body before rejection (Request Entity Too Large).                         |  Optional   |     1024      | Read/Write |
+| subscription-limit    | unsigned integer | Maximum number of subscriptions allowed on a Queue before rejection (Bad Request).                                     |  Optional   |      25       | Read/Write |
+| max-delivery-attempts | unsigned integer | Maximum number of delivery attempts the exchange will make before setting the subscription state to UNREACHABLE.       |  Optional   |       3       | Read/Write |
+| redelivery-interval   | unsigned integer | Number of seconds to delay before attempting a redelivery of a failed message receipt; see also max-delivery-attempts. |  Optional   |      30       | Read/Write |
 
 #### Queues Collection
 

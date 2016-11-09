@@ -20,7 +20,7 @@ Feature: Range request-header field
         And I should see a "Accept-Ranges" header value "none"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "285"
+        And I should see a "Content-Length" header value "336"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "ETag" header value
@@ -70,7 +70,7 @@ Feature: Range request-header field
         And I should see a "Accept-Ranges" header value "none"
         And I should see a "Server" header value "corvusoft/restq"
         And I should see a "Content-Type" header value "application/json; charset=utf-8"
-        And I should see a "Content-Length" header value "285"
+        And I should see a "Content-Length" header value "336"
         And I should see a "Content-MD5" header value
         And I should see a "Connection" header value "close"
         And I should see a "ETag" header value

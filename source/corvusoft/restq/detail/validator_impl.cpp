@@ -125,6 +125,16 @@ namespace restq
                         stoul( String::to_string( value.lower_bound( "subscription-limit" )->second ) );
                     }
                     
+                    if ( value.count( "max-delivery-attempts" ) )
+                    {
+                        stoul( String::to_string( value.lower_bound( "max-delivery-attempts" )->second ) );
+                    }
+                    
+                    if ( value.count( "redelivery-interval" ) )
+                    {
+                        stoul( String::to_string( value.lower_bound( "redelivery-interval" )->second ) );
+                    }
+                    
                     if ( value.count( "pattern" ) and "pub-sub" not_eq String::lowercase( String::to_string( value.lower_bound( "pattern" )->second ) ) )
                     {
                         return true;
