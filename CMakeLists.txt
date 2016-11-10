@@ -1,8 +1,12 @@
 # Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.
+cmake_minimum_required( VERSION 2.8.10 )
 
 project( "restq" )
-
-cmake_minimum_required( VERSION 2.8.10 )
+set (restq_VERSION_MAJOR 1)
+set (restq_VERSION_MINOR 5.0)
+set (restq_VERSION ${restq_VERSION_MAJOR}.${restq_VERSION_MINOR})
+set (PACKAGE_VERSION ${restq_VERSION})
+set (VERSION "${restq_VERSION}")
 
 #
 # Build Options
@@ -15,7 +19,7 @@ option( BUILD_SSL      "Build secure socket layer support."  ON )
 #
 # Configuration
 #
-include( "${CMAKE_SOURCE_DIR}/cmake/build_configuration.cmake" )
+include( "${CMAKE_SOURCE_DIR}/cmake/configuration.cmake" )
 
 message( "   ${Blue}Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.${Reset}" )
 
@@ -39,11 +43,11 @@ endif ( )
 #
 # Build
 #
-include( "${CMAKE_SOURCE_DIR}/cmake/build_manifest.cmake" )
+include( "${CMAKE_SOURCE_DIR}/cmake/manifest.cmake" )
 
 include_directories( ${INCLUDE_DIR} )
 
-add_library( ${PROJECT_NAME} ${BUILD_MANIFEST} ${load_SOURCE} )
+add_library( ${PROJECT_NAME} ${MANIFEST} ${load_SOURCE} )
 
 if ( BUILD_SSL )
     target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${restbed_LIBRARY} ${ssl_LIBRARY} ${crypto_LIBRARY} )
@@ -67,10 +71,10 @@ endif ( )
 #
 # Install
 #
-include( "${CMAKE_SOURCE_DIR}/cmake/build_artifacts.cmake" )
+include( "${CMAKE_SOURCE_DIR}/cmake/artifacts.cmake" )
 
 install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "include" )
-install( FILES ${BUILD_ARTIFACTS} DESTINATION "include/corvusoft/${PROJECT_NAME}" )
+install( FILES ${ARTIFACTS} DESTINATION "include/corvusoft/${PROJECT_NAME}" )
 install( TARGETS ${PROJECT_NAME}
          LIBRARY DESTINATION "library"
          ARCHIVE DESTINATION "library" COMPONENT library )

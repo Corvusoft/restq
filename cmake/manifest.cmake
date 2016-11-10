@@ -1,6 +1,6 @@
 # Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.
 
-set( BUILD_MANIFEST
+set( MANIFEST
    ${SOURCE_DIR}/query.cpp
    ${SOURCE_DIR}/string.cpp
    ${SOURCE_DIR}/settings.cpp
