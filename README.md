@@ -148,7 +148,7 @@ The [lettuce.py](http://lettuce.it) behaviour driven development tool is require
 cd restq
 ./distribution/example/http_example
 
-lettuce --failfast --random test/acceptance/features
+lettuce --failfast --random -t-manual test/acceptance/features
 ```
 
 The acceptance tests can be located [here](https://github.com/Corvusoft/restq/tree/master/test/acceptance/features). They're also a good starting point for developers wishing to integrate with RestQ.
