@@ -6,7 +6,6 @@
 #define _RESTQ_URI_H 1
 
 //System Includes
-#include <string>
 
 //Project Includes
 

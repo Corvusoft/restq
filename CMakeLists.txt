@@ -1,12 +1,13 @@
 # Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.
+
 cmake_minimum_required( VERSION 2.8.10 )
 
 project( "restq" )
-set (restq_VERSION_MAJOR 1)
-set (restq_VERSION_MINOR 5.0)
-set (restq_VERSION ${restq_VERSION_MAJOR}.${restq_VERSION_MINOR})
-set (PACKAGE_VERSION ${restq_VERSION})
-set (VERSION "${restq_VERSION}")
+set( restq_VERSION_MAJOR 1 )
+set( restq_VERSION_MINOR 5.0 )
+set( restq_VERSION ${restq_VERSION_MAJOR}.${restq_VERSION_MINOR} )
+set( PACKAGE_VERSION ${restq_VERSION} )
+set( VERSION "${restq_VERSION}" )
 
 #
 # Build Options
@@ -48,6 +49,10 @@ include( "${CMAKE_SOURCE_DIR}/cmake/manifest.cmake" )
 include_directories( ${INCLUDE_DIR} )
 
 add_library( ${PROJECT_NAME} ${MANIFEST} ${load_SOURCE} )
+
+if ( BUILD_SHARED )
+    set_target_properties( ${PROJECT_NAME} PROPERTIES SOVERSION ${restq_VERSION_MAJOR} VERSION ${restq_VERSION} )
+endif ( )
 
 if ( BUILD_SSL )
     target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${restbed_LIBRARY} ${ssl_LIBRARY} ${crypto_LIBRARY} )
