@@ -30,11 +30,12 @@ message( "   ${Blue}Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.${Re
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
 
 find_package( md5 REQUIRED )
+find_package( asio REQUIRED )
 find_package( load REQUIRED )
 find_package( restbed REQUIRED )
 find_package( kashmir REQUIRED )
 
-include_directories( SYSTEM ${md5_INCLUDE} ${load_INCLUDE} ${restbed_INCLUDE} ${kashmir_INCLUDE} )
+include_directories( SYSTEM ${md5_INCLUDE} ${asio_INCLUDE} ${load_INCLUDE} ${restbed_INCLUDE} ${kashmir_INCLUDE} )
 
 if ( BUILD_SSL )
     find_package( openssl REQUIRED )
@@ -48,16 +49,16 @@ include( "${CMAKE_SOURCE_DIR}/cmake/manifest.cmake" )
 
 include_directories( ${INCLUDE_DIR} )
 
-add_library( ${PROJECT_NAME} ${MANIFEST} ${load_SOURCE} )
+add_library( ${PROJECT_NAME} ${MANIFEST} ${load_SOURCE} $<TARGET_OBJECTS:restbed> )
 
 if ( BUILD_SHARED )
     set_target_properties( ${PROJECT_NAME} PROPERTIES SOVERSION ${restq_VERSION_MAJOR} VERSION ${restq_VERSION} )
 endif ( )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${restbed_LIBRARY} ${ssl_LIBRARY} ${crypto_LIBRARY} )
+    target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${ssl_LIBRARY} ${crypto_LIBRARY} )
 else ( )
-    target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${restbed_LIBRARY} )
+    target_link_libraries( ${PROJECT_NAME} )
 endif ( )
 
 if ( BUILD_EXAMPLES )

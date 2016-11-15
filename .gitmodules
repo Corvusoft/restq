@@ -4,9 +4,6 @@
 [submodule "dependency/catch"]
 	path = dependency/catch
 	url = https://github.com/corvusoft/catch-dependency
-[submodule "dependency/kashmir"]
-	path = dependency/kashmir
-	url = https://github.com/corvusoft/kashmir-dependency
 [submodule "dependency/md5"]
 	path = dependency/md5
 	url = https://github.com/corvusoft/md5-dependency
