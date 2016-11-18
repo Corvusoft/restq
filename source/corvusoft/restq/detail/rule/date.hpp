@@ -6,6 +6,7 @@
 #define _RESTQ_DETAIL_RULE_DATE_H 1
 
 //System Includes
+#include <ctime>
 #include <chrono>
 #include <string>
 #include <memory>
@@ -61,8 +62,12 @@ namespace restq
                 {
                     const time_t now = ( value ) ? value : time( 0 );
                     struct tm components = tm( );
+
+#ifdef __unix__
                     gmtime_r( &now, &components );
-                    
+#else
+                    gmtime_s( &components, &now );
+#endif
                     char datastamp[ 50 ] = { };
                     strftime( datastamp, sizeof datastamp, "%a, %d %b %Y %H:%M:%S GMT", &components );
                     return datastamp;

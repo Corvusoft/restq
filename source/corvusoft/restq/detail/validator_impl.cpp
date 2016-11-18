@@ -5,6 +5,7 @@
 //System Includes
 #include <set>
 #include <regex>
+#include <ciso646>
 #include <stdexcept>
 
 //Project Includes
@@ -140,11 +141,11 @@ namespace restq
                         return true;
                     }
                 }
-                catch ( const invalid_argument& ia )
+                catch ( const invalid_argument& )
                 {
                     return true;
                 }
-                catch ( const out_of_range& ofr )
+                catch ( const out_of_range& )
                 {
                     return true;
                 }

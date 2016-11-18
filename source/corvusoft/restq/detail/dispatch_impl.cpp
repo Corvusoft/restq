@@ -4,6 +4,7 @@
 
 //System Includes
 #include <chrono>
+#include <ciso646>
 #include <functional>
 
 //Project Includes

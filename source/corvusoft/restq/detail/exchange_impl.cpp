@@ -571,7 +571,7 @@ namespace restq
             query->set_include( SUBSCRIPTION );
             query->set_exclusive_filter( "type", QUEUE );
             
-            m_repository->read( query, [ this, changeset, session ]( const shared_ptr< Query > query )
+            m_repository->read( query, [ this, changeset ]( const shared_ptr< Query > query )
             {
                 auto session = query->get_session( );
                 
@@ -663,6 +663,7 @@ namespace restq
         
         void ExchangeImpl::asterisk_resource_handler( const shared_ptr< Session > session )
         {
+#ifdef __unix__ 
             static const unsigned cpu_usage_delay = 990000;
             const float cpu_usage = cpu_percentage( cpu_usage_delay );
             
@@ -679,7 +680,15 @@ namespace restq
                 { "CPU", String::format( "%.1f%%", cpu_usage ) },
                 { "Memory", String::format( "%.1f%%", memory_usage ) }
             };
-            
+#else
+            multimap< string, string > headers
+            {
+                { "Allow", "OPTIONS" },
+                { "Date", Date::make( ) },
+                { "Uptime", ::to_string( m_service->get_uptime( ).count( ) ) },
+                { "Workers", ::to_string( m_settings->get_worker_limit( ) ) },
+            };
+#endif            
             if ( session->get_headers( ).count( "Accept-Ranges" ) == 0 )
             {
                 headers.insert( make_pair( "Accept-Ranges", AcceptRanges::make( ) ) );

@@ -19,8 +19,6 @@ if ( load_INCLUDE )
       endif ( )
     elseif ( CMAKE_SYSTEM_NAME MATCHES "NetBSD" )
       set( load_SOURCE "${LOAD_SOURCE_DIR}/netbsd/memory.cc" "${LOAD_SOURCE_DIR}/netbsd/cpu.cc" )
-    else ( )
-      message( FATAL_ERROR "${Red}Failed to build Load dependency.${Reset}" )
     endif ( )
 
     if( ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC )

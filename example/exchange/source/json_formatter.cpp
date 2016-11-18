@@ -269,14 +269,14 @@ Resource JSONFormatter::parse_object( const json& value ) const
                     throw domain_error( "Child unordered sets are not supported." );
                 }
                 
-                auto value = to_string( item );
-                object.insert( make_pair( iterator.key( ), String::to_bytes( value ) ) );
+                auto field = to_string( item );
+                object.insert( make_pair( iterator.key( ), String::to_bytes( field ) ) );
             }
         }
         else
         {
-            auto value = to_string( *iterator );
-            object.insert( make_pair( iterator.key( ), String::to_bytes( value ) ) );
+            auto field = to_string( *iterator );
+            object.insert( make_pair( iterator.key( ), String::to_bytes( field ) ) );
         }
     }
     

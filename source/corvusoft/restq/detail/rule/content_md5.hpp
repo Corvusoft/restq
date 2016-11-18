@@ -72,7 +72,7 @@ namespace restq
                     md5_state_t state;
                     md5_byte_t digest[ 16 ];
                     md5_init( &state );
-                    md5_append( &state, static_cast< const md5_byte_t* >( &value[ 0 ] ), value.size( ) );
+                    md5_append( &state, static_cast< const md5_byte_t* >( &value[ 0 ] ), static_cast< int >( value.size( ) ) );
                     md5_finish( &state, digest );
                     
                     static const char* character_set = "0123456789abcdef";
