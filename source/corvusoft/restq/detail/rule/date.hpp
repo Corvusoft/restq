@@ -62,11 +62,11 @@ namespace restq
                 {
                     const time_t now = ( value ) ? value : time( 0 );
                     struct tm components = tm( );
-
-#ifdef __unix__
-                    gmtime_r( &now, &components );
-#else
+                    
+#ifdef _WIN32
                     gmtime_s( &components, &now );
+#else
+                    gmtime_r( &now, &components );
 #endif
                     char datastamp[ 50 ] = { };
                     strftime( datastamp, sizeof datastamp, "%a, %d %b %Y %H:%M:%S GMT", &components );
