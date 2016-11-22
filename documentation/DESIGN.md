@@ -52,6 +52,7 @@ System Entities
 
 -	[Byte/Bytes](#bytebytes)
 -	[Resource/Resources](#resourceresources)
+- [Callback](#callback)
 -	[StatusCode](#statuscode)
 -	[String](#string)
 -	[URI](#uri)
