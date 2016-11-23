@@ -176,7 +176,7 @@ Utility class with static scope offering a common suite of string manipulation r
 
 ### URI
 
-Represents a Uniform Resource Identifier as specified in RFC 3986.
+Represents a Uniform Resource Identifier as specified in [RFC 3986](https://www.ietf.org/rfc/rfc3986.txt).
 
 > A generic URI is of the form:
 >
@@ -236,9 +236,9 @@ Represents a conversation between a client and the service. Internally this clas
                   1 |                                      | 1
  +------------------+----------------+  +------------------+-----------------+
  |             <<class>>             |  |             <<class>>              |
- |              Request              |  |              Response              |
+ |              Request              |  |              Resource              |
  +-----------------------------------+  +------------------------------------+
- | See restbed::Request for details. |  | See restbed::Response for details. |
+ | See restbed::Request for details. |  | See restbed::Resource for details. |
  +-----------------------------------+  +------------------------------------+
 ```
 
@@ -388,7 +388,16 @@ Interface detailing the required contract for logger extensions. No default logg
  | + start(Settings)                        void |
  | + log(Logger::Level,string)              void |
  | + log_if(condition,Logger::Level,string) void |
- +-----------------------------------------------+
+ +----------------------^------------------------+
+                        |
+                        |
+                        |
+        +---------------v----------------+
+        |            <<enum>>            |
+        |         Logger::Level          |
+        +--------------------------------+
+        | See Logger::Level for details. |
+        +--------------------------------+
 ```
 
 ### Exchange
@@ -419,13 +428,7 @@ The exchange is responsible for managing the [Network API](#NETWORK-API.md), HTT
  |            <<interface>>               |  |             <<interface>>               |  |                 <<interface>>                 |
  |              Formatter                 |  |               Repository                |  |                    Logger                     |
  +----------------------------------------+  +-----------------------------------------+  +-----------------------------------------------+
- | + parse(Bytes)               Resources |  | + stop(void)                       void |  | + stop(void)                             void |
- | + try_parse(Bytes,Resources) bool      |  | + start(Settings)                  void |  | + start(Settings)                        void |
- | + compose(Resources,bool)    Bytes     |  | + create(Resources,Query,Callback) void |  | + log(Logger::Level,string)              void |
- | + get_mime_type(void)        string    |  | + read(Query,Callback)             void |  | + log_if(condition,Logger::Level,string) void |
- | + set_logger(Logger)         void      |  | + update(Resources,Query,Callback) void |  |                                               |
- |                                        |  | + destroy(Query,Callback)          void |  |                                               |
- |                                        |  | + set_logger(Logger)               void |  |                                               |
+ |      See Formatter for details.        |  |        See Repository for details.      |  |              See Logger for details.          |
  +----------------------------------------+  +-----------------------------------------+  +-----------------------------------------------+
 ```
 
